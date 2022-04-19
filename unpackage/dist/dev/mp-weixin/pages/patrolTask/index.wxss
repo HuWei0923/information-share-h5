@@ -1,0 +1,44 @@
+
+.task-box.data-v-0ce4fdad {
+	margin-top: 10rpx;
+}
+.task-item.data-v-0ce4fdad {
+	padding: 28rpx;
+	margin-bottom: 22rpx;
+	background-color: #fff;
+	color: #333333;
+}
+.topTitle.data-v-0ce4fdad {
+	line-height: 80rpx;
+	font-size: 32rpx;
+	border-bottom: 1px solid #efefef;
+}
+.detail.data-v-0ce4fdad {
+	line-height: 50rpx;
+	padding: 20rpx 0;
+}
+.address.data-v-0ce4fdad {
+	font-size: 28rpx;
+	color: #999999;
+	/* line-height: 50rpx; */
+}
+.last.data-v-0ce4fdad {
+	display: flex;
+	justify-content: space-between;
+}
+.finish.data-v-0ce4fdad {
+	padding: 28rpx;
+	background-color: #fff;
+	border-bottom: 1px solid #efefef;
+	line-height: 60rpx;
+	color: #333333;
+}
+.btn-box.data-v-0ce4fdad {
+	margin-top: 100rpx;
+	padding: 0 40rpx 20rpx;
+}
+.danger-style.data-v-0ce4fdad {
+	color: #ee0a24;
+	font-size: 24rpx;
+}
+

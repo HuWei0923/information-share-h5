@@ -1,0 +1,27 @@
+{
+  "pages": [
+    "pages/login/index",
+    "pages/index/index",
+    "pages/patrolTask/index",
+    "pages/patrolTask/createTask",
+    "pages/patrolTask/distributeTask",
+    "pages/patrolTask/map",
+    "pages/patrolTask/policeList",
+    "pages/patrolTask/troubleList",
+    "pages/patrolTask/troubleDetail",
+    "pages/patrolTask/rejectReason",
+    "pages/patrolTask/choosePolice",
+    "pages/patrolTask/taskDetail",
+    "pages/patrolTask/reDispatch",
+    "pages/patrolTask/troubleReport"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#265ad2",
+    "backgroundColor": "#F8F8F8"
+  },
+  "usingComponents": {},
+  "sitemapLocation": "sitemap.json"
+}

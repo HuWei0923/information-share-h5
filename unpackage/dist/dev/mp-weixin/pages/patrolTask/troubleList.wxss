@@ -1,0 +1,25 @@
+
+.task-box.data-v-8d00a760 {
+	margin-top: 10rpx;
+}
+.task-item.data-v-8d00a760 {
+	padding: 28rpx;
+	margin-bottom: 22rpx;
+	background-color: #fff;
+	color: #333333;
+}
+.topTitle.data-v-8d00a760 {
+	padding-bottom: 30rpx;
+	font-size: 32rpx;
+	border-bottom: 1px solid #efefef;
+}
+.detail.data-v-8d00a760 {
+	line-height: 50rpx;
+	padding: 20rpx 0;
+}
+.address.data-v-8d00a760 {
+	font-size: 28rpx;
+	color: #999999;
+	/* line-height: 50rpx; */
+}
+
