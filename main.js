@@ -5,11 +5,6 @@ import App from './App'
 //引用并设置环境变量
 import '.env.js'
 Vue.config.productionTip = false
-import Dialog from './wxcomponents/vant/dialog/dialog'
-Vue.prototype.$Dialog=Dialog
-
-import Notigy from './wxcomponents/vant/notify/notify'
-Vue.prototype.$notify=Notigy
 
 App.mpType = 'app'
 
