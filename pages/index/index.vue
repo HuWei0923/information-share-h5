@@ -1,10 +1,6 @@
 <template>
 	<view class="container">
-		<div class="top">
-			<image src="@/static/img/index/logo_trans.png" class="logo"></image>
-			<view class="title">{{ title }}</view>
-			<view class="sub-title">数字化技术下的资信共享新模式</view>
-		</div>
+		<TopHeader></TopHeader>
 		<div class="content-box">
 			<uni-collapse ref="collapse" v-model="activeMenu">
 				<uni-collapse-item :title="item.title" v-for="(item, index) in menuData" :key="index" :border="false">
@@ -13,9 +9,11 @@
 						{{ item.title }}
 					</view>
 					<uni-row class="content">
-						<uni-col :span="6" v-for="(i, id) in item.children" :key="id" class="content-item">
-							<image :src="i.icon" style="width: 60rpx;height:60rpx;"></image>
-							<text class="text">{{ i.title }}</text>
+						<uni-col :span="6" v-for="(i, id) in item.children" :key="id">
+							<view @click="goToPage(i)" class="content-item">
+								<image :src="i.icon" style="width: 60rpx;height:60rpx;"></image>
+								<text class="text">{{ i.title }}</text>
+							</view>
 						</uni-col>
 					</uni-row>
 				</uni-collapse-item>
@@ -25,7 +23,11 @@
 </template>
 
 <script>
+import TopHeader from '@/components/topHeader.vue';
 export default {
+	components: {
+		TopHeader
+	},
 	data() {
 		return {
 			title: process.uniEnv['APP_NAME'],
@@ -78,7 +80,8 @@ export default {
 					children: [
 						{
 							title: '信保报告申请',
-							icon: require('@/static/img/index/xbbgsq.png')
+							icon: require('@/static/img/index/xbbgsq.png'),
+							url: '/pages/apply/apply'
 						},
 						{
 							title: '信保报告审核',
@@ -106,39 +109,21 @@ export default {
 			]
 		};
 	},
-	methods: {}
+	onLoad() {
+		console.log(33333);
+	},
+	methods: {
+		goToPage(item) {
+			if (!item.url) return;
+			uni.navigateTo({
+				url: item.url
+			});
+		}
+	}
 };
 </script>
 
 <style scoped>
-.container {
-	/* height: 100%; */
-}
-.top {
-	height: 400rpx;
-	background: url('@/static/img/index/index_bg.jpg');
-	background-size: 100% 100%;
-	text-align: center;
-	position: relative;
-}
-.logo {
-	width: 170rpx;
-	height: 54rpx;
-	position: absolute;
-	top: 20rpx;
-	right: 20rpx;
-}
-.title {
-	font-size: 46rpx;
-	font-weight: 700;
-	color: #fff;
-	padding: 120rpx 0 40rpx 0;
-	letter-spacing: 8rpx;
-}
-.sub-title {
-	font-size: 28rpx;
-	color: #f5f9cc;
-}
 .content {
 	padding: 0 20rpx;
 }
@@ -151,11 +136,11 @@ export default {
 }
 .text {
 	font-size: 26rpx;
-	margin-top:10rpx;
+	margin-top: 10rpx;
 	color: #333;
 }
-.menu-title{
-	padding-left:20rpx;
+.menu-title {
+	padding-left: 20rpx;
 	font-weight: bold;
 	line-height: 80rpx;
 }
