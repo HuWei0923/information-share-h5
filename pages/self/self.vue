@@ -85,7 +85,8 @@ export default {
 		        userId: uni.getStorageSync('userId')
 		}).then(res => {
 				debugger;
-			if (res.status == 200) {
+			if (res.code == 200) {
+				debugger;
 				  this.form.name = res.data.user.name;
 				  this.form.password = res.data.user.password;
 				  this.form.email = res.data.user.email;
