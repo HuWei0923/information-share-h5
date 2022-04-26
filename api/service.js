@@ -35,22 +35,32 @@ const createRequest = function(apiConfig) {
 				uni.hideLoading()
 				let [err, res] = response;
 				if (res.statusCode == 200) {
-					if (res.data.code == 200) {
+					if (res.data.code == 0) {
 						resolve(res.data)
-					} else if (res.data.code == 401 || res.data.code == -1) {
-						uni.navigateTo({
-							url: '/pages/login/index'
-						})
-						reject(res.data)
-					}else{
+					} else if (res.data.code == 49998 || res.data.code == 49999 || res.data
+						.code == 50000) {
 						uni.showToast({
-							icon:'none',
-							title:'请求失败',
+							icon: 'none',
+							title: '您的账号已在另一地点登录，您已被迫下线,请重新登录。',
+							success:()=>{
+								setTimeout(()=>{
+									uni.redirectTo({
+										url: '/pages/login/index'
+									})
+								},1000)
+								
+							}
+						})
+						reject('您的账号已在另一地点登录，您已被迫下线,请重新登录')
+					} else {
+						uni.showToast({
+							icon: 'none',
+							title: res.data.msg || '请求失败',
 						})
 						reject(res.data)
 					}
 				} else if (res.statusCode == 401) {
-					uni.navigateTo({
+					uni.switchTab({
 						url: '/pages/login/index'
 					})
 				}

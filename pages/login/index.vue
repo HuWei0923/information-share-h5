@@ -34,37 +34,45 @@
 					username: '',
 					password: ''
 				},
-				showPwd:false
+				showPwd:false,
+				timer:null
 			}
 		},
 		onLoad() {
 		},
+		onHide(){
+			clearTimeout(this.timer)
+		},
 		methods: {
 			login() {
-				uni.switchTab({
-					url: '/pages/index/index'
+				userAPI.login({
+					username: this.user.username,
+					password: this.user.password,
+				}).then(res => {
+					if (res.code == 0) {
+						if(res.isOverdue=='1'){
+							uni.showToast({
+								icon:'none',
+								title:'密码过期，请及时修改。',
+							})
+							return
+						}
+						uni.showToast({
+							icon:'none',
+							title:'登录成功',
+							success:()=>{
+								uni.setStorageSync('token', res.token);
+								uni.setStorageSync('username', res.username);
+								this.timer=setTimeout(()=>{
+									uni.switchTab({
+										url: '/pages/index/index'
+									})
+								},1000)
+								
+							}
+						})
+					} 
 				})
-				// userAPI.login({
-				// 	username: this.user.username,
-				// 	password: this.user.password,
-				// }).then(res => {
-				// 	if (res.code == 200) {
-				// 		uni.showToast({
-				// 			icon:'none',
-				// 			title:'登录成功',
-				// 			success:()=>{
-				// 				uni.setStorageSync('token', res.data);
-				// 				uni.setStorageSync('username', this.user.username);
-				// 				uni.setStorageSync('roleId', res.roleId)
-				// 				uni.setStorageSync('deptId', res.deptInfo.deptId);
-				// 				uni.setStorageSync('deptName', res.deptInfo.deptName)
-				// 				uni.redirectTo({
-				// 					url: '../index/index'
-				// 				})
-				// 			}
-				// 		})
-				// 	} 
-				// })
 	
 			}
 		}

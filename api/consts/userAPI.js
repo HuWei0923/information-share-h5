@@ -3,6 +3,6 @@ export default [
 	{
 		name:"login",
 		method:'post',
-		url:'/sys-manage/sys/login2'
+		url:'/api/user/login'
 	},
 ]
