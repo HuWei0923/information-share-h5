@@ -42,10 +42,10 @@
 					uni.showLoading({
 						mask: true
 					})
-					if (res.code == 0) {
-						uni.setStorageSync('token', res.token);
-						uni.setStorageSync('username', res.username);
-						uni.setStorageSync('userId', res.userId);
+					if (res.data.code == 0) {
+						uni.setStorageSync('token', res.data.token);
+						uni.setStorageSync('username', res.data.username);
+						uni.setStorageSync('userId', res.data.userId);
 						this.timer=setTimeout(()=>{
 							uni.switchTab({
 								url: '/pages/index/index'

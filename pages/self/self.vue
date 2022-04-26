@@ -3,7 +3,6 @@
 		<TopHeader></TopHeader>
 		<uni-card title="账号设置" is-shadow is-full>
 			<uni-list>
-				
 				<uni-list-item>
 					<view slot="header" class="form-title">
 						<text class="required-s">*</text>
@@ -30,8 +29,8 @@
 						手机
 					</view>
 					<view slot="footer">
-						<input placeholder="请输入" placeholder-style="color:#B5B5B5;" name="input" :value="form.phone" @input="inputPhone" />
-						<view class="error-style" v-if="errMsg.phone != ''">{{ errMsg.phone }}</view>
+						<input placeholder="请输入" placeholder-style="color:#B5B5B5;" name="input" :value="form.mobile" @input="inputPhone" />
+						<view class="error-style" v-if="errMsg.mobile != ''">{{ errMsg.mobile }}</view>
 					</view>
 				</uni-list-item>
 				<uni-list-item>
@@ -54,11 +53,8 @@
 
 <script>
 import TopHeader from '@/components/topHeader.vue';
-import {
-		userAPI
-	} from "api/index.js"
+import { userAPI } from 'api/index.js';
 export default {
-	
 	components: {
 		TopHeader
 	},
@@ -66,35 +62,29 @@ export default {
 		return {
 			title: process.uniEnv['APP_NAME'],
 			form: {
-				
 				name: '',
 				password: '',
 				email: '',
-				phone: ''
+				mobile: ''
 			},
 			errMsg: {
-				
 				name: '',
 				password: '',
 				email: '',
-				phone: ''
+				mobile: ''
 			}
 		};
-	},onLoad() {
-		userAPI.getUserInfo({
-		        userId: uni.getStorageSync('userId')
-		}).then(res => {
-				debugger;
-			if (res.code == 200) {
-				debugger;
-				  this.form.name = res.data.user.name;
-				  this.form.password = res.data.user.password;
-				  this.form.email = res.data.user.email;
-				  this.form.mobile = res.data.user.mobile;
-			}
-			
-		})
-	},methods: {
+	},
+	onLoad() {
+		userAPI
+			.getUserInfo({
+				userId: uni.getStorageSync('userId')
+			})
+			.then(res => {
+				this.form = res.data.user;
+			});
+	},
+	methods: {
 		inputUserName(event) {
 			this.form.username = event.detail.value;
 			this.errMsg.username = '';
@@ -107,13 +97,13 @@ export default {
 			this.form.password = event.detail.value;
 			this.errMsg.password = '';
 		},
-		inputPhone(event){
-			this.form.phone = event.detail.value;
-			this.errMsg.phone = ''
+		inputPhone(event) {
+			this.form.mobile = event.detail.value;
+			this.errMsg.mobile = '';
 		},
-		inputEmail(event){
+		inputEmail(event) {
 			this.form.email = event.detail.value;
-			this.errMsg.email = ''
+			this.errMsg.email = '';
 		}
 	}
 };

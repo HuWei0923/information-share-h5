@@ -40,10 +40,9 @@
 		},
 		onLoad() {
 			if(uni.getStorageSync('token')){
-				
 				uni.showToast({
 					icon:'none',
-					title:'已登录',
+					title:'您已登录，将为您自动跳转至首页',
 					success:()=>{
 						uni.setStorageSync('token', uni.getStorageSync('token'));
 						uni.setStorageSync('username', uni.getStorageSync('username'));
@@ -52,12 +51,10 @@
 							uni.switchTab({
 								url: '/pages/index/index'
 							})
-						},1000)
+						},2000)
 						
 					}
 				})
-					
-				
 			}
 		},
 		onHide(){
@@ -65,13 +62,11 @@
 		},
 		methods: {
 			login() {
-				
-				
 				userAPI.login({
 					username: this.user.username,
 					password: this.user.password,
 				}).then(res => {
-					if (res.code == 0) {
+					if (res.data.code == 0) {
 						if(res.isOverdue=='1'){
 							uni.showToast({
 								icon:'none',
@@ -83,9 +78,9 @@
 							icon:'none',
 							title:'登录成功',
 							success:()=>{
-								uni.setStorageSync('token', res.token);
-								uni.setStorageSync('username', res.username);
-								uni.setStorageSync('userId', res.userId);
+								uni.setStorageSync('token', res.data.token);
+								uni.setStorageSync('username', res.data.username);
+								uni.setStorageSync('userId', res.data.userId);
 								this.timer=setTimeout(()=>{
 									uni.switchTab({
 										url: '/pages/index/index'
