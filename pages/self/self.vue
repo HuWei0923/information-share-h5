@@ -3,16 +3,7 @@
 		<TopHeader></TopHeader>
 		<uni-card title="账号设置" is-shadow is-full>
 			<uni-list>
-				<uni-list-item>
-					<view slot="header" class="form-title">
-						<text class="required-s">*</text>
-						用户名
-					</view>
-					<view slot="footer">
-						<input placeholder="请输入" placeholder-style="color:#B5B5B5;" name="input" :value="form.username" @input="inputUserName" />
-						<view class="error-style" v-if="errMsg.username != ''">{{ errMsg.username }}</view>
-					</view>
-				</uni-list-item>
+				
 				<uni-list-item>
 					<view slot="header" class="form-title">
 						<text class="required-s">*</text>
@@ -63,7 +54,11 @@
 
 <script>
 import TopHeader from '@/components/topHeader.vue';
+import {
+		userAPI
+	} from "api/index.js"
 export default {
+	
 	components: {
 		TopHeader
 	},
@@ -71,22 +66,34 @@ export default {
 		return {
 			title: process.uniEnv['APP_NAME'],
 			form: {
-				username: 'anglela baby',
-				name: '张三',
-				password: '123456',
-				email: '453543@163.com',
-				phone: '13524321345'
+				
+				name: '',
+				password: '',
+				email: '',
+				phone: ''
 			},
 			errMsg: {
-				username: '',
+				
 				name: '',
 				password: '',
 				email: '',
 				phone: ''
 			}
 		};
-	},
-	methods: {
+	},onLoad() {
+		userAPI.getUserInfo({
+		        userId: uni.getStorageSync('userId')
+		}).then(res => {
+				debugger;
+			if (res.status == 200) {
+				  this.form.name = res.data.user.name;
+				  this.form.password = res.data.user.password;
+				  this.form.email = res.data.user.email;
+				  this.form.mobile = res.data.user.mobile;
+			}
+			
+		})
+	},methods: {
 		inputUserName(event) {
 			this.form.username = event.detail.value;
 			this.errMsg.username = '';
