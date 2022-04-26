@@ -5,4 +5,10 @@ export default [
 		method:'post',
 		url:'/api/user/login'
 	},
+	{
+		name:"getUserInfo",
+		method:'post',
+		url:'/api/user/getUserInfo'
+	}
+	
 ]
