@@ -39,12 +39,33 @@
 			}
 		},
 		onLoad() {
+			if(uni.getStorageSync('token')){
+				
+				uni.showToast({
+					icon:'none',
+					title:'已登录',
+					success:()=>{
+						uni.setStorageSync('token', uni.getStorageSync('token'));
+						uni.setStorageSync('username', uni.getStorageSync('username'));
+						this.timer=setTimeout(()=>{
+							uni.switchTab({
+								url: '/pages/index/index'
+							})
+						},1000)
+						
+					}
+				})
+					
+				
+			}
 		},
 		onHide(){
 			clearTimeout(this.timer)
 		},
 		methods: {
 			login() {
+				
+				
 				userAPI.login({
 					username: this.user.username,
 					password: this.user.password,
