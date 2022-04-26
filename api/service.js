@@ -29,16 +29,14 @@ const createRequest = function(apiConfig) {
 				method: method,
 				data: data,
 				header: {
-					Authorization: token
+					token: token
 				}
 			}).then(response => {
 				uni.hideLoading()
 				let [err, res] = response;
+				debugger;
 				if (res.statusCode == 200) {
-					if (res.data.code == 0) {
-						resolve(res.data)
-					} else if (res.data.code == 49998 || res.data.code == 49999 || res.data
-						.code == 50000) {
+					if (res && res.data && (res.data.code == 49998 || res.data.code == 49999 || res.data.code == 50000)) {
 						uni.showToast({
 							icon: 'none',
 							title: '您的账号已在另一地点登录，您已被迫下线,请重新登录。',
@@ -52,12 +50,23 @@ const createRequest = function(apiConfig) {
 							}
 						})
 						reject('您的账号已在另一地点登录，您已被迫下线,请重新登录')
-					} else {
+					} else if (res && res.data && res.data.code == 401) {
+						
 						uni.showToast({
 							icon: 'none',
-							title: res.data.msg || '请求失败',
+							title: '您的账号已在另一地点登录，您已被迫下线,请重新登录。',
+							success:()=>{
+								setTimeout(()=>{
+									uni.redirectTo({
+										url: '/pages/login/index'
+									})
+								},1000)
+								
+							}
 						})
-						reject(res.data)
+					} else {
+						
+						reject(res)
 					}
 				} else if (res.statusCode == 401) {
 					uni.switchTab({
