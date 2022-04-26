@@ -45,6 +45,7 @@
 					if (res.code == 0) {
 						uni.setStorageSync('token', res.token);
 						uni.setStorageSync('username', res.username);
+						uni.setStorageSync('userId', res.userId);
 						this.timer=setTimeout(()=>{
 							uni.switchTab({
 								url: '/pages/index/index'
