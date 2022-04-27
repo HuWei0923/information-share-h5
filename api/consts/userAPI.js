@@ -9,6 +9,11 @@ export default [
 		name:"getUserInfo",
 		method:'post',
 		url:'/api/user/getUserInfo'
+	},
+	{
+		name:"updateUser",
+		method:'post',
+		url:'/api/user/updateUser'
 	}
 	
 ]

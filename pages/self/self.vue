@@ -5,11 +5,11 @@
 			<uni-list>
 				<uni-list-item>
 					<view slot="header" class="form-title">
-						<text class="required-s">*</text>
+						
 						姓名
 					</view>
 					<view slot="footer">
-						<input placeholder="请输入" placeholder-style="color:#B5B5B5;" name="input" :value="form.name" @input="inputName" />
+						<input placeholder="请输入" disabled="true" placeholder-style="color:#B5B5B5;" name="input" :value="form.name" @input="inputName" />
 						<view class="error-style" v-if="errMsg.name != ''">{{ errMsg.name }}</view>
 					</view>
 				</uni-list-item>
@@ -46,7 +46,7 @@
 			</uni-list>
 		</uni-card>
 		<view class="flex flex-direction" style="padding: 50rpx 150rpx">
-			<button class="cu-btn round text-white" @click="login" style="background-image: linear-gradient(to right,#2d56f6,#5ba1ff);">保 存</button>
+			<button class="cu-btn round text-white" @click="saveUserInfo" style="background-image: linear-gradient(to right,#2d56f6,#5ba1ff);">保 存</button>
 		</view>
 	</view>
 </template>
@@ -104,6 +104,23 @@ export default {
 		inputEmail(event) {
 			this.form.email = event.detail.value;
 			this.errMsg.email = '';
+		},
+		saveUserInfo(){
+			userAPI.updateUser({
+				userId: uni.getStorageSync('userId'),
+				username: uni.getStorageSync('userCode'),
+				name:this.form.name,
+				password:this.form.password,
+				email:this.form.email,
+				mobile:this.form.mobile
+			}).then(res => {
+				if (res.data.code == 0) {
+					uni.showToast({
+						icon:'none',
+						title:'保存成功。',
+					})
+				}
+			})
 		}
 	}
 };

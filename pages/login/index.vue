@@ -47,6 +47,7 @@
 						uni.setStorageSync('token', uni.getStorageSync('token'));
 						uni.setStorageSync('username', uni.getStorageSync('username'));
 						uni.setStorageSync('userId', uni.getStorageSync('userId'));
+						uni.setStorageSync('userCode', uni.getStorageSync('username'));
 						this.timer=setTimeout(()=>{
 							uni.switchTab({
 								url: '/pages/index/index'
@@ -79,8 +80,9 @@
 							title:'登录成功',
 							success:()=>{
 								uni.setStorageSync('token', res.data.token);
-								uni.setStorageSync('username', res.data.username);
+								uni.setStorageSync('username', res.data.name);
 								uni.setStorageSync('userId', res.data.userId);
+								uni.setStorageSync('userCode', res.data.username);
 								this.timer=setTimeout(()=>{
 									uni.switchTab({
 										url: '/pages/index/index'
@@ -89,7 +91,13 @@
 								
 							}
 						})
-					} 
+					} else{
+						uni.showToast({
+							icon:'none',
+							title:res.data.msg
+						})
+						return
+					}
 				})
 	
 			}

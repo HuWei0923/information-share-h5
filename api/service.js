@@ -36,6 +36,8 @@ const createRequest = function(apiConfig) {
 				let [err, res] = response;
 				if (res.statusCode == 200) {
 					if (res.data && (res.data.code == 49998 || res.data.code == 49999 || res.data.code == 50000||res.data.code == 401)) {
+						
+						uni.removeStorageSync("token");
 						uni.showToast({
 							icon: 'none',
 							title: '您的账号已在另一地点登录，您已被迫下线,请重新登录。',
@@ -52,6 +54,7 @@ const createRequest = function(apiConfig) {
 						resolve(res)
 					}
 				} else if (res.statusCode == 401) {
+					uni.removeStorageSync("token");
 					uni.switchTab({
 						url: '/pages/login/index'
 					})

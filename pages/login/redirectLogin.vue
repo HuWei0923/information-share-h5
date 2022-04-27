@@ -44,8 +44,9 @@
 					})
 					if (res.data.code == 0) {
 						uni.setStorageSync('token', res.data.token);
-						uni.setStorageSync('username', res.data.username);
+						uni.setStorageSync('username', res.data.name);
 						uni.setStorageSync('userId', res.data.userId);
+						uni.setStorageSync('userCode', res.data.username);
 						this.timer=setTimeout(()=>{
 							uni.switchTab({
 								url: '/pages/index/index'
