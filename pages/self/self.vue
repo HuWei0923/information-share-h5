@@ -5,10 +5,19 @@
 			<uni-list>
 				<uni-list-item>
 					<view slot="header" class="form-title">
+						用户名
+					</view>
+					<view slot="footer">
+						<input placeholder="请输入" disabled="true" placeholder-style="color:#B5B5B5;" name="input" :value="form.username" @input="inputUserName" />
+						<view class="error-style" v-if="errMsg.username != ''">{{ errMsg.username }}</view>
+					</view>
+				</uni-list-item>
+				<uni-list-item>
+					<view slot="header" class="form-title">
 						姓名
 					</view>
 					<view slot="footer">
-						<input placeholder="请输入" disabled="true" placeholder-style="color:#B5B5B5;" name="input" :value="form.name" @input="inputName" />
+						<input placeholder="请输入" placeholder-style="color:#B5B5B5;" name="input" :value="form.name" @input="inputName" />
 						<view class="error-style" v-if="errMsg.name != ''">{{ errMsg.name }}</view>
 					</view>
 				</uni-list-item>
@@ -24,7 +33,7 @@
 				</uni-list-item>
 				<uni-list-item>
 					<view slot="header" class="form-title">
-						<text class="required-s">*</text>
+						
 						手机
 					</view>
 					<view slot="footer">
@@ -62,6 +71,7 @@ export default {
 		return {
 			title: process.uniEnv['APP_NAME'],
 			form: {
+				username: uni.getStorageSync('userCode'),
 				name: '',
 				password: '',
 				email: '',
