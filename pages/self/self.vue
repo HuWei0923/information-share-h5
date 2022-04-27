@@ -5,7 +5,6 @@
 			<uni-list>
 				<uni-list-item>
 					<view slot="header" class="form-title">
-						
 						姓名
 					</view>
 					<view slot="footer">
@@ -35,7 +34,7 @@
 				</uni-list-item>
 				<uni-list-item>
 					<view slot="header" class="form-title">
-						<text class="required-s">*</text>
+						
 						邮箱
 					</view>
 					<view slot="footer">
@@ -58,7 +57,8 @@ export default {
 	components: {
 		TopHeader
 	},
-	data() {
+	data(){
+		
 		return {
 			title: process.uniEnv['APP_NAME'],
 			form: {
@@ -67,12 +67,14 @@ export default {
 				email: '',
 				mobile: ''
 			},
+			
 			errMsg: {
 				name: '',
 				password: '',
 				email: '',
 				mobile: ''
-			}
+			},
+			flag:true,
 		};
 	},
 	onLoad() {
@@ -85,6 +87,7 @@ export default {
 			});
 	},
 	methods: {
+		
 		inputUserName(event) {
 			this.form.username = event.detail.value;
 			this.errMsg.username = '';
@@ -95,32 +98,75 @@ export default {
 		},
 		inputPassword(event) {
 			this.form.password = event.detail.value;
-			this.errMsg.password = '';
+			
+			let modes = 0;
+			var value = this.form.password;
+			 if (value.length < 8) {
+				 this.errMsg.password = '密码长度不小于8位';
+					this.flag = false;
+					return;
+			 }
+			 if (/\d/.test(value)) modes++; //数字
+			 if ((/[a-z]/.test(value)) || (/[A-Z]/.test(value)) )modes++; //字母
+			 // if (/[A-Z]/.test(value)) modes++; //大写
+			 if (/\W/.test(value)) modes++; //特殊字符
+					
+			 if (value && modes < 2) {
+							this.errMsg.password = '需由数字、字母、字符中的两种组成。';
+			 }else {
+							this.errMsg.password = '';
+			 }
+			 
+			 if(this.errMsg.password == ''){
+			 	this.flag = true;
+			 }else{
+			 	this.flag = false;
+			 }
 		},
 		inputPhone(event) {
 			this.form.mobile = event.detail.value;
+			debugger;
+			var value = this.form.mobile;
+			let TEL_REGEXP = /^[1][3,4,5,7,8,9][0-9]{9}$/;
+		  if (value === ""||typeof value=='undefined') {
 			this.errMsg.mobile = '';
+		  } else if (value && !TEL_REGEXP.test(value)) {
+			
+			this.errMsg.mobile = '请输入正确的手机号!';
+		  } else {
+			this.errMsg.mobile = '';
+		  }
+			if(this.errMsg.mobile == ''){
+				this.flag = true;
+			}else{
+				this.flag = false;
+			}
 		},
 		inputEmail(event) {
 			this.form.email = event.detail.value;
 			this.errMsg.email = '';
+			
 		},
 		saveUserInfo(){
-			userAPI.updateUser({
-				userId: uni.getStorageSync('userId'),
-				username: uni.getStorageSync('userCode'),
-				name:this.form.name,
-				password:this.form.password,
-				email:this.form.email,
-				mobile:this.form.mobile
-			}).then(res => {
-				if (res.data.code == 0) {
-					uni.showToast({
-						icon:'none',
-						title:'保存成功。',
-					})
-				}
-			})
+			
+			if(this.flag){
+				userAPI.updateUser({
+					userId: uni.getStorageSync('userId'),
+					username: uni.getStorageSync('userCode'),
+					name:this.form.name,
+					password:this.form.password,
+					email:this.form.email,
+					mobile:this.form.mobile
+				}).then(res => {
+					if (res.data.code == 0) {
+						uni.showToast({
+							icon:'none',
+							title:'保存成功。',
+						})
+					}
+				})
+			}
+			
 		}
 	}
 };
