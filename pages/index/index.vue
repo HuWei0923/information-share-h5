@@ -30,10 +30,114 @@ export default {
 		TopHeader
 	},
 	data() {
+		
+		
+		
 		return {
 			title: process.uniEnv['APP_NAME'],
 			activeMenu: ['0', '1', '2', '3'],
 			menuData: [
+				{
+					title: '通用',
+					children: [
+						{
+							title: '关注清单',
+							icon: require('@/static/img/index/gzqd.png'),
+							flag:true
+						},
+						{
+							title: '消息中心',
+							icon: require('@/static/img/index/xxzx.png'),
+							flag:true
+						},
+						{
+							title: '黑灰名单',
+							icon: require('@/static/img/index/hhmd.png'),
+							flag:true
+						},
+						{
+							title: '用户中心',
+							icon: require('@/static/img/index/hhmd.png'),
+							flag:false
+						}
+					]
+				},
+				{
+					title: '中诚信',
+					children: [
+						{
+							title: '风险初筛',
+							icon: require('@/static/img/index/fxcs.png'),
+							flag:true
+						},
+						{
+							title: '财务排雷',
+							icon: require('@/static/img/index/cwpl.png'),
+							flag:true
+						},
+						{
+							title: '产业企业评价',
+							icon: require('@/static/img/index/cyqypj.png'),
+							flag:true
+						},
+						{
+							title: '区域信用评价',
+							icon: require('@/static/img/index/qyxypj.png'),
+							flag:true
+						},
+						{
+							title: '城投企业评价',
+							icon: require('@/static/img/index/ctqypj.png'),
+							flag:true
+						}
+					]
+				},
+				{
+					title: '中信保',
+					children: [
+						{
+							title: '信保报告申请',
+							icon: require('@/static/img/index/xbbgsq.png'),
+							url: '/pages/apply/apply',
+							flag:false
+						},
+						{
+							title: '信保报告审核',
+							icon: require('@/static/img/index/xbbgsh.png'),
+							flag:false
+						},
+						{
+							title: '我的信保报告',
+							icon: require('@/static/img/index/wdxbbg.png'),
+							flag:false
+						},
+						{
+							title: '信保报告列表',
+							icon: require('@/static/img/index/xbbglb.png'),
+							flag:false
+						}
+					]
+				},
+				{
+					title: '天眼查',
+					children: [
+						{
+							title: '检索入口',
+							icon: require('@/static/img/index/jsrk.png'),
+							flag:true
+						}
+					]
+				}
+			]
+		};
+	},
+	
+	async onLoad(option) {
+		debugger;
+		await this.verifyPermissions();
+		
+	        
+		this.menuData=[
 				{
 					title: '通用',
 					children: [
@@ -125,45 +229,9 @@ export default {
 						}
 					]
 				}
-			]
-		};
-	},
-	
-	mounted() {
-		userAPI
-			.verifyPermissions({
-				userId: uni.getStorageSync('userId'),
-				permissionPoint:"user.manage,user.sub_manage,blacklist.audit,blacklist.apply,zxbreport.audit,merchant.screening,news.all,zxbreport.apply,zxbreport.list,zxbMessage.list"
-			})
-			.then(res => {
-				if(res.data.code==0){
-					
-				// 	this.blacklistAudit = res.data.verifyPermissionResult['blacklist.audit'];
-				// 	this.blacklistApply = res.data.verifyPermissionResult['blacklist.apply']
-				// 	this.userManage = res.data.verifyPermissionResult['user.manage']
-				// 	this.sub_manage = res.data.verifyPermissionResult['user.sub_manage']
-				// 	this.zxbreportAudit = res.data.verifyPermissionResult['zxbreport.audit'];
-				// 	this.merchant = res.data.verifyPermissionResult['merchant.screening'];
-				// 	this.newsAll = res.data.verifyPermissionResult['news.all'];
-					
-					uni.setStorageSync('blacklistAudit',res.data.verifyPermissionResult['blacklist.audit']);
-					uni.setStorageSync('blacklistApply',res.data.verifyPermissionResult['blacklist.apply']);
-					uni.setStorageSync('userManage',res.data.verifyPermissionResult['user.manage']);
-					uni.setStorageSync('sub_manage',res.data.verifyPermissionResult['user.sub_manage']);
-					uni.setStorageSync('zxbreportAudit',res.data.verifyPermissionResult['zxbreport.audit']);
-					uni.setStorageSync('merchant',res.data.verifyPermissionResult['merchant.screening']);
-					uni.setStorageSync('newsAll',res.data.verifyPermissionResult['news.all']);
-					
-					uni.setStorageSync('zxbReportApply',res.data.verifyPermissionResult['zxbreport.apply']);
-					uni.setStorageSync('zxbReportlist',res.data.verifyPermissionResult['zxbreport.list'])
-					uni.setStorageSync('zxbMessageList',res.data.verifyPermissionResult['zxbMessage.list'])
-					
-					if(res.data.verifyPermissionResult['user.manage']||res.data.verifyPermissionResult['user.sub_manage']){
-					   uni.setStorageSync('userManage', 'true');
-					}
-					 console.log(res.data);
-				}
-			});
+			];
+		
+		
 	},
 	methods: {
 		goToPage(item) {
@@ -171,6 +239,43 @@ export default {
 			uni.navigateTo({
 				url: item.url
 			});
+		},
+		async verifyPermissions() {
+			await userAPI
+				.verifyPermissions({
+					userId: uni.getStorageSync('userId'),
+					permissionPoint:"user.manage,user.sub_manage,blacklist.audit,blacklist.apply,zxbreport.audit,merchant.screening,news.all,zxbreport.apply,zxbreport.list,zxbMessage.list"
+				})
+				.then(res => {
+					if(res.data.code==0){
+						
+					// 	this.blacklistAudit = res.data.verifyPermissionResult['blacklist.audit'];
+					// 	this.blacklistApply = res.data.verifyPermissionResult['blacklist.apply']
+					// 	this.userManage = res.data.verifyPermissionResult['user.manage']
+					// 	this.sub_manage = res.data.verifyPermissionResult['user.sub_manage']
+					// 	this.zxbreportAudit = res.data.verifyPermissionResult['zxbreport.audit'];
+					// 	this.merchant = res.data.verifyPermissionResult['merchant.screening'];
+					// 	this.newsAll = res.data.verifyPermissionResult['news.all'];
+						
+						uni.setStorageSync('blacklistAudit',res.data.verifyPermissionResult['blacklist.audit']);
+						uni.setStorageSync('blacklistApply',res.data.verifyPermissionResult['blacklist.apply']);
+						uni.setStorageSync('userManage',res.data.verifyPermissionResult['user.manage']);
+						uni.setStorageSync('sub_manage',res.data.verifyPermissionResult['user.sub_manage']);
+						uni.setStorageSync('zxbreportAudit',res.data.verifyPermissionResult['zxbreport.audit']);
+						uni.setStorageSync('merchant',res.data.verifyPermissionResult['merchant.screening']);
+						uni.setStorageSync('newsAll',res.data.verifyPermissionResult['news.all']);
+						
+						uni.setStorageSync('zxbReportApply',res.data.verifyPermissionResult['zxbreport.apply']);
+						uni.setStorageSync('zxbReportlist',res.data.verifyPermissionResult['zxbreport.list'])
+						uni.setStorageSync('zxbMessageList',res.data.verifyPermissionResult['zxbMessage.list'])
+						
+						if(res.data.verifyPermissionResult['user.manage']||res.data.verifyPermissionResult['user.sub_manage']){
+						   uni.setStorageSync('userManage', 'true');
+						}
+						 console.log(res.data);
+					}
+				});
+			
 		}
 		
 		
