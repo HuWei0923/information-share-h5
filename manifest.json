@@ -67,7 +67,11 @@
                 }
             },
             "https" : false,
-            "port" : 9002
+            "port" : 9001
+        },
+        "router" : {
+            "base" : "/phone/",
+            "mode" : "history"
         }
     }
 }
