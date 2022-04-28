@@ -18,14 +18,18 @@
 					</view>
 				</uni-list-item>
 				<uni-list-item title="待调查企业中国信保企业代码">
-					<view slot="footer"><input placeholder="请填写" placeholder-style="color:#B5B5B5;" name="input" style="width: 280rpx;" :value="form.creditCode" @input="inputCreditCode" /></view>
+					<view slot="footer">
+						<input placeholder="请填写" placeholder-style="color:#B5B5B5;" name="input" style="width: 280rpx;" :value="form.creditCode" @input="inputCreditCode" />
+					</view>
 				</uni-list-item>
 				<uni-list-item title="待调查企业国别">
 					<view slot="footer">
-						<picker :value="form.type" @change="changeNation" :range="nationOptions" range-key="name">
+						<text class="cuIcon-right right-icon"></text>
+						<input placeholder="请选择" placeholder-style="color:#B5B5B5;" name="input" :value="form.nation" readonly style="float:right" @click="showNationList" />
+						<!-- <picker :value="form.type" @change="changeNation" :range="nationOptions" range-key="name">
 							<text class="cuIcon-right right-icon"></text>
 							<input placeholder="请选择" placeholder-style="color:#B5B5B5;" name="input" :value="form.nation" readonly style="float:right" />
-						</picker>
+						</picker> -->
 					</view>
 				</uni-list-item>
 				<uni-list-item>
@@ -45,7 +49,9 @@
 					<view slot="footer"><input placeholder="请填写" placeholder-style="color:#B5B5B5;" name="input" :value="form.address" @input="inputAddress" /></view>
 				</uni-list-item>
 				<uni-list-item title="待调查企业统一社会信用代码">
-					<view slot="footer"><input placeholder="请填写" placeholder-style="color:#B5B5B5;" name="input" style="width: 280rpx;" :value="form.credit" @input="inputCredit" /></view>
+					<view slot="footer">
+						<input placeholder="请填写" placeholder-style="color:#B5B5B5;" name="input" style="width: 280rpx;" :value="form.credit" @input="inputCredit" />
+					</view>
 				</uni-list-item>
 				<uni-list-item title="是否导读">
 					<view slot="footer"><switch checked @change="switchIfRead" /></view>
@@ -75,6 +81,7 @@
 
 <script>
 import TopHeader from '@/components/topHeader.vue';
+import { commonAPI } from 'api/index.js';
 export default {
 	components: {
 		TopHeader
@@ -85,6 +92,7 @@ export default {
 				buyerCode: '',
 				creditCode: '',
 				nation: '',
+				nationCode:'',
 				nationNameC: '',
 				nationNameE: '',
 				address: '',
@@ -97,13 +105,22 @@ export default {
 				buyerCode: '',
 				nationNameC: ''
 			},
-			nationOptions: [],
 			emergencyOptions: []
 		};
 	},
-	onLoad(){
+	onLoad(options) {
+		uni.removeStorageSync('nationName')
+		uni.removeStorageSync('nationCode')
+	},
+	onShow(){
+		if(uni.getStorageSync('nationName')) this.form.nation=uni.getStorageSync('nationName')
+		if(uni.getStorageSync('nationCode')) this.form.nationCode=uni.getStorageSync('nationCode')
+	
 	},
 	methods: {
+		showNationList() {
+			uni.navigateTo({url:`/pages/nationList/nationList?nationCode=${this.form.nationCode}&nationName=${this.form.nation}`})
+		},
 		switchIfCreditCode(event) {
 			console.log(event);
 		},
@@ -171,6 +188,10 @@ input {
 .btn-style {
 	background: #318fe7;
 	font-size: 28rpx;
+}
+.popup-content {
+	height: 40vh;
+	overflow: auto;
 }
 ::v-deep uni-switch .uni-switch-input.uni-switch-input-checked {
 	background-color: #62bc63 !important;
