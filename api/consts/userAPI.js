@@ -14,6 +14,11 @@ export default [
 		name:"updateUser",
 		method:'post',
 		url:'/api/user/updateUser'
+	},
+	{
+		name:"verifyPermissions",
+		method:'post',
+		url:'/api/user/verifyPermissions'
 	}
 	
 ]
