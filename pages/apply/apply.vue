@@ -12,7 +12,7 @@
 						买方代码
 					</view>
 					<view slot="footer">
-						<input placeholder="请填写" placeholder-style="color:#B5B5B5;" name="input" :value="form.clientNo"  />
+						<input disabled placeholder-style="color:#B5B5B5;" name="input" :value="form.clientNo"  />
 					</view>
 				</uni-list-item>
 				<uni-list-item title="待调查企业中国信保企业代码">
@@ -79,7 +79,7 @@
 
 <script>
 import TopHeader from '@/components/topHeader.vue';
-import { compayAPI } from 'api/index.js';
+import { companyAPI } from 'api/index.js';
 
 export default {
 	components: {
@@ -162,12 +162,12 @@ export default {
 			this.form.speed = this.emergencyOptions[event.detail.value];
 		},
 		getCodeInfo(){
-			compayAPI.getCodeInfoByUserId({
+			companyAPI.getCodeInfoByUserId({
 					userId:  uni.getStorageSync('userId')
 			}).then(res => {
 				if (res.data.code == '0') {
 					if (res.data.codeInfo) {
-						this.form.clientNo=res.data.codeInfo;
+						this.form.clientNo=res.data.codeInfo.clientNo;
 					}
 				}
 			})
