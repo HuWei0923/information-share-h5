@@ -12,18 +12,19 @@
 						买方代码
 					</view>
 					<view slot="footer">
-						<input disabled placeholder-style="color:#B5B5B5;" name="input" :value="form.clientNo"  />
+						<input disabled="true" placeholder-style="color:#B5B5B5;" name="input" :value="form.clientNo"  />
 					</view>
 				</uni-list-item>
 				<uni-list-item title="待调查企业中国信保企业代码">
 					<view slot="footer">
-						<input placeholder="请填写" placeholder-style="color:#B5B5B5;" name="input" style="width: 280rpx;" :value="form.reportbuyerNo" @input="inputreportbuyerNo" />
+						<input placeholder="请填写" v-if="form.buyerCode" placeholder-style="color:#B5B5B5;" name="input" style="width: 280rpx;" :value="form.reportbuyerNo" @input="inputreportbuyerNo" />
 					</view>
 				</uni-list-item>
 				<uni-list-item title="待调查企业国别">
 					<view slot="footer">
 						<text class="cuIcon-right right-icon"></text>
-						<input placeholder="请选择" placeholder-style="color:#B5B5B5;" name="input" :value="form.reportCorpCountryName" readonly style="float:right" @click="showNationList" />
+						
+						<input placeholder="请选择" v-if="!form.buyerCode" disabled="true" placeholder-style="color:#B5B5B5;" name="input" :value="form.reportCorpCountryName" readonly style="float:right" @click="showNationList" />
 						<!-- <picker :value="form.type" @change="changeNation" :range="nationOptions" range-key="name">
 							<text class="cuIcon-right right-icon"></text>
 							<input placeholder="请选择" placeholder-style="color:#B5B5B5;" name="input" :value="form.nation" readonly style="float:right" />
@@ -33,7 +34,6 @@
 				<uni-list-item>
 					<view slot="header" class="form-title">
 						待调查企业中文名称
-						<text class="required-s">*</text>
 					</view>
 					<view slot="footer">
 						<input placeholder="请填写" placeholder-style="color:#B5B5B5;" name="input" :value="form.reportCorpChnName" @input="inputreportCorpChnName" />
@@ -44,21 +44,21 @@
 					<view slot="footer"><input placeholder="请填写" placeholder-style="color:#B5B5B5;" name="input" :value="form.reportCorpEngName" @input="inputreportCorpEngName" /></view>
 				</uni-list-item>
 				<uni-list-item title="待调查企业地址">
-					<view slot="footer"><input placeholder="请填写" placeholder-style="color:#B5B5B5;" name="input" :value="form.reportCorpaddress" @input="inputreportCorpaddress" /></view>
+					<view slot="footer"><input v-if="!form.buyerCode" placeholder="请填写"  placeholder-style="color:#B5B5B5;" name="input" :value="form.reportCorpaddress" @input="inputreportCorpaddress" /></view>
 				</uni-list-item>
 				<uni-list-item title="待调查企业统一社会信用代码">
 					<view slot="footer">
-						<input placeholder="请填写" placeholder-style="color:#B5B5B5;" name="input" style="width: 280rpx;" :value="form.creditno" @input="inputcreditno" />
+						<input placeholder="请填写" v-if="!form.buyerCode" placeholder-style="color:#B5B5B5;" name="input" style="width: 280rpx;" :value="form.creditno" @input="inputcreditno" />
 					</view>
 				</uni-list-item>
 				<uni-list-item title="是否导读">
-					<view slot="footer"><switch checked @change="switchIfRead" /></view>
+					<view slot="footer"><switch  @change="switchIfRead" /></view>
 				</uni-list-item>
 				<uni-list-item title="待调查企业联系电话">
-					<view slot="footer"><input placeholder="请填写" placeholder-style="color:#B5B5B5;" name="input" :value="form.phone" @input="inputPhone" /></view>
+					<view slot="footer"><input placeholder="请填写" v-if="!form.buyerCode" placeholder-style="color:#B5B5B5;" name="input" :value="form.phone" @input="inputPhone" /></view>
 				</uni-list-item>
 				<uni-list-item title="待调查企业邮箱">
-					<view slot="footer"><input placeholder="请填写" placeholder-style="color:#B5B5B5;" name="input" :value="form.email" @input="inputEmail" /></view>
+					<view slot="footer"><input placeholder="请填写" v-if="!form.buyerCode" placeholder-style="color:#B5B5B5;" name="input" :value="form.email" @input="inputEmail" /></view>
 				</uni-list-item>
 				<uni-list-item title="紧急度">
 					<view slot="footer">
@@ -89,7 +89,7 @@ export default {
 		return {
 			form: {
 				userId: uni.getStorageSync('userId'),
-				buyerCode: '',
+				buyerCode: true,
 				clientNo: '',
 				reportbuyerNo: '',
 				reportCorpCountryCode:'',
@@ -98,7 +98,7 @@ export default {
 				reportCorpEngName: '',
 				reportCorpaddress: '',
 				creditno: '',
-				istranslation:'',
+				istranslation:'0',
 				phone: '',
 				email: '',
 				speed: '普通'
@@ -107,7 +107,8 @@ export default {
 				buyerCode: '',
 				nationNameC: ''
 			},
-			emergencyOptions: ['普通','加急','特急']
+			emergencyOptions: ['普通','加急','特急'],
+			buyerCodeflag:false
 		};
 	},
 	onLoad(options) {
@@ -122,12 +123,16 @@ export default {
 	},
 	methods: {
 		showNationList() {
-			uni.navigateTo({url:`/pages/nationList/nationList?nationCode=${this.form.reportCorpCountryCode}&nationName=${this.form.reportCorpCountryName}`})
+			
+				uni.navigateTo({url:`/pages/nationList/nationList?nationCode=${this.form.reportCorpCountryCode}&nationName=${this.form.reportCorpCountryName}`})
+			
+			
 		},
 		switchIfCreditCode(event) {
 			console.log(event);
 			if(event.detail){
 				
+				this.form.buyerCode=event.detail.value;
 			}
 		},
 		
@@ -151,10 +156,10 @@ export default {
 		},
 		switchIfRead(event){
 			console.log(event);
-			if(event.detail){
-				form.istranslation='1';
+			if(event.detail.value){
+				this.form.istranslation='1';
 			}else{
-				form.istranslation='0';
+				this.form.istranslation='0';
 			}
 		},
 		changeSpeed(event) {
