@@ -19,6 +19,12 @@ export default [
 		name:"verifyPermissions",
 		method:'post',
 		url:'/api/user/verifyPermissions'
-	}
+	},
+	{
+		name:"getReviewer",
+		method:'post',
+		url:'/api/user/getReviewer'
+	},
+	
 	
 ]
