@@ -74,8 +74,8 @@ export default {
 		},
 		chooseNation(item){
 			this.radio = item.nationCode
-			uni.setStorageSync('nationCode',item.nationCode)
-			uni.setStorageSync('nationName',item.nationName)
+			uni.setStorageSync('reportCorpCountryCode',item.nationCode)
+			uni.setStorageSync('reportCorpCountryName',item.nationName)
 			setTimeout(()=>{
 				uni.navigateBack()
 				// uni.redirectTo({
