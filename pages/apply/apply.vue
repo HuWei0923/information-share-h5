@@ -72,14 +72,14 @@
 		</view>
 		<uni-row class="content" :gutter="20" style="padding: 50rpx;">
 			<uni-col :span="12"><button class="cu-btn lg block text-white btn-style">点击申请</button></uni-col>
-			<uni-col :span="12"><button class="cu-btn lg block text-white btn-style">重置</button></uni-col>
+			<uni-col :span="12"><button class="cu-btn lg block text-white btn-style"  @click="resetinput" >重置</button></uni-col>
 		</uni-row>
 	</view>
 </template>
 
 <script>
 import TopHeader from '@/components/topHeader.vue';
-import { companyAPI } from 'api/index.js';
+import { companyAPI,userAPI } from 'api/index.js';
 
 export default {
 	components: {
@@ -108,13 +108,15 @@ export default {
 				nationNameC: ''
 			},
 			emergencyOptions: ['普通','加急','特急'],
-			buyerCodeflag:false
+			buyerCodeflag:false,
+			isZxbreportAudit:false,
 		};
 	},
 	onLoad(options) {
 		uni.removeStorageSync('reportCorpCountryName');
 		uni.removeStorageSync('reportCorpCountryCode');
 		this.getCodeInfo();
+		this.getReviewer();
 	},
 	onShow(){
 		if(uni.getStorageSync('reportCorpCountryName')) this.form.reportCorpCountryName=uni.getStorageSync('reportCorpCountryName')
@@ -177,6 +179,33 @@ export default {
 				}
 			})
 		
+		},
+		resetinput(){
+			this.form.reportbuyerNo='';
+			this.form.reportCorpCountryCode='';
+			uni.removeStorageSync('reportCorpCountryName');
+			uni.removeStorageSync('reportCorpCountryCode');
+			this.form.reportCorpCountryCode='';
+			this.form.reportCorpCountryName='';
+			this.form.reportCorpChnName='';
+			this.form.reportCorpEngName='';
+			this.form.reportCorpaddress='';
+			this.form.creditno='';
+			this.form.phone='';
+			this.form.email='';
+			
+		},
+		getReviewer(){
+			userAPI
+				.getReviewer({
+					username: uni.getStorageSync('userCode'),
+				})
+				.then(res => {
+					if (res.data.code == '0') {
+						  this.isZxbreportAudit = res.data.isReviewer;
+						  console.log(res.data.isReviewer)
+					}
+				});
 		}
 	}
 };
