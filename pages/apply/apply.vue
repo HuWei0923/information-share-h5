@@ -10,22 +10,20 @@
 				<uni-list-item>
 					<view slot="header" class="form-title">
 						买方代码
-						<text class="required-s">*</text>
 					</view>
 					<view slot="footer">
-						<input placeholder="请填写" placeholder-style="color:#B5B5B5;" name="input" :value="form.buyerCode" @input="inputBuyerCode" />
-						<view class="error-style" v-if="errMsg.buyerCode != ''">{{ errMsg.buyerCode }}</view>
+						<input placeholder="请填写" placeholder-style="color:#B5B5B5;" name="input" :value="form.clientNo"  />
 					</view>
 				</uni-list-item>
 				<uni-list-item title="待调查企业中国信保企业代码">
 					<view slot="footer">
-						<input placeholder="请填写" placeholder-style="color:#B5B5B5;" name="input" style="width: 280rpx;" :value="form.creditCode" @input="inputCreditCode" />
+						<input placeholder="请填写" placeholder-style="color:#B5B5B5;" name="input" style="width: 280rpx;" :value="form.reportbuyerNo" @input="inputreportbuyerNo" />
 					</view>
 				</uni-list-item>
 				<uni-list-item title="待调查企业国别">
 					<view slot="footer">
 						<text class="cuIcon-right right-icon"></text>
-						<input placeholder="请选择" placeholder-style="color:#B5B5B5;" name="input" :value="form.nation" readonly style="float:right" @click="showNationList" />
+						<input placeholder="请选择" placeholder-style="color:#B5B5B5;" name="input" :value="form.reportCorpCountryName" readonly style="float:right" @click="showNationList" />
 						<!-- <picker :value="form.type" @change="changeNation" :range="nationOptions" range-key="name">
 							<text class="cuIcon-right right-icon"></text>
 							<input placeholder="请选择" placeholder-style="color:#B5B5B5;" name="input" :value="form.nation" readonly style="float:right" />
@@ -38,19 +36,19 @@
 						<text class="required-s">*</text>
 					</view>
 					<view slot="footer">
-						<input placeholder="请填写" placeholder-style="color:#B5B5B5;" name="input" :value="form.nationNameC" @input="inputNationNameC" />
-						<view class="error-style" v-if="errMsg.nationNameC != ''">{{ errMsg.nationNameC }}</view>
+						<input placeholder="请填写" placeholder-style="color:#B5B5B5;" name="input" :value="form.reportCorpChnName" @input="inputreportCorpChnName" />
+						<view class="error-style" v-if="errMsg.reportCorpChnName != ''">{{ errMsg.reportCorpChnName }}</view>
 					</view>
 				</uni-list-item>
 				<uni-list-item title="待调查企业英文名称">
-					<view slot="footer"><input placeholder="请填写" placeholder-style="color:#B5B5B5;" name="input" :value="form.nationNameE" @input="inputNationNameE" /></view>
+					<view slot="footer"><input placeholder="请填写" placeholder-style="color:#B5B5B5;" name="input" :value="form.reportCorpEngName" @input="inputreportCorpEngName" /></view>
 				</uni-list-item>
 				<uni-list-item title="待调查企业地址">
-					<view slot="footer"><input placeholder="请填写" placeholder-style="color:#B5B5B5;" name="input" :value="form.address" @input="inputAddress" /></view>
+					<view slot="footer"><input placeholder="请填写" placeholder-style="color:#B5B5B5;" name="input" :value="form.reportCorpaddress" @input="inputreportCorpaddress" /></view>
 				</uni-list-item>
 				<uni-list-item title="待调查企业统一社会信用代码">
 					<view slot="footer">
-						<input placeholder="请填写" placeholder-style="color:#B5B5B5;" name="input" style="width: 280rpx;" :value="form.credit" @input="inputCredit" />
+						<input placeholder="请填写" placeholder-style="color:#B5B5B5;" name="input" style="width: 280rpx;" :value="form.creditno" @input="inputcreditno" />
 					</view>
 				</uni-list-item>
 				<uni-list-item title="是否导读">
@@ -64,9 +62,9 @@
 				</uni-list-item>
 				<uni-list-item title="紧急度">
 					<view slot="footer">
-						<picker :value="form.emergency" @change="changeEmergency" :range="emergencyOptions" range-key="name">
+						<picker :value="form.speed" @change="changeSpeed" :range="emergencyOptions" range-key="name">
 							<text class="cuIcon-right right-icon"></text>
-							<input placeholder="请选择" placeholder-style="color:#B5B5B5;" name="input" :value="form.emergency" readonly style="float:right" />
+							<input placeholder="请选择" placeholder-style="color:#B5B5B5;" name="input" :value="form.speed" readonly style="float:right" />
 						</picker>
 					</view>
 				</uni-list-item>
@@ -81,7 +79,8 @@
 
 <script>
 import TopHeader from '@/components/topHeader.vue';
-import { commonAPI } from 'api/index.js';
+import { compayAPI } from 'api/index.js';
+
 export default {
 	components: {
 		TopHeader
@@ -89,73 +88,90 @@ export default {
 	data() {
 		return {
 			form: {
+				userId: uni.getStorageSync('userId'),
 				buyerCode: '',
-				creditCode: '',
-				nation: '',
-				nationCode:'',
-				nationNameC: '',
-				nationNameE: '',
-				address: '',
-				credit: '',
+				clientNo: '',
+				reportbuyerNo: '',
+				reportCorpCountryCode:'',
+				reportCorpCountryName:'',
+				reportCorpChnName: '',
+				reportCorpEngName: '',
+				reportCorpaddress: '',
+				creditno: '',
+				istranslation:'',
 				phone: '',
 				email: '',
-				emergency: ''
+				speed: '普通'
 			},
 			errMsg: {
 				buyerCode: '',
 				nationNameC: ''
 			},
-			emergencyOptions: []
+			emergencyOptions: ['普通','加急','特急']
 		};
 	},
 	onLoad(options) {
-		uni.removeStorageSync('nationName')
-		uni.removeStorageSync('nationCode')
+		uni.removeStorageSync('reportCorpCountryName');
+		uni.removeStorageSync('reportCorpCountryCode');
+		this.getCodeInfo();
 	},
 	onShow(){
-		if(uni.getStorageSync('nationName')) this.form.nation=uni.getStorageSync('nationName')
-		if(uni.getStorageSync('nationCode')) this.form.nationCode=uni.getStorageSync('nationCode')
+		if(uni.getStorageSync('reportCorpCountryName')) this.form.reportCorpCountryName=uni.getStorageSync('reportCorpCountryName')
+		if(uni.getStorageSync('reportCorpCountryCode')) this.form.reportCorpCountryCode=uni.getStorageSync('reportCorpCountryCode')
 	
 	},
 	methods: {
 		showNationList() {
-			uni.navigateTo({url:`/pages/nationList/nationList?nationCode=${this.form.nationCode}&nationName=${this.form.nation}`})
+			uni.navigateTo({url:`/pages/nationList/nationList?nationCode=${this.form.reportCorpCountryCode}&nationName=${this.form.reportCorpCountryName}`})
 		},
 		switchIfCreditCode(event) {
 			console.log(event);
+			if(event.detail){
+				
+			}
 		},
-		inputBuyerCode(event) {
-			this.form.buyerCode = event.detail.value;
-			this.errMsg.buyerCode = '';
+		
+		
+		inputreportbuyerNo(event) {
+			this.form.reportbuyerNo = event.detail.value;
+			
 		},
-		inputCreditCode(event) {
-			this.form.creditCode = event.detail.value;
+		
+		inputreportCorpChnName(event){
+			this.form.reportCorpChnName = event.detail.value;
 		},
-		changeNation(event) {
-			this.form.nation = this.nationOptions[event.detail.value].value;
+		inputreportCorpEngName(event){
+			this.form.reportCorpEngName = event.detail.value;
 		},
-		inputNationNameC(event) {
-			this.form.nationNameC = event.detail.value;
-			this.errMsg.nationNameC = '';
+		inputreportCorpaddress(event){
+			this.form.treportCorpaddress = event.detail.value;
 		},
-		inputNationNameE(event) {
-			this.form.nationNameE = event.detail.value;
+		inputcreditno(event){
+			this.form.creditno = event.detail.value;
 		},
-		inputAddress(event) {
-			this.form.address = event.detail.value;
+		switchIfRead(event){
+			console.log(event);
+			if(event.detail){
+				form.istranslation='1';
+			}else{
+				form.istranslation='0';
+			}
 		},
-		inputCredit(event) {
-			this.form.credit = event.detail.value;
+		changeSpeed(event) {
+			debugger;
+			this.form.speed = this.emergencyOptions[event.detail.value];
 		},
-		switchIfRead(event) {},
-		inputPhone(event) {
-			this.form.phone = event.detail.value;
-		},
-		inputEmail(event) {
-			this.form.email = event.detail.value;
-		},
-		changeEmergency(event) {
-			this.form.emergency = this.emergencyOptions[event.detail.value].value;
+		getCodeInfo(){
+			compayAPI.getCodeInfoByUserId({
+					userId:  uni.getStorageSync('userId')
+			}).then(res => {
+				if (res.data.code == '0') {
+					if (res.data.codeInfo) {
+						this.form.clientNo=res.data.codeInfo;
+					}
+				}
+			})
+		
 		}
 	}
 };
