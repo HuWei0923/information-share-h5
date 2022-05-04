@@ -29,7 +29,7 @@
 		}, {
 			"path": "pages/apply/apply",
 			"style": {
-				"navigationBarTitleText": "",
+				"navigationBarTitleText": "信保报告申请",
 				"enablePullDownRefresh": false
 			}
 
@@ -40,6 +40,43 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/list/list",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "信保报告列表",
+                "enablePullDownRefresh": true
+            }
+            
+        }
+        
+        ,{
+            "path" : "pages/detail/detail",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "摘要信息",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/audit/audit",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "信保报告审核",
+                "enablePullDownRefresh": true
+            }
+            
+        }
+        ,{
+            "path" : "pages/myReport/myReport",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "我的信保报告",
                 "enablePullDownRefresh": false
             }
             

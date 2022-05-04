@@ -1,7 +1,7 @@
 <template>
 	<view class="container">
-		<TopHeader></TopHeader>
-		<view class="title">信保报告申请</view>
+		<!-- <TopHeader></TopHeader> -->
+		<!-- <view class="title">信保报告申请</view> -->
 		<view class="content">
 			<uni-list>
 				<uni-list-item title="是否有信保代码">
@@ -78,12 +78,12 @@
 </template>
 
 <script>
-import TopHeader from '@/components/topHeader.vue';
+// import TopHeader from '@/components/topHeader.vue';
 import { companyAPI,userAPI } from 'api/index.js';
 
 export default {
 	components: {
-		TopHeader
+		// TopHeader
 	},
 	data() {
 		return {
@@ -221,12 +221,14 @@ input {
 }
 .title {
 	font-size: 32rpx;
-	position: absolute;
+	/* position: absolute;
 	top: 340rpx;
 	left: 50%;
-	transform: translateX(-50%);
-	font-weight: 500;
+	transform: translateX(-50%); */
+	font-weight: 700;
 	color: #303133;
+	text-align: center;
+	line-height: 100rpx;
 }
 
 .right-icon {

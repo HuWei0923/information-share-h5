@@ -79,16 +79,19 @@ const menuData= [
 						{
 							title: '信保报告审核',
 							icon: require('@/static/img/index/xbbgsh.png'),
+							url: '/pages/audit/audit',
 							flag: 'zxbreport.audit'
 						},
 						{
 							title: '我的信保报告',
 							icon: require('@/static/img/index/wdxbbg.png'),
+							url: '/pages/myReport/myReport',
 							flag: 'zxbreport.apply'
 						},
 						{
 							title: '信保报告列表',
 							icon: require('@/static/img/index/xbbglb.png'),
+							url: '/pages/list/list',
 							flag: 'zxbreport.list'
 						}
 					]

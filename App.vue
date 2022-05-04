@@ -37,7 +37,4 @@
 		box-shadow: 0px 0px 0px 0px #fff!important;
 		
 	}
-	.uni-card--border{
-		border: none!important;
-	}
 </style>

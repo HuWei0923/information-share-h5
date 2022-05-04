@@ -1,45 +1,48 @@
 <template>
 	<view class="container">
 		<TopHeader></TopHeader>
-		<uni-card title="账号设置" is-shadow is-full>
-			<uni-list>
-				<uni-list-item>
-					<view slot="header" class="form-title">用户名</view>
-					<view slot="footer"><input placeholder="请输入" disabled placeholder-style="color:#B5B5B5;" name="input" :value="form.username" /></view>
-				</uni-list-item>
-				<uni-list-item>
-					<view slot="header" class="form-title">姓名</view>
-					<view slot="footer">
-						<input placeholder="请输入" placeholder-style="color:#B5B5B5;" name="input" :value="form.name" @input="inputName" />
-						<view class="error-style" v-if="errMsg.name != ''">{{ errMsg.name }}</view>
-					</view>
-				</uni-list-item>
-				<uni-list-item>
-					<view slot="header" class="form-title">
-						<text class="required-s">*</text>
-						密码
-					</view>
-					<view slot="footer">
-						<input placeholder="请输入" placeholder-style="color:#B5B5B5;" type="password" name="input" :value="form.password" @input="inputPassword" />
-						<view class="error-style" v-if="errMsg.password != ''">{{ errMsg.password }}</view>
-					</view>
-				</uni-list-item>
-				<uni-list-item>
-					<view slot="header" class="form-title">手机</view>
-					<view slot="footer">
-						<input placeholder="请输入" placeholder-style="color:#B5B5B5;" name="input" :value="form.mobile" @input="inputPhone" />
-						<view class="error-style" v-if="errMsg.mobile != ''">{{ errMsg.mobile }}</view>
-					</view>
-				</uni-list-item>
-				<uni-list-item>
-					<view slot="header" class="form-title">邮箱</view>
-					<view slot="footer">
-						<input placeholder="请输入" placeholder-style="color:#B5B5B5;" name="input" :value="form.email" @input="inputEmail" />
-						<view class="error-style" v-if="errMsg.email != ''">{{ errMsg.email }}</view>
-					</view>
-				</uni-list-item>
-			</uni-list>
-		</uni-card>
+		<uni-section title="账号设置" type="line">
+			<uni-card is-shadow>
+				<uni-list>
+					<uni-list-item>
+						<view slot="header" class="form-title">用户名</view>
+						<view slot="footer"><input placeholder="请输入" disabled placeholder-style="color:#B5B5B5;" name="input" :value="form.username" /></view>
+					</uni-list-item>
+					<uni-list-item>
+						<view slot="header" class="form-title">姓名</view>
+						<view slot="footer">
+							<input placeholder="请输入" placeholder-style="color:#B5B5B5;" name="input" :value="form.name" @input="inputName" />
+							<view class="error-style" v-if="errMsg.name != ''">{{ errMsg.name }}</view>
+						</view>
+					</uni-list-item>
+					<uni-list-item>
+						<view slot="header" class="form-title">
+							<text class="required-s">*</text>
+							密码
+						</view>
+						<view slot="footer">
+							<input placeholder="请输入" placeholder-style="color:#B5B5B5;" type="password" name="input" :value="form.password" @input="inputPassword" />
+							<view class="error-style" v-if="errMsg.password != ''">{{ errMsg.password }}</view>
+						</view>
+					</uni-list-item>
+					<uni-list-item>
+						<view slot="header" class="form-title">手机</view>
+						<view slot="footer">
+							<input placeholder="请输入" placeholder-style="color:#B5B5B5;" name="input" :value="form.mobile" @input="inputPhone" />
+							<view class="error-style" v-if="errMsg.mobile != ''">{{ errMsg.mobile }}</view>
+						</view>
+					</uni-list-item>
+					<uni-list-item>
+						<view slot="header" class="form-title">邮箱</view>
+						<view slot="footer">
+							<input placeholder="请输入" placeholder-style="color:#B5B5B5;" name="input" :value="form.email" @input="inputEmail" />
+							<view class="error-style" v-if="errMsg.email != ''">{{ errMsg.email }}</view>
+						</view>
+					</uni-list-item>
+				</uni-list>
+			</uni-card>
+		</uni-section>
+
 		<view class="flex flex-direction" style="padding: 50rpx 150rpx">
 			<button class="cu-btn round text-white" @click="saveUserInfo" style="background-image: linear-gradient(to right,#2d56f6,#5ba1ff);">保 存</button>
 		</view>
@@ -164,4 +167,7 @@ input {
 ::v-deep .uni-card .uni-card__content {
 	padding: 0 !important;
 }
+::v-deep .uni-card--border{
+		border: none!important;
+	}
 </style>
