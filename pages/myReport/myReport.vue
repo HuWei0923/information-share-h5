@@ -1,45 +1,39 @@
 <template>
 	<view class="content">
-		<uni-row>
-			<uni-col :span="12">
-				<uni-search-bar
-					v-model="form.code"
-					radius="100"
-					placeholder="信保代码"
-					clearButton="auto"
-					cancelButton="none"
-					@blur="confirm(1, $event)"
-					@clear="confirm(1, $event)"
-				/>
-			</uni-col>
-			<uni-col :span="12">
-				<uni-search-bar
-					v-model="form.name"
-					radius="100"
-					placeholder="中/英文名称"
-					clearButton="auto"
-					cancelButton="none"
-					@blur="confirm(2, $event)"
-					@clear="confirm(2, $event)"
-				/>
-			</uni-col>
+		<uni-row :gutter="20" style="padding: 0 20rpx;">
+			<uni-col :span="8"><uni-easyinput class="uni-mt-5" trim="all" v-model="form.code" placeholder="信保代码"></uni-easyinput></uni-col>
+			<uni-col :span="8"><uni-combox class="uni-mt-5" :candidates="candidates" placeholder="审批标识" v-model="form.flag"></uni-combox></uni-col>
+			<uni-col :span="8"><uni-easyinput class="uni-mt-5" trim="all" v-model="form.name" placeholder="中/英文名称"></uni-easyinput></uni-col>
 		</uni-row>
-		<view style="padding: 0 20rpx;">
+		<view style="padding: 10rpx 20rpx 0;">
 			共
 			<text style="color: #409eff;margin: 0 10rpx;">{{ total }}</text>
 			条数据
 		</view>
 		<view v-if="listData.length > 0">
 			<uni-group :title="`信保代码：${item.code}`" mode="card" v-for="(item, index) in listData" :key="index">
-			<view>中英文名称：{{ item.name }}</view>
-			<view>填报时间：{{ item.reportTime }}</view>
-			<text>审核时间：{{ item.auditTime }}</text>
-				<view style="display: flex;justify-content: space-between;">
-					<view>审批标识：<text>
-							<uni-tag text="待审核" inverted	 type="primary" v-if="item.flag==0"></uni-tag>
-							<uni-tag text="通过" inverted	 type="success" v-else-if="item.flag==1"></uni-tag>
-							<uni-tag text="不通过" inverted	 type="error" v-else-if="item.flag==2"></uni-tag></text></view>
-					<uni-icons type="more-filled" size="24" @click="item.showMenu = !item.showMenu"></uni-icons>
+				<view style="position: relative;line-height: 48rpx;">
+					<view>中英文名称：{{ item.name }}</view>
+					<view>
+						审批标识：
+						<text>
+							<uni-tag text="待审核" inverted type="primary" v-if="item.flag == 0"></uni-tag>
+							<uni-tag text="通过" inverted type="success" v-else-if="item.flag == 1"></uni-tag>
+							<uni-tag text="不通过" inverted type="error" v-else-if="item.flag == 2"></uni-tag>
+						</text>
+					</view>
+					<uni-transition mode-class="fade" :duration="200" :show="item.showMore">
+						<view>审核人：</view>
+						<text>审核时间：{{ item.auditTime }}</text>
+						<view>填报时间：{{ item.reportTime }}</view>
+						<view>中信保反馈：</view>
+						<view>更新时间：</view>
+						<view>摘要时间：</view>
+					</uni-transition>
+					<view class="btn-box">
+						<uni-icons :type="item.showMore?'top':'bottom'" size="20" style="margin-right: 20rpx;" @click="item.showMore = !item.showMore"></uni-icons>
+						<uni-icons type="more-filled" size="20" @click="item.showMenu = !item.showMenu"></uni-icons>
+					</view>
 				</view>
 				<uni-transition mode-class="fade" :duration="200" :show="item.showMenu">
 					<view style="margin-top: 20rpx;padding-top: 20rpx;text-align: right;border-top: 1px solid #efefef;">
@@ -64,14 +58,27 @@ export default {
 		return {
 			form: {
 				code: '',
-				name: ''
+				name: '',
+				flag:''
 			},
 			listData: [],
 			currentPage: 1,
 			pageSize: 5,
 			total: 23,
-			loadStatus: 'more' //more/loading/noMore，
+			loadStatus: 'more' ,//more/loading/noMore，
+			candidates:['是','否']
 		};
+	},
+	watch:{
+		form:{
+			handler(val){
+				console.log(val)
+				this.currentPage = 1;
+				this.listData = [];
+				this.getData();
+			},
+			deep:true
+		}
 	},
 	onLoad() {
 		this.getData();
@@ -97,27 +104,17 @@ export default {
 	methods: {
 		getData() {
 			let tempData = [
-				{ code: 'SUZHOUTENGXUN032541', name: '/ALEMBIC', flag: 0, reportTime: '2022-04-12', auditTime: '', showMenu: false },
-				{ code: 'SUZHOUTENGXUN032541', name: '/TOVARIS', flag: 1, reportTime: '2022-04-12', auditTime: '2022-04-12', showMenu: false },
-				{ code: 'SUZHOUTENGXUN032541', name: '/NHAT NG', flag: 2, reportTime: '2022-04-12', auditTime: '2022-04-12', showMenu: false },
-				{ code: 'SUZHOUTENGXUN032541', name: '/REAL CH', flag: 0, reportTime: '2022-04-12', auditTime: '', showMenu: false},
-				{ code: 'SUZHOUTENGXUN032541', name: '杭州甲康', flag: 1, reportTime: '2022-04-12', auditTime: '2022-04-12', showMenu: false}
+				{ code: 'SUZHOUTENGXUN032541', name: '/ALEMBIC', flag: 0, reportTime: '2022-04-12', auditTime: '',showMore: false,  showMenu: false },
+				{ code: 'SUZHOUTENGXUN032541', name: '/TOVARIS', flag: 1, reportTime: '2022-04-12', auditTime: '2022-04-12', showMore: false, showMore: false, showMenu: false },
+				{ code: 'SUZHOUTENGXUN032541', name: '/NHAT NG', flag: 2, reportTime: '2022-04-12', auditTime: '2022-04-12', showMore: false, showMenu: false },
+				{ code: 'SUZHOUTENGXUN032541', name: '/REAL CH', flag: 0, reportTime: '2022-04-12', auditTime: '', showMore: false, showMenu: false },
+				{ code: 'SUZHOUTENGXUN032541', name: '杭州甲康', flag: 1, reportTime: '2022-04-12', auditTime: '2022-04-12', showMore: false, showMenu: false }
 			];
 			this.loadStatus = 'loading';
 			setTimeout(() => {
 				this.loadStatus = 'more';
 				this.listData = [...this.listData, ...tempData];
 			}, 1000);
-		},
-		confirm(type, e) {
-			if (type == 1) {
-				this.form.code = e.value;
-			} else if (type == 2) {
-				this.form.name = e.value;
-			}
-			this.currentPage = 1;
-			this.listData = [];
-			this.getData();
 		},
 		preview(item) {
 			//预览pdf
@@ -136,11 +133,11 @@ export default {
 				}
 			});
 		},
-		checkDetail(item){
+		checkDetail(item) {
 			//查看摘要信息
 			uni.navigateTo({
-				url:'/pages/detail/detail'
-			})
+				url: '/pages/detail/detail'
+			});
 		}
 	}
 };
@@ -160,5 +157,14 @@ export default {
 	border: 1px solid #e3e3e3;
 	width: 300rpx;
 	position: absolute;
+}
+.btn-box {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+}
+::v-deep .uni-combox__input-plac {
+	font-size: 24rpx;
+	font-weight: 200;
 }
 </style>
