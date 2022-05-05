@@ -71,7 +71,7 @@
 			</uni-list>
 		</view>
 		<uni-row class="content" :gutter="20" style="padding: 50rpx;">
-			<uni-col :span="12"><button class="cu-btn lg block text-white btn-style">点击申请</button></uni-col>
+			<uni-col :span="12"><button class="cu-btn lg block text-white btn-style" @click="applyxbbg" >点击申请</button></uni-col>
 			<uni-col :span="12"><button class="cu-btn lg block text-white btn-style"  @click="resetinput" >重置</button></uni-col>
 		</uni-row>
 	</view>
@@ -110,6 +110,7 @@ export default {
 			emergencyOptions: ['普通','加急','特急'],
 			buyerCodeflag:false,
 			isZxbreportAudit:false,
+			isClientNo:false,
 		};
 	},
 	onLoad(options) {
@@ -125,25 +126,18 @@ export default {
 	},
 	methods: {
 		showNationList() {
-			
-				uni.navigateTo({url:`/pages/nationList/nationList?nationCode=${this.form.reportCorpCountryCode}&nationName=${this.form.reportCorpCountryName}`})
-			
-			
+			uni.navigateTo({url:`/pages/nationList/nationList?nationCode=${this.form.reportCorpCountryCode}&nationName=${this.form.reportCorpCountryName}`})
 		},
 		switchIfCreditCode(event) {
 			console.log(event);
 			if(event.detail){
-				
 				this.form.buyerCode=event.detail.value;
 			}
 		},
-		
-		
 		inputreportbuyerNo(event) {
 			this.form.reportbuyerNo = event.detail.value;
 			
 		},
-		
 		inputreportCorpChnName(event){
 			this.form.reportCorpChnName = event.detail.value;
 		},
@@ -151,7 +145,7 @@ export default {
 			this.form.reportCorpEngName = event.detail.value;
 		},
 		inputreportCorpaddress(event){
-			this.form.treportCorpaddress = event.detail.value;
+			this.form.reportCorpaddress = event.detail.value;
 		},
 		inputcreditno(event){
 			this.form.creditno = event.detail.value;
@@ -175,6 +169,9 @@ export default {
 				if (res.data.code == '0') {
 					if (res.data.codeInfo) {
 						this.form.clientNo=res.data.codeInfo.clientNo;
+						if(res.data.codeInfo.clientNo){
+							this.isClientNo = true;
+						}
 					}
 				}
 			})
@@ -202,10 +199,200 @@ export default {
 				})
 				.then(res => {
 					if (res.data.code == '0') {
-						  this.isZxbreportAudit = res.data.isReviewer;
-						  console.log(res.data.isReviewer)
+						this.isZxbreportAudit = res.data.isReviewer;
+						console.log(res.data.isReviewer)
 					}
 				});
+		},
+		applyxbbg(){
+			var speed1 = '';
+			if(this.form.speed==='普通'){
+				speed1='1';
+			}else if(this.form.speed==='加急'){
+				speed1='2';
+			}else if(this.form.speed==='特急'){
+				speed1='3';
+			}
+			if((!this.isClientNo && !this.isZxbreportAudit) || !this.isClientNo){
+				uni.showToast({
+					icon:'none',
+					title:'您所在的二级公司没有开通信保通业务，如需使用该功能请咨询公司管理员。',
+				})
+				return;
+			}else if(!this.isZxbreportAudit){
+				uni.showToast({
+					icon:'none',
+					title:'您所在的二级公司没有设置信保审核专员，如需使用该功能请咨询公司管理员。',
+				})
+                return;
+			}
+			if(!this.form.buyerCode){
+				if (this.form.reportCorpCountryCode === '') {
+					uni.showToast({
+						icon:'none',
+						title:'请输入待调查企业国别',
+					})
+					return;
+				} else if (this.form.reportCorpChnName === '' && this.form.reportCorpEngName === '') {
+					uni.showToast({
+						icon:'none',
+						title:'请输入待调查企业中文名称或英文名称',
+					})
+					return;
+				} else if (this.form.reportCorpaddress === '') {
+					uni.showToast({
+						icon:'none',
+						title:'请输入待调查企业地址',
+					})
+					return;
+				} else if (this.form.creditno === '' && this.form.reportCorpEngName === '') {
+					uni.showToast({
+						icon:'none',
+						title:'请输入待调查企业统一社会信用代码',
+					})
+					return;
+				}else if (this.form.istranslation === '') {
+					uni.showToast({
+						icon:'none',
+						title:'请输入是否导读',
+					})
+					return;
+				}
+			}else{
+				if (!this.form.reportbuyerNo || this.form.reportbuyerNo == '') {
+					uni.showToast({
+						icon:'none',
+						title:'请输入待调查企业中国信保企业代码',
+					})
+					return;
+				} else if (this.form.reportCorpChnName === '' && this.form.reportCorpEngName === '') {
+					
+					uni.showToast({
+						icon:'none',
+						title:'请输入待调查企业中文名称或英文名称',
+					})
+					return;
+				}
+			}
+			if(!this.form.buyerCode){
+				var noCreditCode={
+					clientNo: this.form.clientNo,
+					userId: this.form.userId,
+					reportbuyerNo: this.form.reportbuyerNo,
+					reportCorpCountryCode: this.form.reportCorpCountryCode,
+					reportCorpChnName: this.form.reportCorpChnName,
+					reportCorpEngName: this.form.reportCorpEngName,
+					reportCorpaddress: this.form.reportCorpaddress,
+					creditno: this.form.creditno,
+					istranslation: this.form.istranslation,
+					speed:speed1
+				}
+				
+				
+				companyAPI.zhongxinbaoApply(noCreditCode)
+					.then(res => {
+						console.log(!this.isClientNo)
+						console.log(!this.isZxbreportAudit)
+						if (res.statusCode == 200) {
+							
+							uni.showToast({
+								icon:'none',
+								title:res.data.returnMsg,
+							})
+							
+							this.timer=setTimeout(()=>{
+								uni.switchTab({
+									url: '/pages/index/index'
+								})
+							},1000)
+						}
+					});
+				
+				return;
+			}else{
+				
+
+				var haveCreditCode={
+					clientNo: this.form.clientNo,
+					userId: this.form.userId,
+					reportbuyerNo: this.form.reportbuyerNo,
+					reportCorpCountryCode: this.form.reportCorpCountryCode,
+					reportCorpChnName: this.form.reportCorpChnName,
+					reportCorpEngName: this.form.reportCorpEngName,
+					reportCorpaddress: this.form.userId,
+					creditno: this.form.creditno,
+					istranslation: this.form.istranslation,
+					speed: speed1,
+					forcedApply: false
+				}
+				companyAPI.zhongxinbaoApply(haveCreditCode)
+					.then(res => {
+						
+						console.log(!this.isClientNo)
+						console.log(!this.isZxbreportAudit)
+						console.log("============================")
+						console.log(res.data.isExist)
+						console.log("============================")
+						if (res.statusCode == 200) {
+							if(res.data.isExist == true){
+								console.log("============================")
+								console.log(res.data.isExist)
+								console.log("============================")
+								
+								uni.showModal({
+									title: '提示',
+									cancelText:'放弃',
+									confirmText:'是',
+									content: res.data.confirmMessage,
+									success: function (res) {
+										if (res.confirm) {
+											haveCreditCode.forcedApply = true;
+											companyAPI.zhongxinbaoApply(haveCreditCode)
+												.then(res => {
+													if (res.statusCode == 200) {
+														uni.showToast({
+															icon:'none',
+															title:res.data.returnMsg,
+														})
+														
+														this.timer=setTimeout(()=>{
+															uni.switchTab({
+																url: '/pages/index/index'
+															})
+														},1000)
+													}
+											
+												});
+											console.log('用户点击确定');
+											
+											
+											
+										} else if (res.cancel) {
+											if(res.data.isPreview){
+												console.log(res.data.pdfName);
+												
+											}
+											console.log('放弃');
+										}
+									}
+								});
+							}else{
+								
+								uni.showToast({
+									icon:'none',
+									title:res.data.returnMsg,
+								})
+								this.timer=setTimeout(()=>{
+									uni.switchTab({
+										url: '/pages/index/index'
+									})
+								},1000)
+							}
+						}
+					});
+
+			}
+			
 		}
 	}
 };
