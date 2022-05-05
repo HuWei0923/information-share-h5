@@ -25,27 +25,30 @@
 		<view v-if="listData.length > 0">
 			<uni-group mode="card" v-for="(item, index) in listData" :key="index" >
 				<view slot="title" class="card-title">
-					<text>信保代码：{{ item.code }}</text>
-					<uni-tag text="紧急" type="error" v-if="item.emergency == 0"></uni-tag>
+					<text>信保代码：{{ item.reportbuyerNo }}</text>
+					<uni-tag text="普通" type="error" v-if="item.speed == '普通'"></uni-tag>
+					<uni-tag text="加急" type="error" v-if="item.speed == '加急'"></uni-tag>
+					<uni-tag text="特级" type="error" v-if="item.speed == '特级'"></uni-tag>
 				</view>
 				<view style="position: relative;line-height: 48rpx;">
-					<view>中英文名称：{{ item.name }}</view>
+					<view>中英文名称：{{ item.reportCorpChnName }}/{{item.reportCorpEngName}}</view>
 					<view>
 						审批标识：
 						<text>
-							<uni-tag text="待审核" inverted type="primary" v-if="item.flag == 0"></uni-tag>
-							<uni-tag text="通过" inverted type="success" v-else-if="item.flag == 1"></uni-tag>
-							<uni-tag text="不通过" inverted type="error" v-else-if="item.flag == 2"></uni-tag>
+							<uni-tag text="待审核" inverted type="primary" v-if="item.approveCode == 2"></uni-tag>
+							<uni-tag text="通过" inverted type="success" v-else-if="item.approveCode == 1"></uni-tag>
+							<uni-tag text="不通过" inverted type="error" v-else-if="item.approveCode == 999"></uni-tag>
 						</text>
 					</view>
 					<uni-transition mode-class="fade" :duration="200" :show="item.showMore">
-						<view>统一社会信用代码：</view>
-						<view>是否导读：</view>
-						<view>审批结果：</view>
-						<view>填报人：</view>
-						<view>填报时间：{{ item.reportTime }}</view>
-						<view>审核人：</view>
-						<text>审核时间：{{ item.auditTime }}</text>
+						<view>统一社会信用代码：{{ item.creditno }}</view>
+						<view>是否导读：{{ item.istranslation }}</view>
+						<view>审批结果：{{ item.approveMsg }}</view>
+						<view>填报人：{{ item.updateName }}</view>
+						<view>填报时间：{{ item.updateTime }}</view>
+						<view>审核人：{{ item.approveName }}</view>
+						<view>审核时间：{{ item.approveDate }}</view>
+
 					</uni-transition>
 					<view class="btn-box">
 						<uni-icons :type="item.showMore?'top':'bottom'" size="20" style="margin-right: 20rpx;" @click="item.showMore = !item.showMore"></uni-icons>
@@ -69,6 +72,7 @@
 </template>
 
 <script>
+import { commonAPI } from 'api/index.js';
 export default {
 	data() {
 		return {
@@ -81,8 +85,8 @@ export default {
 			},
 			listData: [],
 			currentPage: 1,
-			pageSize: 5,
-			total: 23,
+			pageSize: 10,
+			total: 0,
 			loadStatus: 'more' ,//more/loading/noMore，
 			candidates:['是','否']
 		};
@@ -121,18 +125,32 @@ export default {
 	},
 	methods: {
 		getData() {
-			let tempData = [
-				{ code: 'SUZHOUTENGXUN032541', name: '/ALEMBIC', flag: 0, reportTime: '2022-04-12', auditTime: '', showMenu: false, showMore: false, emergency: 0 },
-				{ code: 'SUZHOUTENGXUN032541', name: '/TOVARIS', flag: 1, reportTime: '2022-04-12', auditTime: '2022-04-12', showMenu: false, showMore: false, emergency: 1 },
-				{ code: 'SUZHOUTENGXUN032541', name: '/NHAT NG', flag: 2, reportTime: '2022-04-12', auditTime: '2022-04-12', showMenu: false, showMore: false, emergency: 1 },
-				{ code: 'SUZHOUTENGXUN032541', name: '/REAL CH', flag: 0, reportTime: '2022-04-12', auditTime: '', showMenu: false, showMore: false, emergency: 0 },
-				{ code: 'SUZHOUTENGXUN032541', name: '杭州甲康', flag: 1, reportTime: '2022-04-12', auditTime: '2022-04-12', showMenu: false, showMore: false, emergency: 1 }
-			];
-			this.loadStatus = 'loading';
-			setTimeout(() => {
-				this.loadStatus = 'more';
-				this.listData = [...this.listData, ...tempData];
-			}, 1000);
+			commonAPI.searchApplyList({
+				pageIndex:  this.currentPage,
+				pageSize: this.pageSize,
+				zxbCode:'',
+				zxbCompanyName:'',
+				zxbApprove:'',
+				zxbInformant:'',
+				zxbApprover:'',
+				operator: uni.getStorageSync('userCode')
+			})
+			.then(res => {
+				this.loadStatus = 'loading';
+				this.total=res.data.totalRecords;
+				if (res.data.applyList) {
+					for (let i in res.data.applyList) {
+						res.data.applyList[i].showMore=false;
+						res.data.applyList[i].showMenu=false;
+					}
+				}
+				
+				setTimeout(() => {
+					this.loadStatus = 'more';
+					this.listData = [...this.listData, ...res.data.applyList];
+				}, 1000);
+			})
+			
 		},
 		
 	}
