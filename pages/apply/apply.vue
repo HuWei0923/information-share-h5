@@ -295,16 +295,21 @@ export default {
 						console.log(!this.isZxbreportAudit)
 						if (res.statusCode == 200) {
 							
-							uni.showToast({
-								icon:'none',
-								title:res.data.returnMsg,
-							})
 							
-							this.timer=setTimeout(()=>{
-								uni.switchTab({
-									url: '/pages/index/index'
-								})
-							},1000)
+							uni.showModal({
+								title: '提示',
+								content: res.data.returnMsg,
+								showCancel:false,
+								success:()=>{
+									this.timer=setTimeout(()=>{
+										uni.switchTab({
+											url: '/pages/index/index'
+										})
+									},1000)
+									
+								}
+							});
+							
 						}
 					});
 				
@@ -350,16 +355,19 @@ export default {
 											companyAPI.zhongxinbaoApply(haveCreditCode)
 												.then(res => {
 													if (res.statusCode == 200) {
-														uni.showToast({
-															icon:'none',
-															title:res.data.returnMsg,
-														})
-														
-														this.timer=setTimeout(()=>{
-															uni.switchTab({
-																url: '/pages/index/index'
-															})
-														},1000)
+														uni.showModal({
+															title: '提示',
+															content: res.data.returnMsg,
+															showCancel:false,
+															success:()=>{
+																this.timer=setTimeout(()=>{
+																	uni.switchTab({
+																		url: '/pages/index/index'
+																	})
+																},1000)
+																
+															}
+														});
 													}
 											
 												});
@@ -378,15 +386,19 @@ export default {
 								});
 							}else{
 								
-								uni.showToast({
-									icon:'none',
-									title:res.data.returnMsg,
-								})
-								this.timer=setTimeout(()=>{
-									uni.switchTab({
-										url: '/pages/index/index'
-									})
-								},1000)
+								uni.showModal({
+									title: '提示',
+									content: res.data.returnMsg,
+									showCancel:false,
+									success:()=>{
+										this.timer=setTimeout(()=>{
+											uni.switchTab({
+												url: '/pages/index/index'
+											})
+										},1000)
+										
+									}
+								});
 							}
 						}
 					});

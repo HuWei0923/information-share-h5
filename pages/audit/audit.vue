@@ -5,7 +5,12 @@
 				<uni-easyinput class="uni-mt-5"  trim="all" v-model="form.xcode" placeholder="信保代码"></uni-easyinput>
 			</uni-col>
 			<uni-col :span="8">
-				<uni-combox class="uni-mt-5" :candidates="candidates" placeholder="审批标识" v-model="form.approve"></uni-combox>
+				<uni-combox class="uni-mt-5" :candidates="candidates" placeholder="审批标识" v-model="form.approve"></uni-combox> 
+				
+				<!-- <picker :value="form.approve" @change="changeApprove" :range="candidates" range-key="name">
+					<text class="cuIcon-right right-icon"></text>
+					<input placeholder="审批标识"  name="input" :value="form.approve" readonly style="float:right" />
+				</picker> -->
 			</uni-col>
 			<uni-col :span="8">
 				<uni-easyinput class="uni-mt-5" trim="all" v-model="form.informant" placeholder="填报人" ></uni-easyinput>
@@ -155,6 +160,10 @@ export default {
 				}, 1000);
 			})
 			
+		},
+		changeApprove(event) {
+			
+			this.form.approve = this.candidates[event.detail.value];
 		},
 		audit(row, code) {
                 
