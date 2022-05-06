@@ -26,8 +26,8 @@
 			<uni-group mode="card" v-for="(item, index) in listData" :key="index" >
 				<view slot="title" class="card-title">
 					<text>信保代码：{{ item.reportbuyerNo }}</text>
-					<uni-tag text="普通" type="error" v-if="item.speed == '普通'"></uni-tag>
-					<uni-tag text="加急" type="error" v-if="item.speed == '加急'"></uni-tag>
+					<uni-tag text="普通" type="default" v-if="item.speed == '普通'"></uni-tag>
+					<uni-tag text="加急" type="primary" v-if="item.speed == '加急'"></uni-tag>
 					<uni-tag text="特级" type="error" v-if="item.speed == '特级'"></uni-tag>
 				</view>
 				<view style="position: relative;line-height: 48rpx;">
@@ -42,12 +42,15 @@
 					</view>
 					<uni-transition mode-class="fade" :duration="200" :show="item.showMore">
 						<view>统一社会信用代码：{{ item.creditno }}</view>
-						<view>是否导读：{{ item.istranslation }}</view>
+						<view>是否导读：
+							<text v-if="item.istranslation=='0' ">否</text>
+							<text v-if="item.istranslation=='1' ">是</text>
+						</view>
 						<view>审批结果：{{ item.approveMsg }}</view>
 						<view>填报人：{{ item.updateName }}</view>
-						<view>填报时间：{{ item.updateTime }}</view>
+						<view>填报时间：<uni-dateformat :date='item.updateTime' format='yyyy/MM/dd hh:mm:ss' ></uni-dateformat></view>
 						<view>审核人：{{ item.approveName }}</view>
-						<view>审核时间：{{ item.approveDate }}</view>
+						<view>审核时间：<uni-dateformat :date='item.approveDate' format='yyyy/MM/dd hh:mm:ss' ></uni-dateformat></view>
 
 					</uni-transition>
 					<view class="btn-box">
@@ -57,8 +60,8 @@
 				</view>
 				<uni-transition mode-class="fade" :duration="200" :show="item.showMenu">
 					<view style="margin-top: 20rpx;padding-top: 20rpx;text-align: right;border-top: 1px solid #efefef;">
-						<uni-tag text="通过" type="primary" style="margin-right: 10rpx;"></uni-tag>
-						<uni-tag text="不通过" type="error"></uni-tag>
+						<uni-tag :disabled="item.approveby!=null" text="通过" type="primary" style="margin-right: 10rpx;"></uni-tag>
+						<uni-tag :disabled="item.approveby!=null" text="不通过" type="error"></uni-tag>
 					</view>
 				</uni-transition>
 			</uni-group>
