@@ -8,5 +8,10 @@ export default [
 		name:"zhongxinbaoApply",
 		method:'post',
 		url:'/api/company/zhongxinbaoApply'
-	}
+	},
+	{
+		name:"zhongxinbaoApprove",
+		method:'post',
+		url:'/api/company/zhongxinbaoApprove'
+	},
 ]

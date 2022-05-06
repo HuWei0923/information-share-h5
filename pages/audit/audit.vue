@@ -2,19 +2,19 @@
 	<view class="content">
 		<uni-row :gutter="20" style="padding: 0 20rpx;">
 			<uni-col :span="8"  >
-				<uni-easyinput class="uni-mt-5"  trim="all" v-model="form.code" placeholder="信保代码"></uni-easyinput>
+				<uni-easyinput class="uni-mt-5"  trim="all" v-model="form.xcode" placeholder="信保代码"></uni-easyinput>
 			</uni-col>
 			<uni-col :span="8">
-				<uni-combox class="uni-mt-5" :candidates="candidates" placeholder="审批标识" v-model="form.flag"></uni-combox>
+				<uni-combox class="uni-mt-5" :candidates="candidates" placeholder="审批标识" v-model="form.approve"></uni-combox>
 			</uni-col>
 			<uni-col :span="8">
-				<uni-easyinput class="uni-mt-5" trim="all" v-model="form.reporter" placeholder="填报人" ></uni-easyinput>
+				<uni-easyinput class="uni-mt-5" trim="all" v-model="form.informant" placeholder="填报人" ></uni-easyinput>
 			</uni-col>
 			<uni-col :span="8">
-				<uni-easyinput class="uni-mt-5" trim="all" v-model="form.audit" placeholder="审批人"></uni-easyinput>
+				<uni-easyinput class="uni-mt-5" trim="all" v-model="form.approver" placeholder="审批人"></uni-easyinput>
 			</uni-col>
 			<uni-col :span="8">
-				<uni-easyinput class="uni-mt-5" trim="all" v-model="form.name" placeholder="中/英文名称"></uni-easyinput>
+				<uni-easyinput class="uni-mt-5" trim="all" v-model="form.companyName" placeholder="中/英文名称"></uni-easyinput>
 			</uni-col>
 		</uni-row>
 		<view style="padding: 10rpx 20rpx 0;">
@@ -60,8 +60,8 @@
 				</view>
 				<uni-transition mode-class="fade" :duration="200" :show="item.showMenu">
 					<view style="margin-top: 20rpx;padding-top: 20rpx;text-align: right;border-top: 1px solid #efefef;">
-						<uni-tag :disabled="item.approveby!=null" text="通过" type="primary" style="margin-right: 10rpx;"></uni-tag>
-						<uni-tag :disabled="item.approveby!=null" text="不通过" type="error"></uni-tag>
+						<uni-tag :disabled="item.approveby!=null" text="通过" type="primary" style="margin-right: 10rpx;" @click="audit(item,1)"></uni-tag>
+						<uni-tag :disabled="item.approveby!=null" text="不通过" type="error" @click="audit(item,999)"></uni-tag>
 					</view>
 				</uni-transition>
 			</uni-group>
@@ -75,23 +75,24 @@
 </template>
 
 <script>
-import { commonAPI } from 'api/index.js';
+import { commonAPI,companyAPI } from 'api/index.js';
 export default {
 	data() {
 		return {
 			form: {
-				code: '',
-				name: '',
-				flag:'',
-				reporter:'',
-				audit:''
+				xcode: '',
+				companyName: '',
+				approve:'',
+				informant:'',
+				approver:''
 			},
 			listData: [],
 			currentPage: 1,
 			pageSize: 10,
 			total: 0,
 			loadStatus: 'more' ,//more/loading/noMore，
-			candidates:['是','否']
+			candidates:['通过','不通过','待审核','异常'],
+			
 		};
 	},
 	watch:{
@@ -131,11 +132,11 @@ export default {
 			commonAPI.searchApplyList({
 				pageIndex:  this.currentPage,
 				pageSize: this.pageSize,
-				zxbCode:'',
-				zxbCompanyName:'',
-				zxbApprove:'',
-				zxbInformant:'',
-				zxbApprover:'',
+				zxbCode:this.form.xcode,
+				zxbCompanyName:this.form.companyName,
+				zxbApprove:this.form.approve,
+				zxbInformant:this.form.informant,
+				zxbApprover:this.form.approver,
 				operator: uni.getStorageSync('userCode')
 			})
 			.then(res => {
@@ -155,6 +156,47 @@ export default {
 			})
 			
 		},
+		audit(row, code) {
+                
+				debugger;
+				//uni.showLoading({title: '提交中',mask:true});
+                companyAPI.zhongxinbaoApprove({
+                    corpSerialNo: row.corpSerialNo,
+                    approve: uni.getStorageSync('userId'),
+                    approveCode: code
+                })
+				.then(res => {
+					//uni.hideLoading();
+                    if (res.statusCode == 200) {
+						if(res.data.returnCode == 0){
+							uni.showModal({
+							    title: '提示',
+							    content: res.data.returnMsg,
+								showCancel:false,
+								success:()=>{
+									this.listData = [];
+									this.currentPage = 1;
+							        this.getData();
+									
+							    }
+							});
+						}else{
+							uni.showModal({
+							    title: '提示',
+							    content: res.data.returnMsg,
+								showCancel:false,
+							    success:()=>{
+							       this.listData = [];
+								   this.currentPage = 1;
+							       this.getData();
+							       
+							    }
+							});
+						}
+                    }
+                    
+                })
+            }
 		
 	}
 };
