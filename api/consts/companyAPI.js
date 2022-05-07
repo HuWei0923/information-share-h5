@@ -24,4 +24,9 @@ export default [
 		method:'post',
 		url:'/api/company/getPDFListAll'
 	},
+	{
+		name:"getAllBusinessInfo",
+		method:'post',
+		url:'/api/company/zhongxinbao/getAllBusinessInfo'
+	},
 ]

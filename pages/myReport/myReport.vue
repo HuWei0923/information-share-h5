@@ -164,7 +164,7 @@ export default {
 		checkDetail(item) {
 			//查看摘要信息
 			uni.navigateTo({
-				url: '/pages/detail/detail'
+				url: '/pages/detail/detail?reportcorpchnname='+item.reportcorpchnname+'&reportcorpengname='+item.reportcorpengname+'&reportbuyerno='+item.reportbuyerno
 			});
 		}
 	}
