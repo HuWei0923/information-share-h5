@@ -14,4 +14,14 @@ export default [
 		method:'post',
 		url:'/api/company/zhongxinbaoApprove'
 	},
+	{
+		name:"getApplyProgressList",
+		method:'post',
+		url:'/api/company/getApplyProgressList'
+	},
+	{
+		name:"getPDFListAll",
+		method:'post',
+		url:'/api/company/getPDFListAll'
+	},
 ]

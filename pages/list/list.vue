@@ -3,7 +3,7 @@
 		<uni-row>
 			<uni-col :span="12">
 				<uni-search-bar
-					v-model="form.code"
+					v-model="form.xcode"
 					radius="100"
 					placeholder="信保代码"
 					clearButton="auto"
@@ -30,12 +30,12 @@
 			条数据
 		</view>
 		<view v-if="listData.length > 0">
-			<uni-group :title="`信保代码：${item.code}`" mode="card" v-for="(item, index) in listData" :key="index">
-				<view>中英文名称：{{ item.name }}</view>
-				<view>PDF名称：{{ item.pdfName }}</view>
-				<view>更新时间：{{ item.updateTime }}</view>
+			<uni-group :title="`信保代码：${item.reportbuyerno}`" mode="card" v-for="(item, index) in listData" :key="index">
+				<view>中英文名称：{{item.reportcorpchnname}}/{{item.reportcorpengname}}</view>
+				<view>PDF名称：{{ item.reportName }}</view>
+				<view>更新时间：{{ item.updatetime }}</view>
 				<view style="display: flex;justify-content: space-between;">
-					<text>摘要时间：{{ item.detailTime }}</text>
+					<text>摘要时间：{{ item.getTime }}</text>
 					<uni-icons type="more-filled" size="24" @click="item.showMenu = !item.showMenu"></uni-icons>
 				</view>
 				<uni-transition mode-class="fade" :duration="200" :show="item.showMenu">
@@ -56,17 +56,18 @@
 </template>
 
 <script>
+import { commonAPI,companyAPI } from 'api/index.js';
 export default {
 	data() {
 		return {
 			form: {
-				code: '',
+				xcode: '',
 				companyName: ''
 			},
 			listData: [],
 			currentPage: 1,
-			pageSize: 5,
-			total: 23,
+			pageSize: 10,
+			total: 0,
 			loadStatus: 'more' //more/loading/noMore，
 		};
 	},
@@ -93,22 +94,46 @@ export default {
 	},
 	methods: {
 		getData() {
-			let tempData = [
-				{ code: 'SUZHOUTENGXUN032541', name: 'SUZHOUTENGXUN', pdfName: 'test.pdf', updateTime: '2022-04-12', detailTime: '2022-04-12', showMenu: false },
-				{ code: 'SUZHOUTENGXUN032541', name: 'SUZHOUTENGXUN', pdfName: 'test.pdf', updateTime: '2022-04-12', detailTime: '2022-04-12', showMenu: false },
-				{ code: 'SUZHOUTENGXUN032541', name: 'SUZHOUTENGXUN', pdfName: 'test.pdf', updateTime: '2022-04-12', detailTime: '2022-04-12', showMenu: false },
-				{ code: 'SUZHOUTENGXUN032541', name: 'SUZHOUTENGXUN', pdfName: 'test.pdf', updateTime: '2022-04-12', detailTime: '2022-04-12', showMenu: false },
-				{ code: 'SUZHOUTENGXUN032541', name: 'SUZHOUTENGXUN', pdfName: 'test.pdf', updateTime: '2022-04-12', detailTime: '2022-04-12', showMenu: false }
-			];
-			this.loadStatus = 'loading';
-			setTimeout(() => {
-				this.loadStatus = 'more';
-				this.listData = [...this.listData, ...tempData];
-			}, 1000);
+			// let tempData = [
+			// 	{ code: 'SUZHOUTENGXUN032541', name: 'SUZHOUTENGXUN', pdfName: 'test.pdf', updateTime: '2022-04-12', detailTime: '2022-04-12', showMenu: false },
+			// 	{ code: 'SUZHOUTENGXUN032541', name: 'SUZHOUTENGXUN', pdfName: 'test.pdf', updateTime: '2022-04-12', detailTime: '2022-04-12', showMenu: false },
+			// 	{ code: 'SUZHOUTENGXUN032541', name: 'SUZHOUTENGXUN', pdfName: 'test.pdf', updateTime: '2022-04-12', detailTime: '2022-04-12', showMenu: false },
+			// 	{ code: 'SUZHOUTENGXUN032541', name: 'SUZHOUTENGXUN', pdfName: 'test.pdf', updateTime: '2022-04-12', detailTime: '2022-04-12', showMenu: false },
+			// 	{ code: 'SUZHOUTENGXUN032541', name: 'SUZHOUTENGXUN', pdfName: 'test.pdf', updateTime: '2022-04-12', detailTime: '2022-04-12', showMenu: false }
+			// ];
+			// this.loadStatus = 'loading';
+			// setTimeout(() => {
+			// 	this.loadStatus = 'more';
+			// 	this.listData = [...this.listData, ...tempData];
+			// }, 1000);
+			companyAPI.getPDFListAll({
+				pageIndex:  this.currentPage,
+				pageSize: this.pageSize,
+				companyName: this.form.companyName,
+                xcode: this.form.xcode
+			})
+			.then(res => {
+				this.loadStatus = 'loading';
+				this.total=res.data.totalRecords;
+				if (res.data.pdfList) {
+					for (let i in res.data.pdfList) {
+						res.data.pdfList[i].showMore=false;
+						res.data.pdfList[i].showMenu=false;
+						if(res.data.pdfList[i].reportbuyerno==null){
+							res.data.pdfList[i].reportbuyerno='';
+						}
+					}
+				}
+				
+				setTimeout(() => {
+					this.loadStatus = 'more';
+					this.listData = [...this.listData, ...res.data.pdfList];
+				}, 1000);
+			})
 		},
 		confirm(type, e) {
 			if (type == 1) {
-				this.form.code = e.value;
+				this.form.xcode = e.value;
 			} else if (type == 2) {
 				this.form.companyName = e.value;
 			}
