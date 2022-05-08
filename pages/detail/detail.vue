@@ -71,26 +71,7 @@ export default {
 	data() {
 		return {
 			businessInfo: {
-				buyerchnName:'',
-				buyerengName:'',
-				reportNo:'',
-				dateRegistered:'',
-				operationStatus:'',
-				sinosureBuyerno:'',
-				registerCapital:'',
-				registerAddr:'',
-				parent:'',
-				productionCapacity:'',
-				locationType:'',
-				purchasingArea:'',
-				industName:'',
-				products:'',
-				updateTime:'',
-				gisterYear:'',
-				employeeNum:'',
-				branchEmployeeNum:'',
-				listedFlag:'',
-				tockexChange:'',
+				
 			},
 			shareInfo:[
 				{
@@ -116,12 +97,11 @@ export default {
 			this.reportcorpchnname=options.reportcorpchnname;
 			this.reportcorpengname=options.reportcorpengname;
 			this.reportbuyerno=options.reportbuyerno;
+			this.getNationCode();
 		}
-		this.getNationCode();
 	},
 	methods: {
 		getNationCode() {
-			debugger;
 			companyAPI.getAllBusinessInfo({
 				userId: uni.getStorageSync('userId'),
 				reportcorpchnname:this.reportcorpchnname,
@@ -140,4 +120,11 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+	::v-deep .uni-list-item__extra{
+		text-align: right;
+	}
+	::v-deep .uni-list-item__content{
+		min-width: 25vw;
+	}
+</style>

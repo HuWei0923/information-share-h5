@@ -81,6 +81,23 @@
             }
             
         }
+        ,{
+            "path" : "pages/user/user",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "用户中心",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/user/create",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "新建用户",
+                "enablePullDownRefresh": false
+            }
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

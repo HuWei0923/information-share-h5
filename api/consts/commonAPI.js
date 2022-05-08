@@ -8,5 +8,5 @@ export default [
 		name:"searchApplyList",
 		method:'post',
 		url:'/api/common/searchApplyList'
-	}
+	},
 ]

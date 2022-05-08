@@ -94,18 +94,7 @@ export default {
 	},
 	methods: {
 		getData() {
-			// let tempData = [
-			// 	{ code: 'SUZHOUTENGXUN032541', name: 'SUZHOUTENGXUN', pdfName: 'test.pdf', updateTime: '2022-04-12', detailTime: '2022-04-12', showMenu: false },
-			// 	{ code: 'SUZHOUTENGXUN032541', name: 'SUZHOUTENGXUN', pdfName: 'test.pdf', updateTime: '2022-04-12', detailTime: '2022-04-12', showMenu: false },
-			// 	{ code: 'SUZHOUTENGXUN032541', name: 'SUZHOUTENGXUN', pdfName: 'test.pdf', updateTime: '2022-04-12', detailTime: '2022-04-12', showMenu: false },
-			// 	{ code: 'SUZHOUTENGXUN032541', name: 'SUZHOUTENGXUN', pdfName: 'test.pdf', updateTime: '2022-04-12', detailTime: '2022-04-12', showMenu: false },
-			// 	{ code: 'SUZHOUTENGXUN032541', name: 'SUZHOUTENGXUN', pdfName: 'test.pdf', updateTime: '2022-04-12', detailTime: '2022-04-12', showMenu: false }
-			// ];
-			// this.loadStatus = 'loading';
-			// setTimeout(() => {
-			// 	this.loadStatus = 'more';
-			// 	this.listData = [...this.listData, ...tempData];
-			// }, 1000);
+			this.loadStatus = 'loading';
 			companyAPI.getPDFListAll({
 				pageIndex:  this.currentPage,
 				pageSize: this.pageSize,
@@ -113,7 +102,6 @@ export default {
                 xcode: this.form.xcode
 			})
 			.then(res => {
-				this.loadStatus = 'loading';
 				this.total=res.data.totalRecords;
 				if (res.data.pdfList) {
 					for (let i in res.data.pdfList) {
@@ -123,12 +111,9 @@ export default {
 							res.data.pdfList[i].reportbuyerno='';
 						}
 					}
-				}
-				
-				setTimeout(() => {
 					this.loadStatus = 'more';
 					this.listData = [...this.listData, ...res.data.pdfList];
-				}, 1000);
+				}
 			})
 		},
 		confirm(type, e) {
@@ -150,9 +135,6 @@ export default {
 					uni.openDocument({
 						filePath: res.tempFilePath,
 						success: res => {
-							// uni.navigateBack({
-							// 	delta: 1
-							// });
 						}
 					});
 				}

@@ -33,7 +33,8 @@ const menuData= [
 							title: '用户中心',
 							icon: require('@/static/img/index/hhmd.png'),
 							flag: 'user.manage',
-							flag2:'user.sub_manage'
+							flag2:'user.sub_manage',
+							url:'/pages/user/user'
 						}
 					]
 				},

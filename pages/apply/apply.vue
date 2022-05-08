@@ -159,7 +159,6 @@ export default {
 			}
 		},
 		changeSpeed(event) {
-			debugger;
 			this.form.speed = this.emergencyOptions[event.detail.value];
 		},
 		getCodeInfo(){

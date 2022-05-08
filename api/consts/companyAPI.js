@@ -29,4 +29,9 @@ export default [
 		method:'post',
 		url:'/api/company/zhongxinbao/getAllBusinessInfo'
 	},
+	{
+		name:"getAllCompanyLevel",
+		method:'post',
+		url:'/api/company/getAllCompanyLevel'
+	},
 ]
