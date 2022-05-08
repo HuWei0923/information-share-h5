@@ -31,7 +31,7 @@
 					</text>
 					<!-- <text>{{ item.code }}</text> -->
 				</view>
-				<view style="position: relative;line-height: 48rpx;">
+				<view style="position: relative;line-height: 48rpx;padding-right: 60rpx;">
 					<view>邮箱：{{ item.email }}</view>
 					<view>手机号：{{ item.mobile }}</view>
 					<view>所属公司名称：{{ item.company }}</view>
@@ -114,7 +114,7 @@ export default {
 		},
 		getData() {
 			let temp = [
-				{ name: '沈旗', code: '70107165', email: 'test@163.com', mobile: '13513213322', company: '浙江康恩贝制药', status: 0, showMenu: false },
+				{ name: '沈旗', code: '70107165', email: 'test@163.com', mobile: '13513213322', company: '浙江康恩贝制药浙江康恩贝制药浙江康恩贝制药浙江康恩贝制药浙江康恩贝制药', status: 0, showMenu: false },
 				{ name: '应春晓', code: '80007532', email: 'test@163.com', mobile: '13513213322', company: '浙江康恩贝制药', status: 1, showMenu: false },
 				{ name: '王蕾', code: '70107165', email: 'test@163.com', mobile: '13513213322', company: '浙江康恩贝制药', status: 0, showMenu: false },
 				{ name: '贾琼', code: '70107165', email: 'test@163.com', mobile: '13513213322', company: '浙江康恩贝制药', status: 0, showMenu: false },
