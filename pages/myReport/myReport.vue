@@ -38,7 +38,7 @@
 				<uni-transition mode-class="fade" :duration="200" :show="item.showMenu">
 					<view style="margin-top: 20rpx;padding-top: 20rpx;text-align: right;border-top: 1px solid #efefef;">
 						<uni-tag :disabled="item.updatetime == '暂无报告'" text="预览" type="primary" style="margin-right: 10rpx;" @click="preview(item)"></uni-tag>
-						<uni-tag :disabled="item.updatetime == '暂无报告'" text="下载" type="success" style="margin-right: 10rpx;"></uni-tag>
+						<uni-tag :disabled="item.updatetime == '暂无报告'" text="下载" type="success" style="margin-right: 10rpx;"  @click="downnload(item)"></uni-tag>
 						<uni-tag :disabled="item.updatetime == '暂无报告'" text="摘要" type="warning" @click="checkDetail(item)"></uni-tag>
 					</view>
 				</uni-transition>
@@ -147,7 +147,7 @@ export default {
 		preview(item) {
 			//预览pdf
 			uni.navigateTo({
-				url: '/pages/pdf/index'
+				url: '/pages/pdf/index?noticeSerialno='+item.reportName+'&reportbuyerno='+item.reportbuyerno+'&reportcorpchnname='+item.reportcorpengname+'&updatetime='+item.updatetime+'&isDownload=0'
 			});
 		},
 		checkDetail(item) {
@@ -155,7 +155,41 @@ export default {
 			uni.navigateTo({
 				url: '/pages/detail/detail?reportcorpchnname='+item.reportcorpchnname+'&reportcorpengname='+item.reportcorpengname+'&reportbuyerno='+item.reportbuyerno
 			});
-		}
+		},
+		downnload(item) {
+			var param={
+				 
+				userId:uni.getStorageSync('userId'),
+				noticeSerialno:item.reportName,
+				reportbuyerno:item.reportbuyerno,
+				reportcorpchnname:item.reportcorpchnname,
+				reportcorpengname:item.reportcorpengname,
+				updatetime:item.updatetime,
+				isDownload:"1"
+			}
+			
+			
+			companyAPI.getPDF(param).then(res => {
+				
+				const content = res.data
+				const blob = new Blob([content])
+				const fileName = item.reportName
+				debugger;
+				if ('download' in document.createElement('a')) { // 非IE下载
+					const elink = document.createElement('a')
+					elink.download = item.reportName
+					elink.style.display = 'none'
+					elink.href = URL.createObjectURL(blob)
+					console.log(elink.href);
+					document.body.appendChild(elink)
+					elink.click()
+					URL.revokeObjectURL(elink.href) // 释放URL 对象
+					document.body.removeChild(elink)
+				} else { // IE10+下载
+					navigator.msSaveBlob(blob, item.reportName)
+				}
+			})
+		},
 	}
 };
 </script>

@@ -12,7 +12,7 @@ const createRequest = function(apiConfig) {
 	let filetype = apiConfig.filetype;
 	let responseType ='text';
 	if(filetype){
-		responseType='blob';
+		responseType='arraybuffer';
 	}
 	
 	return function(data) {

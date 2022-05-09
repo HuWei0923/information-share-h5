@@ -21,15 +21,22 @@
 		},
 		onLoad(options) {
 			
-			var param={
-				 
-				userId:uni.getStorageSync('userId'),
-				noticeSerialno:options.noticeSerialno,
-				reportbuyerno:options.reportbuyerno,
-				reportcorpchnname:options.reportcorpchnname,
-				reportcorpengname:options.reportcorpengname,
-				updatetime:options.updatetime,
-				isDownload:options.isDownload,
+			var param={};
+			if(options.isDownload){
+				param={
+					userId:uni.getStorageSync('userId'),
+					noticeSerialno:options.noticeSerialno,
+					reportbuyerno:options.reportbuyerno,
+					reportcorpchnname:options.reportcorpchnname,
+					reportcorpengname:options.reportcorpengname,
+					updatetime:options.updatetime,
+					isDownload:options.isDownload
+				}
+			}else{
+				param = {
+				  userId: uni.getStorageSync('userId'),
+				  noticeSerialno:options.noticeSerialno
+				}
 			}
 			
 			

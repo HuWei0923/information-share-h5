@@ -133,6 +133,38 @@ export default {
 			});
 		},
 		downnload(item) {
+			var param={
+				 
+				userId:uni.getStorageSync('userId'),
+				noticeSerialno:item.reportName,
+				reportbuyerno:item.reportbuyerno,
+				reportcorpchnname:item.reportcorpchnname,
+				reportcorpengname:item.reportcorpengname,
+				updatetime:item.updatetime,
+				isDownload:"1"
+			}
+			
+			
+			companyAPI.getPDF(param).then(res => {
+				
+				const content = res.data
+				const blob = new Blob([content])
+				const fileName = item.reportName
+				debugger;
+				if ('download' in document.createElement('a')) { // 非IE下载
+					const elink = document.createElement('a')
+					elink.download = item.reportName
+					elink.style.display = 'none'
+					elink.href = URL.createObjectURL(blob)
+					console.log(elink.href);
+					document.body.appendChild(elink)
+					elink.click()
+					URL.revokeObjectURL(elink.href) // 释放URL 对象
+					document.body.removeChild(elink)
+				} else { // IE10+下载
+					navigator.msSaveBlob(blob, item.reportName)
+				}
+			})
 		},
 		checkDetail(item) {
 			//查看摘要信息

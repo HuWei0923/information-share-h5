@@ -348,8 +348,8 @@ export default {
 									cancelText:'放弃',
 									confirmText:'是',
 									content: res.data.confirmMessage,
-									success: function (res) {
-										if (res.confirm) {
+									success: function (res1) {
+										if (res1.confirm) {
 											haveCreditCode.forcedApply = true;
 											companyAPI.zhongxinbaoApply(haveCreditCode)
 												.then(res => {
@@ -374,10 +374,13 @@ export default {
 											
 											
 											
-										} else if (res.cancel) {
+										} else if (res1.cancel) {
 											if(res.data.isPreview){
 												console.log(res.data.pdfName);
 												
+												uni.navigateTo({
+													url: '/pages/pdf/index?noticeSerialno='+res.data.pdfName
+												});
 											}
 											console.log('放弃');
 										}
