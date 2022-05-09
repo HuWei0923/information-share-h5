@@ -128,16 +128,8 @@ export default {
 		},
 		preview(item) {
 			//预览pdf
-			uni.downloadFile({
-				url: 'https://www.gjtool.cn/pdfh5/git.pdf',
-				success: res => {
-					console.log(res);
-					uni.openDocument({
-						filePath: res.tempFilePath,
-						success: res => {
-						}
-					});
-				}
+			uni.navigateTo({
+				url: '/pages/pdf/index?noticeSerialno='+item.reportName+'&reportbuyerno='+item.reportbuyerno+'&reportcorpchnname='+item.reportcorpengname+'&updatetime='+item.updatetime+'&isDownload=0'
 			});
 		},
 		downnload(item) {

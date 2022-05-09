@@ -11,7 +11,7 @@
 			条数据
 		</view>
 		<view v-if="listData.length > 0">
-			<uni-group :title="`信保代码：${item.reportbuyerno||''}`" mode="card" v-for="(item, index) in listData" :key="index">
+			<uni-group :title="`信保代码：${item.reportbuyerno}`" mode="card" v-for="(item, index) in listData" :key="index">
 				<view style="position: relative;line-height: 48rpx;">
 					<view>中英文名称： {{item.reportcorpchnname}}/{{item.reportcorpengname}}</view>
 					<view>
@@ -104,7 +104,19 @@ export default {
 	},
 	methods: {
 		getData() {
-			this.loadStatus = 'loading';
+			// let tempData = [
+			// 	{ code: 'SUZHOUTENGXUN032541', name: '/ALEMBIC', flag: 0, reportTime: '2022-04-12', auditTime: '',showMore: false,  showMenu: false },
+			// 	{ code: 'SUZHOUTENGXUN032541', name: '/TOVARIS', flag: 1, reportTime: '2022-04-12', auditTime: '2022-04-12', showMore: false, showMore: false, showMenu: false },
+			// 	{ code: 'SUZHOUTENGXUN032541', name: '/NHAT NG', flag: 2, reportTime: '2022-04-12', auditTime: '2022-04-12', showMore: false, showMenu: false },
+			// 	{ code: 'SUZHOUTENGXUN032541', name: '/REAL CH', flag: 0, reportTime: '2022-04-12', auditTime: '', showMore: false, showMenu: false },
+			// 	{ code: 'SUZHOUTENGXUN032541', name: '杭州甲康', flag: 1, reportTime: '2022-04-12', auditTime: '2022-04-12', showMore: false, showMenu: false }
+			// ];
+			// this.loadStatus = 'loading';
+			// setTimeout(() => {
+			// 	this.loadStatus = 'more';
+			// 	this.listData = [...this.listData, ...tempData];
+			// }, 1000);
+			
 			companyAPI.getApplyProgressList({
 				pageIndex:  this.currentPage,
 				pageSize: this.pageSize,
@@ -114,40 +126,28 @@ export default {
 				userName: uni.getStorageSync('userCode')
 			})
 			.then(res => {
+				
 				this.total=res.data.totalRecords;
 				if (res.data.zhongXinBaoApplyProgressList) {
-					res.data.zhongXinBaoApplyProgressList.map(item=>{
-						item.showMore=false;
-						item.showMenu=false;
-						return item
-					})
-					// for (let i in res.data.zhongXinBaoApplyProgressList) {
-					// 	res.data.zhongXinBaoApplyProgressList[i].showMore=false;
-					// 	res.data.zhongXinBaoApplyProgressList[i].showMenu=false;
-					// 	if(res.data.zhongXinBaoApplyProgressList[i].reportbuyerno==null){
-					// 		res.data.zhongXinBaoApplyProgressList[i].reportbuyerno='';
-					// 	}
-					// }
+					for (let i in res.data.zhongXinBaoApplyProgressList) {
+						res.data.zhongXinBaoApplyProgressList[i].showMore=false;
+						res.data.zhongXinBaoApplyProgressList[i].showMenu=false;
+						if(res.data.zhongXinBaoApplyProgressList[i].reportbuyerno==null){
+							res.data.zhongXinBaoApplyProgressList[i].reportbuyerno='';
+						}
+					}
+				}
+				
+				setTimeout(() => {
 					this.loadStatus = 'more';
 					this.listData = [...this.listData, ...res.data.zhongXinBaoApplyProgressList];
-				}
+				}, 1000);
 			})
 		},
 		preview(item) {
 			//预览pdf
-			uni.downloadFile({
-				url: 'https://www.gjtool.cn/pdfh5/git.pdf',
-				success: res => {
-					console.log(res);
-					uni.openDocument({
-						filePath: res.tempFilePath,
-						success: res => {
-							// uni.navigateBack({
-							// 	delta: 1
-							// });
-						}
-					});
-				}
+			uni.navigateTo({
+				url: '/pages/pdf/index'
 			});
 		},
 		checkDetail(item) {

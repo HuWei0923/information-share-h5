@@ -98,6 +98,15 @@
                 "enablePullDownRefresh": false
             }
         }
+        ,{
+            "path" : "pages/pdf/index",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
