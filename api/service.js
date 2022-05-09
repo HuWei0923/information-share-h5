@@ -9,6 +9,12 @@ const createRequest = function(apiConfig) {
 	} else {
 		url = baseUrl + apiConfig.url
 	}
+	let filetype = apiConfig.filetype;
+	let responseType ='text';
+	if(filetype){
+		responseType='blob';
+	}
+	debugger;
 	return function(data) {
 		let token = uni.getStorageSync('token')
 		let regex = (/([^{}](?=.*})(?!.*{))+/)
@@ -19,7 +25,7 @@ const createRequest = function(apiConfig) {
 		if (p && p[0]) {
 			newUrl = url.replace(regex, data[p[0]]).replace((/\{/), '').replace((/\}/), '')
 		}
-
+		
 		return new Promise((resolve, reject) => {
 			uni.showLoading({
 				mask: true
@@ -30,7 +36,8 @@ const createRequest = function(apiConfig) {
 				data: data,
 				header: {
 					token: token
-				}
+				},
+				responseType:responseType,
 			}).then(response => {
 				uni.hideLoading()
 				let [err, res] = response;
