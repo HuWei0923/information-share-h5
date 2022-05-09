@@ -37,6 +37,7 @@ export default [
 	{
 		name:"getPDF",
 		method:'post',
-		url:'/api/company/getPDF'
+		url:'/api/company/getPDF',
+		filetype:true,
 	},
 ]
