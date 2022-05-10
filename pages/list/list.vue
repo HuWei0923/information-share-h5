@@ -72,6 +72,31 @@ export default {
 		};
 	},
 	onLoad() {
+		var script4 = document.createElement('script');
+		script4.src="http://cmp/v1.0.0/js/cmp-i18n.js"
+		document.body.appendChild(script4);
+		var script = document.createElement('script');
+		script.src = 'http://cmp/v1.0.0/js/cordova/__CMPSHELL_PLATFORM__/cordova.js';
+		document.body.appendChild(script);
+		var script1 = document.createElement('script');
+		script1.src = 'http://cmp/v1.0.0/js/cordova/cordova-plugins.js';
+		document.body.appendChild(script1);
+		var script2 = document.createElement('script');
+		script2.src = 'http://cmp/v/js/cmp.js'
+		document.body.appendChild(script2);
+		var script3 = document.createElement('script');
+		script3.src = 'http://cmp/v/js/cmp-att.js'
+		document.body.appendChild(script3);
+		var script5 = document.createElement('script');
+		script5.src = 'http://cmp/v/js/cmp-app.js'
+		document.body.appendChild(script5);
+		var script6 = document.createElement('script');
+		script6.src = 'http://cmp/v/js/cmp-chat.js'
+		document.body.appendChild(script6);
+		var script7 = document.createElement('script');
+		script7.src = 'http://cmp/v/js/cmp-webviewListener.js'
+		document.body.appendChild(script7);
+		
 		this.getData();
 	},
 	//上拉加载更多
@@ -128,19 +153,63 @@ export default {
 		},
 		preview(item) {
 			//预览pdf
-			uni.downloadFile({
-				url: 'https://www.gjtool.cn/pdfh5/git.pdf',
-				success: res => {
-					console.log(res);
-					uni.openDocument({
-						filePath: res.tempFilePath,
-						success: res => {
-						}
-					});
-				}
+			uni.navigateTo({
+				url: '/pages/pdf/index?noticeSerialno='+item.reportName+'&reportbuyerno='+item.reportbuyerno+'&reportcorpchnname='+item.reportcorpengname+'&updatetime='+item.updatetime+'&isDownload=0'
 			});
 		},
 		downnload(item) {
+			var param={
+				 
+				userId:uni.getStorageSync('userId'),
+				noticeSerialno:item.reportName,
+				reportbuyerno:item.reportbuyerno,
+				reportcorpchnname:item.reportcorpchnname,
+				reportcorpengname:item.reportcorpengname,
+				updatetime:item.updatetime,
+				isDownload:"1"
+			}
+			
+			var url1='http://zibchina.com:9001/api/common/ZXB/downloadPDF/'+item.reportName;	
+			alert(url1);
+			alert(typeof(cmp.att.download));
+			if(typeof(cmp)  == 'function'){
+				alert("131231")
+				var toDownloadFileOptions = {
+					path:url1,//文件下载地址
+					filename:item.reportName,//文件名称
+					
+					success:function(result){ //下载成功的回调
+					//返回的数据格式如下：
+						alert(JSON.stringify(result));
+					},
+					error:function(error){//下载失败的回调函数
+						alert(JSON.stringify(error));
+					
+					}
+				}
+				cmp.att.read(toDownloadFileOptions);
+			}else{
+				companyAPI.getPDF(param).then(res => {
+					
+					const content = res.data
+					const blob = new Blob([content])
+					const fileName = item.reportName
+					
+					if ('download' in document.createElement('a')) { // 非IE下载
+						const elink = document.createElement('a')
+						elink.download = item.reportName
+						elink.style.display = 'none'
+						elink.href = URL.createObjectURL(blob)
+						console.log(elink.href);
+						document.body.appendChild(elink)
+						elink.click()
+						URL.revokeObjectURL(elink.href) // 释放URL 对象
+						document.body.removeChild(elink)
+					} else { // IE10+下载
+						navigator.msSaveBlob(blob, item.reportName)
+					}			
+				})
+			}
 		},
 		checkDetail(item) {
 			//查看摘要信息

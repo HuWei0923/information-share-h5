@@ -11,7 +11,7 @@
 			条数据
 		</view>
 		<view v-if="listData.length > 0">
-			<uni-group :title="`信保代码：${item.reportbuyerno||''}`" mode="card" v-for="(item, index) in listData" :key="index">
+			<uni-group :title="`信保代码：${item.reportbuyerno}`" mode="card" v-for="(item, index) in listData" :key="index">
 				<view style="position: relative;line-height: 48rpx;">
 					<view>中英文名称： {{item.reportcorpchnname}}/{{item.reportcorpengname}}</view>
 					<view>
@@ -38,7 +38,7 @@
 				<uni-transition mode-class="fade" :duration="200" :show="item.showMenu">
 					<view style="margin-top: 20rpx;padding-top: 20rpx;text-align: right;border-top: 1px solid #efefef;">
 						<uni-tag :disabled="item.updatetime == '暂无报告'" text="预览" type="primary" style="margin-right: 10rpx;" @click="preview(item)"></uni-tag>
-						<uni-tag :disabled="item.updatetime == '暂无报告'" text="下载" type="success" style="margin-right: 10rpx;"></uni-tag>
+						<uni-tag :disabled="item.updatetime == '暂无报告'" text="下载" type="success" style="margin-right: 10rpx;"  @click="downnload(item)"></uni-tag>
 						<uni-tag :disabled="item.updatetime == '暂无报告'" text="摘要" type="warning" @click="checkDetail(item)"></uni-tag>
 					</view>
 				</uni-transition>
@@ -82,6 +82,21 @@ export default {
 		}
 	},
 	onLoad() {
+		var script4 = document.createElement('script');
+		script4.src="http://cmp/v/js/cmp-i18n.js"
+		document.body.appendChild(script4);
+		var script = document.createElement('script');
+		script.src = 'http://cmp/v/js/cordova/__CMPSHELL_PLATFORM__/cordova.js';
+		document.body.appendChild(script);
+		var script1 = document.createElement('script');
+		script1.src = 'http://cmp/v/js/cordova/cordova-plugins.js';
+		document.body.appendChild(script1);
+		var script2 = document.createElement('script');
+		script2.src = 'http://cmp/v/js/cmp.js'
+		document.body.appendChild(script2);
+		var script3 = document.createElement('script');
+		script3.src = 'http://cmp/v/js/cmp-att.js'
+		document.body.appendChild(script3);
 		this.getData();
 	},
 	//上拉加载更多
@@ -104,7 +119,19 @@ export default {
 	},
 	methods: {
 		getData() {
-			this.loadStatus = 'loading';
+			// let tempData = [
+			// 	{ code: 'SUZHOUTENGXUN032541', name: '/ALEMBIC', flag: 0, reportTime: '2022-04-12', auditTime: '',showMore: false,  showMenu: false },
+			// 	{ code: 'SUZHOUTENGXUN032541', name: '/TOVARIS', flag: 1, reportTime: '2022-04-12', auditTime: '2022-04-12', showMore: false, showMore: false, showMenu: false },
+			// 	{ code: 'SUZHOUTENGXUN032541', name: '/NHAT NG', flag: 2, reportTime: '2022-04-12', auditTime: '2022-04-12', showMore: false, showMenu: false },
+			// 	{ code: 'SUZHOUTENGXUN032541', name: '/REAL CH', flag: 0, reportTime: '2022-04-12', auditTime: '', showMore: false, showMenu: false },
+			// 	{ code: 'SUZHOUTENGXUN032541', name: '杭州甲康', flag: 1, reportTime: '2022-04-12', auditTime: '2022-04-12', showMore: false, showMenu: false }
+			// ];
+			// this.loadStatus = 'loading';
+			// setTimeout(() => {
+			// 	this.loadStatus = 'more';
+			// 	this.listData = [...this.listData, ...tempData];
+			// }, 1000);
+			
 			companyAPI.getApplyProgressList({
 				pageIndex:  this.currentPage,
 				pageSize: this.pageSize,
@@ -114,40 +141,28 @@ export default {
 				userName: uni.getStorageSync('userCode')
 			})
 			.then(res => {
+				
 				this.total=res.data.totalRecords;
 				if (res.data.zhongXinBaoApplyProgressList) {
-					res.data.zhongXinBaoApplyProgressList.map(item=>{
-						item.showMore=false;
-						item.showMenu=false;
-						return item
-					})
-					// for (let i in res.data.zhongXinBaoApplyProgressList) {
-					// 	res.data.zhongXinBaoApplyProgressList[i].showMore=false;
-					// 	res.data.zhongXinBaoApplyProgressList[i].showMenu=false;
-					// 	if(res.data.zhongXinBaoApplyProgressList[i].reportbuyerno==null){
-					// 		res.data.zhongXinBaoApplyProgressList[i].reportbuyerno='';
-					// 	}
-					// }
+					for (let i in res.data.zhongXinBaoApplyProgressList) {
+						res.data.zhongXinBaoApplyProgressList[i].showMore=false;
+						res.data.zhongXinBaoApplyProgressList[i].showMenu=false;
+						if(res.data.zhongXinBaoApplyProgressList[i].reportbuyerno==null){
+							res.data.zhongXinBaoApplyProgressList[i].reportbuyerno='';
+						}
+					}
+				}
+				
+				setTimeout(() => {
 					this.loadStatus = 'more';
 					this.listData = [...this.listData, ...res.data.zhongXinBaoApplyProgressList];
-				}
+				}, 1000);
 			})
 		},
 		preview(item) {
 			//预览pdf
-			uni.downloadFile({
-				url: 'https://www.gjtool.cn/pdfh5/git.pdf',
-				success: res => {
-					console.log(res);
-					uni.openDocument({
-						filePath: res.tempFilePath,
-						success: res => {
-							// uni.navigateBack({
-							// 	delta: 1
-							// });
-						}
-					});
-				}
+			uni.navigateTo({
+				url: '/pages/pdf/index?noticeSerialno='+item.reportName+'&reportbuyerno='+item.reportbuyerno+'&reportcorpchnname='+item.reportcorpengname+'&updatetime='+item.updatetime+'&isDownload=0'
 			});
 		},
 		checkDetail(item) {
@@ -155,7 +170,59 @@ export default {
 			uni.navigateTo({
 				url: '/pages/detail/detail?reportcorpchnname='+item.reportcorpchnname+'&reportcorpengname='+item.reportcorpengname+'&reportbuyerno='+item.reportbuyerno
 			});
-		}
+		},
+		downnload(item) {
+			var param={
+			 
+				userId:uni.getStorageSync('userId'),
+				noticeSerialno:item.reportName,
+				reportbuyerno:item.reportbuyerno,
+				reportcorpchnname:item.reportcorpchnname,
+				reportcorpengname:item.reportcorpengname,
+				updatetime:item.updatetime,
+				isDownload:"1"
+			}
+			
+			var url1='http://zibchina.com:9001/api/common/ZXB/downloadPDF/'+item.reportName;	
+			//alert(typeof(cmp));
+			if(typeof(cmp)  == 'function'){
+				var toDownloadFileOptions = {
+					path:url1,//文件下载地址
+					filename:item.reportName,//文件名称
+					
+					success:function(result){ //下载成功的回调
+					//返回的数据格式如下：
+						//alert(JSON.stringify(result));
+					},
+					error:function(error){//下载失败的回调函数
+						alert(JSON.stringify(error));
+					
+					}
+				}
+				cmp.att.read(toDownloadFileOptions);
+			}else{
+				companyAPI.getPDF(param).then(res => {
+					
+					const content = res.data
+					const blob = new Blob([content])
+					const fileName = item.reportName
+					
+					if ('download' in document.createElement('a')) { // 非IE下载
+						const elink = document.createElement('a')
+						elink.download = item.reportName
+						elink.style.display = 'none'
+						elink.href = URL.createObjectURL(blob)
+						console.log(elink.href);
+						document.body.appendChild(elink)
+						elink.click()
+						URL.revokeObjectURL(elink.href) // 释放URL 对象
+						document.body.removeChild(elink)
+					} else { // IE10+下载
+						navigator.msSaveBlob(blob, item.reportName)
+					}			
+				})
+			}
+		},
 	}
 };
 </script>

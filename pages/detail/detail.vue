@@ -55,7 +55,7 @@
 				</uni-row>
 				<template v-if="pdfList.length>0">
 					<uni-row v-for="(item, index) in pdfList" :key="index" >
-						<uni-col :span="15" style="color:#409eff">{{ item.noticeSerialno }}</uni-col>
+						<uni-col :span="15" style="color:#409eff"><view @click="preview(item.noticeSerialno)">{{ item.noticeSerialno }}</view></uni-col> 
 						<uni-col :span="9" >{{ item.updateTime }}</uni-col>
 					</uni-row>
 				</template>
@@ -115,7 +115,14 @@ export default {
 					this.pdfList = res.data.pdfList;;
 				}
 			})
-		}
+		},
+		preview(pdfname) {
+			//预览pdf
+			debugger;
+			uni.navigateTo({
+				url: '/pages/pdf/index?noticeSerialno='+pdfname
+			});
+		},
 	}
 };
 </script>

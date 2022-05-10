@@ -17,8 +17,8 @@
 					</uni-list-item>
 					<uni-list-item>
 						<view slot="header" class="form-title">
-							<text class="required-s">*</text>
 							密码
+							<text class="required-s">*</text>
 						</view>
 						<view slot="footer">
 							<input placeholder="请输入" placeholder-style="color:#B5B5B5;" type="password" name="input" :value="form.password" @input="inputPassword" />

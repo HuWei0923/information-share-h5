@@ -12,6 +12,7 @@
 				"navigationBarTitleText": ""
 			}
 		},
+		
 		{
 			"path": "pages/index/index",
 			"style": {
@@ -97,6 +98,15 @@
                 "navigationBarTitleText": "新建用户",
                 "enablePullDownRefresh": false
             }
+        }
+        ,{
+            "path" : "pages/pdf/index",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
         }
     ],
 	"globalStyle": {
