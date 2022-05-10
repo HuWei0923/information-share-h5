@@ -43,8 +43,9 @@
 			</uni-card>
 		</uni-section>
 
-		<view class="flex flex-direction" style="padding: 50rpx 150rpx">
-			<button class="cu-btn round text-white" @click="saveUserInfo" style="background-image: linear-gradient(to right,#2d56f6,#5ba1ff);">保 存</button>
+		<view style="padding: 50rpx 150rpx;text-align: center;display: flex;justify-content: space-between;">
+			<button class="cu-btn round text-white" @click="saveUserInfo" style="background-image: linear-gradient(to right,#2d56f6,#5ba1ff);margin-right: 20rpx;width:100%" >保 存</button>
+			<button class="cu-btn round text-white" style="background-image: linear-gradient(to right,#EE4F4F,#DE6F6F);width:100%">退出登录</button>
 		</view>
 	</view>
 </template>
