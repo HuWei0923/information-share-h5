@@ -82,6 +82,21 @@ export default {
 		}
 	},
 	onLoad() {
+		var script4 = document.createElement('script');
+		script4.src="http://cmp/v/js/cmp-i18n.js"
+		document.body.appendChild(script4);
+		var script = document.createElement('script');
+		script.src = 'http://cmp/v/js/cordova/__CMPSHELL_PLATFORM__/cordova.js';
+		document.body.appendChild(script);
+		var script1 = document.createElement('script');
+		script1.src = 'http://cmp/v/js/cordova/cordova-plugins.js';
+		document.body.appendChild(script1);
+		var script2 = document.createElement('script');
+		script2.src = 'http://cmp/v/js/cmp.js'
+		document.body.appendChild(script2);
+		var script3 = document.createElement('script');
+		script3.src = 'http://cmp/v/js/cmp-att.js'
+		document.body.appendChild(script3);
 		this.getData();
 	},
 	//上拉加载更多
@@ -158,7 +173,7 @@ export default {
 		},
 		downnload(item) {
 			var param={
-				 
+			 
 				userId:uni.getStorageSync('userId'),
 				noticeSerialno:item.reportName,
 				reportbuyerno:item.reportbuyerno,
@@ -168,27 +183,45 @@ export default {
 				isDownload:"1"
 			}
 			
-			
-			companyAPI.getPDF(param).then(res => {
-				
-				const content = res.data
-				const blob = new Blob([content])
-				const fileName = item.reportName
-				debugger;
-				if ('download' in document.createElement('a')) { // 非IE下载
-					const elink = document.createElement('a')
-					elink.download = item.reportName
-					elink.style.display = 'none'
-					elink.href = URL.createObjectURL(blob)
-					console.log(elink.href);
-					document.body.appendChild(elink)
-					elink.click()
-					URL.revokeObjectURL(elink.href) // 释放URL 对象
-					document.body.removeChild(elink)
-				} else { // IE10+下载
-					navigator.msSaveBlob(blob, item.reportName)
+			var url1='http://zibchina.com:9001/api/common/ZXB/downloadPDF/'+item.reportName;	
+			//alert(typeof(cmp));
+			if(typeof(cmp)  == 'function'){
+				var toDownloadFileOptions = {
+					path:url1,//文件下载地址
+					filename:item.reportName,//文件名称
+					
+					success:function(result){ //下载成功的回调
+					//返回的数据格式如下：
+						//alert(JSON.stringify(result));
+					},
+					error:function(error){//下载失败的回调函数
+						alert(JSON.stringify(error));
+					
+					}
 				}
-			})
+				cmp.att.read(toDownloadFileOptions);
+			}else{
+				companyAPI.getPDF(param).then(res => {
+					
+					const content = res.data
+					const blob = new Blob([content])
+					const fileName = item.reportName
+					
+					if ('download' in document.createElement('a')) { // 非IE下载
+						const elink = document.createElement('a')
+						elink.download = item.reportName
+						elink.style.display = 'none'
+						elink.href = URL.createObjectURL(blob)
+						console.log(elink.href);
+						document.body.appendChild(elink)
+						elink.click()
+						URL.revokeObjectURL(elink.href) // 释放URL 对象
+						document.body.removeChild(elink)
+					} else { // IE10+下载
+						navigator.msSaveBlob(blob, item.reportName)
+					}			
+				})
+			}
 		},
 	}
 };

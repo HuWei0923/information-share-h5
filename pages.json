@@ -12,6 +12,7 @@
 				"navigationBarTitleText": ""
 			}
 		},
+		
 		{
 			"path": "pages/index/index",
 			"style": {

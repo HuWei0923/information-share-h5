@@ -12,7 +12,7 @@
 			</uni-col>
 			<uni-col :span="8"><uni-easyinput class="uni-mt-5" trim="all" v-model="form.informant" placeholder="填报人"></uni-easyinput></uni-col>
 			<uni-col :span="8"><uni-easyinput class="uni-mt-5" trim="all" v-model="form.approver" placeholder="审批人"></uni-easyinput></uni-col>
-			<uni-col :span="8"><uni-easyinput class="uni-mt-5" trim="all" v-model="form.companyName" placeholder="中/英文名称"></uni-easyinput></uni-col>
+			<uni-col :span="16"><uni-easyinput class="uni-mt-5" trim="all" v-model="form.companyName" placeholder="中/英文名称"></uni-easyinput></uni-col>
 		</uni-row>
 		<view style="padding: 10rpx 20rpx 0;">
 			共

@@ -14,7 +14,7 @@ const createRequest = function(apiConfig) {
 	if(filetype){
 		responseType='arraybuffer';
 	}
-	
+	debugger;
 	return function(data) {
 		let token = uni.getStorageSync('token')
 		let regex = (/([^{}](?=.*})(?!.*{))+/)
