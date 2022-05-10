@@ -216,7 +216,7 @@ export default {
 			uni.navigateTo({
 				url: '/pages/detail/detail?reportcorpchnname='+item.reportcorpchnname+'&reportcorpengname='+item.reportcorpengname+'&reportbuyerno='+item.reportbuyerno
 			});
-		}
+		},
 	}
 };
 </script>
