@@ -118,7 +118,6 @@ export default {
 		},
 		preview(pdfname) {
 			//预览pdf
-			debugger;
 			uni.navigateTo({
 				url: '/pages/pdf/index?noticeSerialno='+pdfname
 			});

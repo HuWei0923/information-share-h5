@@ -50,7 +50,6 @@
 				this.fileUrl = fileURL;
 				// h5，使用h5访问的时候记得跨域
 				// #ifdef H5
-				debugger;
 				this.url = `${this.viewerUrl}?file=${encodeURIComponent(this.fileUrl)}`;
 				// #endif
 				
