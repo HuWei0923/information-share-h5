@@ -87,15 +87,15 @@ export default {
 		var script3 = document.createElement('script');
 		script3.src = 'http://cmp/v/js/cmp-att.js'
 		document.body.appendChild(script3);
-		var script5 = document.createElement('script');
-		script5.src = 'http://cmp/v/js/cmp-app.js'
-		document.body.appendChild(script5);
-		var script6 = document.createElement('script');
-		script6.src = 'http://cmp/v/js/cmp-chat.js'
-		document.body.appendChild(script6);
-		var script7 = document.createElement('script');
-		script7.src = 'http://cmp/v/js/cmp-webviewListener.js'
-		document.body.appendChild(script7);
+		// var script5 = document.createElement('script');
+		// script5.src = 'http://cmp/v/js/cmp-app.js'
+		// document.body.appendChild(script5);
+		// var script6 = document.createElement('script');
+		// script6.src = 'http://cmp/v/js/cmp-chat.js'
+		// document.body.appendChild(script6);
+		// var script7 = document.createElement('script');
+		// script7.src = 'http://cmp/v/js/cmp-webviewListener.js'
+		// document.body.appendChild(script7);
 		
 		this.getData();
 	},
@@ -170,17 +170,17 @@ export default {
 			}
 			
 			var url1='http://zibchina.com:9001/api/common/ZXB/downloadPDF/'+item.reportName;	
-			alert(url1);
-			alert(typeof(cmp.att.download));
+			// alert(url1);
+			// alert(typeof(cmp.att.download));
 			if(typeof(cmp)  == 'function'){
-				alert("131231")
+				
 				var toDownloadFileOptions = {
 					path:url1,//文件下载地址
 					filename:item.reportName,//文件名称
 					
 					success:function(result){ //下载成功的回调
 					//返回的数据格式如下：
-						alert(JSON.stringify(result));
+						//alert(JSON.stringify(result));
 					},
 					error:function(error){//下载失败的回调函数
 						alert(JSON.stringify(error));
