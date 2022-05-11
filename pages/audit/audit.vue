@@ -58,10 +58,10 @@
 					</uni-transition>
 					<view class="btn-box">
 						<uni-icons :type="item.showMore ? 'top' : 'bottom'" size="20" style="margin-right: 20rpx;" @click="item.showMore = !item.showMore"></uni-icons>
-						<uni-icons type="more-filled" size="20" @click="item.showMenu = !item.showMenu"></uni-icons>
+						<!-- <uni-icons type="more-filled" size="20" @click="item.showMenu = !item.showMenu"></uni-icons> -->
 					</view>
 				</view>
-				<uni-transition mode-class="fade" :duration="200" :show="item.showMenu">
+				<uni-transition mode-class="fade" :duration="200" :show="true">
 					<view style="margin-top: 20rpx;padding-top: 20rpx;text-align: right;border-top: 1px solid #efefef;">
 						<uni-tag :disabled="item.approveby != null" text="通过" type="primary" style="margin-right: 10rpx;" @click="audit(item, 1)"></uni-tag>
 						<uni-tag :disabled="item.approveby != null" text="不通过" type="error" @click="audit(item, 999)"></uni-tag>
