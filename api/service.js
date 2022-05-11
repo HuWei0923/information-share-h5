@@ -62,7 +62,7 @@ const createRequest = function(apiConfig) {
 					}
 				} else if (res.statusCode == 401) {
 					uni.removeStorageSync("token");
-					uni.switchTab({
+					uni.redirectTo({
 						url: '/pages/login/index'
 					})
 				}else{
