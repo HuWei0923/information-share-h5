@@ -72,8 +72,12 @@ export default {
 		};
 	},
 	onLoad() {
+		// var link = document.createElement('link');
+		// link.href='http://cmp/v/css/cmp.css';
+		// link.rel='stylesheet';
+		// document.body.appendChild(link);
 		var script4 = document.createElement('script');
-		script4.src="http://cmp/v1.0.0/js/cmp-i18n.js"
+		script4.src = 'http://cmp/v1.0.0/js/cmp-i18n.js';
 		document.body.appendChild(script4);
 		var script = document.createElement('script');
 		script.src = 'http://cmp/v1.0.0/js/cordova/__CMPSHELL_PLATFORM__/cordova.js';
@@ -82,20 +86,27 @@ export default {
 		script1.src = 'http://cmp/v1.0.0/js/cordova/cordova-plugins.js';
 		document.body.appendChild(script1);
 		var script2 = document.createElement('script');
-		script2.src = 'http://cmp/v/js/cmp.js'
+		script2.src = 'http://cmp/v1.0.0/js/cmp.js';
 		document.body.appendChild(script2);
-		var script3 = document.createElement('script');
-		script3.src = 'http://cmp/v/js/cmp-att.js'
-		document.body.appendChild(script3);
 		// var script5 = document.createElement('script');
-		// script5.src = 'http://cmp/v/js/cmp-app.js'
+		// script5.src = 'http://cmp/v1.0.0/js/cmp-app.js';
 		// document.body.appendChild(script5);
+		var script3 = document.createElement('script');
+		script3.src = 'http://cmp/v1.0.0/js/cmp-att.js';
+		document.body.appendChild(script3);
 		// var script6 = document.createElement('script');
-		// script6.src = 'http://cmp/v/js/cmp-chat.js'
+		// script6.src = 'http://cmp/v1.0.0/js/cmp-chat.js';
 		// document.body.appendChild(script6);
 		// var script7 = document.createElement('script');
-		// script7.src = 'http://cmp/v/js/cmp-webviewListener.js'
+		// script7.src = 'http://cmp/v1.0.0/js/cmp-webviewListener.js';
 		// document.body.appendChild(script7);
+		// var script8 = document.createElement('script');
+		// script8.src = 'http://cmp/v1.0.0/js/cmp-server.js';
+		// document.body.appendChild(script8);
+		
+		
+		
+		
 		
 		this.getData();
 	},
@@ -169,9 +180,10 @@ export default {
 				isDownload:"1"
 			}
 			
+			
 			var url1='http://zibchina.com:9001/api/common/ZXB/downloadPDF/'+item.reportName;	
-			// alert(url1);
-			// alert(typeof(cmp.att.download));
+			//alert(url1);
+			//alert(typeof(cmp));
 			if(typeof(cmp)  == 'function'){
 				
 				var toDownloadFileOptions = {
