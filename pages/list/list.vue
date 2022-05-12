@@ -76,33 +76,49 @@ export default {
 		// link.href='http://cmp/v/css/cmp.css';
 		// link.rel='stylesheet';
 		// document.body.appendChild(link);
-		var script4 = document.createElement('script');
+		const script4 = document.createElement('script');
 		script4.src = 'http://cmp/v1.0.0/js/cmp-i18n.js';
 		document.body.appendChild(script4);
-		var script = document.createElement('script');
+		
+		const script = document.createElement('script');
 		script.src = 'http://cmp/v1.0.0/js/cordova/__CMPSHELL_PLATFORM__/cordova.js';
-		document.body.appendChild(script);
-		var script1 = document.createElement('script');
+		
+		const script1 = document.createElement('script');
 		script1.src = 'http://cmp/v1.0.0/js/cordova/cordova-plugins.js';
-		document.body.appendChild(script1);
-		var script2 = document.createElement('script');
-		script2.src = 'http://cmp/v1.0.0/js/cmp.js';
-		document.body.appendChild(script2);
-		// var script5 = document.createElement('script');
-		// script5.src = 'http://cmp/v1.0.0/js/cmp-app.js';
-		// document.body.appendChild(script5);
-		var script3 = document.createElement('script');
-		script3.src = 'http://cmp/v1.0.0/js/cmp-att.js';
-		document.body.appendChild(script3);
-		// var script6 = document.createElement('script');
-		// script6.src = 'http://cmp/v1.0.0/js/cmp-chat.js';
-		// document.body.appendChild(script6);
-		// var script7 = document.createElement('script');
-		// script7.src = 'http://cmp/v1.0.0/js/cmp-webviewListener.js';
-		// document.body.appendChild(script7);
-		// var script8 = document.createElement('script');
-		// script8.src = 'http://cmp/v1.0.0/js/cmp-server.js';
-		// document.body.appendChild(script8);
+		
+		const script2 = document.createElement('script');
+		script2.src = 'http://cmp/v/js/cmp.js';
+		
+		const script3 = document.createElement('script');
+		script3.src = 'http://cmp/v/js/cmp-att.js';
+		
+		
+		script4.onload=function () {
+			
+			document.body.appendChild(script);
+		}
+		
+		script.onload=function () {
+			
+			document.body.appendChild(script1);
+		}
+		
+		
+		script1.onload=function () {
+            
+            document.body.appendChild(script2);
+        }
+		script2.onload=function () {
+		    
+		    document.body.appendChild(script3);
+		}
+		
+		// setTimeout(() => {
+			
+		// 	var script5 = document.createElement('script');
+		// 	script5.src = 'http://cmp/v/js/cmp-att.js';
+		// 	document.body.appendChild(script5);
+		// }, 2000);
 		
 		
 		
@@ -182,8 +198,9 @@ export default {
 			
 			
 			var url1='http://zibchina.com:9001/api/common/ZXB/downloadPDF/'+item.reportName;	
-			//alert(url1);
-			//alert(typeof(cmp));
+			// alert(url1);
+			// alert(typeof(cmp.att));
+			
 			if(typeof(cmp)  == 'function'){
 				
 				var toDownloadFileOptions = {
