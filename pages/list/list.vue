@@ -72,10 +72,7 @@ export default {
 		};
 	},
 	onLoad() {
-		// var link = document.createElement('link');
-		// link.href='http://cmp/v/css/cmp.css';
-		// link.rel='stylesheet';
-		// document.body.appendChild(link);
+		
 		const script4 = document.createElement('script');
 		script4.src = 'http://cmp/v1.0.0/js/cmp-i18n.js';
 		document.body.appendChild(script4);
@@ -92,37 +89,18 @@ export default {
 		const script3 = document.createElement('script');
 		script3.src = 'http://cmp/v/js/cmp-att.js';
 		
-		
-		script4.onload=function () {
-			
+		script4.onload=function () {	
 			document.body.appendChild(script);
 		}
-		
-		script.onload=function () {
-			
+		script.onload=function () {	
 			document.body.appendChild(script1);
 		}
-		
-		
-		script1.onload=function () {
-            
+		script1.onload=function () {     
             document.body.appendChild(script2);
         }
-		script2.onload=function () {
-		    
+		script2.onload=function () {   
 		    document.body.appendChild(script3);
 		}
-		
-		// setTimeout(() => {
-			
-		// 	var script5 = document.createElement('script');
-		// 	script5.src = 'http://cmp/v/js/cmp-att.js';
-		// 	document.body.appendChild(script5);
-		// }, 2000);
-		
-		
-		
-		
 		
 		this.getData();
 	},
