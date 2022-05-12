@@ -24,17 +24,17 @@
 		<view v-if="listData.length > 0">
 			<uni-group mode="card" v-for="(item, index) in listData" :key="index">
 				<view slot="title" class="card-title">
-					<text style="font-weight: bold;">{{ item.name }}-{{ item.code }}</text>
+					<text style="font-weight: bold;">{{ item.name }}-{{ item.username }}</text>
 					<text>
-						<uni-tag text="启用" type="primary" v-if="item.status == 0"></uni-tag>
-						<uni-tag text="停用" v-else-if="item.status == 1"></uni-tag>
+						<uni-tag text="已启用" type="primary" v-if="item.status == 1"></uni-tag>
+						<uni-tag text="已停用" v-else-if="item.status == 0"></uni-tag>
 					</text>
 					<!-- <text>{{ item.code }}</text> -->
 				</view>
 				<view style="position: relative;line-height: 48rpx;padding-right: 60rpx;">
 					<view>邮箱：{{ item.email }}</view>
 					<view>手机号：{{ item.mobile }}</view>
-					<view>所属公司名称：{{ item.company }}</view>
+					<view>所属公司名称：{{ item.companyName }}</view>
 					<view class="btn-box"><uni-icons type="more-filled" size="20" @click="item.showMenu = !item.showMenu"></uni-icons></view>
 				</view>
 				<uni-transition mode-class="fade" :duration="200" :show="item.showMenu">
@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import { companyAPI } from 'api/index.js';
+import { companyAPI,userAPI } from 'api/index.js';
 	import Utils from '@/utils/tool.js'
 export default {
 	data() {
@@ -77,6 +77,17 @@ export default {
 			vertical: 'bottom',
 			horizontal: 'right'
 		};
+	},
+	watch:{
+		search:{
+			handler(val){
+				console.log(val)
+				this.currentPage = 1;
+				this.listData = [];
+				this.getData();
+			},
+			deep:true
+		}
 	},
 	onLoad() {
 		this.getAllCompanyLevel();
@@ -113,21 +124,49 @@ export default {
 			});
 		},
 		getData() {
-			let temp = [
-				{ name: '沈旗', code: '70107165', email: 'test@163.com', mobile: '13513213322', company: '浙江康恩贝制药浙江康恩贝制药浙江康恩贝制药浙江康恩贝制药浙江康恩贝制药', status: 0, showMenu: false },
-				{ name: '应春晓', code: '80007532', email: 'test@163.com', mobile: '13513213322', company: '浙江康恩贝制药', status: 1, showMenu: false },
-				{ name: '王蕾', code: '70107165', email: 'test@163.com', mobile: '13513213322', company: '浙江康恩贝制药', status: 0, showMenu: false },
-				{ name: '贾琼', code: '70107165', email: 'test@163.com', mobile: '13513213322', company: '浙江康恩贝制药', status: 0, showMenu: false },
-				{ name: '黎婷', code: '70107165', email: 'test@163.com', mobile: '13513213322', company: '浙江康恩贝制药', status: 0, showMenu: false },
-				{ name: '刘鹏伟', code: '70107165', email: 'test@163.com', mobile: '13513213322', company: '浙江康恩贝制药', status: 0, showMenu: false },
-				{ name: '沈旗', code: '70107165', email: 'test@163.com', mobile: '13513213322', company: '浙江康恩贝制药', status: 0, showMenu: false },
-				{ name: '沈旗', code: '70107165', email: 'test@163.com', mobile: '13513213322', company: '浙江康恩贝制药', status: 0, showMenu: false },
-				{ name: '沈旗', code: '70107165', email: 'test@163.com', mobile: '13513213322', company: '浙江康恩贝制药', status: 0, showMenu: false },
-				{ name: '沈旗', code: '70107165', email: 'test@163.com', mobile: '13513213322', company: '浙江康恩贝制药', status: 0, showMenu: false }
-			];
-			setTimeout(() => {
-				this.listData = [...this.listData, ...temp];
-			}, 1000);
+			// let temp = [
+			// 	{ name: '沈旗', code: '70107165', email: 'test@163.com', mobile: '13513213322', company: '浙江康恩贝制药浙江康恩贝制药浙江康恩贝制药浙江康恩贝制药浙江康恩贝制药', status: 0, showMenu: false },
+			// 	{ name: '应春晓', code: '80007532', email: 'test@163.com', mobile: '13513213322', company: '浙江康恩贝制药', status: 1, showMenu: false },
+			// 	{ name: '王蕾', code: '70107165', email: 'test@163.com', mobile: '13513213322', company: '浙江康恩贝制药', status: 0, showMenu: false },
+			// 	{ name: '贾琼', code: '70107165', email: 'test@163.com', mobile: '13513213322', company: '浙江康恩贝制药', status: 0, showMenu: false },
+			// 	{ name: '黎婷', code: '70107165', email: 'test@163.com', mobile: '13513213322', company: '浙江康恩贝制药', status: 0, showMenu: false },
+			// 	{ name: '刘鹏伟', code: '70107165', email: 'test@163.com', mobile: '13513213322', company: '浙江康恩贝制药', status: 0, showMenu: false },
+			// 	{ name: '沈旗', code: '70107165', email: 'test@163.com', mobile: '13513213322', company: '浙江康恩贝制药', status: 0, showMenu: false },
+			// 	{ name: '沈旗', code: '70107165', email: 'test@163.com', mobile: '13513213322', company: '浙江康恩贝制药', status: 0, showMenu: false },
+			// 	{ name: '沈旗', code: '70107165', email: 'test@163.com', mobile: '13513213322', company: '浙江康恩贝制药', status: 0, showMenu: false },
+			// 	{ name: '沈旗', code: '70107165', email: 'test@163.com', mobile: '13513213322', company: '浙江康恩贝制药', status: 0, showMenu: false }
+			// ];
+			this.loadStatus = 'loading';
+			userAPI.getUserList({
+				pageIndex:  this.currentPage,
+				pageSize: this.pageSize,
+				username: this.search.code,
+				name: this.search.name,
+				status: '',
+				operator: uni.getStorageSync('userCode'),
+				isSubAdmin:'',
+				companyCode:'010',
+				isLevel:true
+			})
+			.then(res => {
+				this.total=res.data.totalRecords;
+				if (res.data.userList) {
+					for (let i in res.data.userList) {
+						res.data.userList[i].showMore=false;
+						res.data.userList[i].showMenu=false;
+						if(res.data.userList[i].reportbuyerno==null){
+							res.data.userList[i].reportbuyerno='';
+						}
+					}
+					this.loadStatus = 'more';
+					this.listData = [...this.listData, ...res.data.userList];
+				}
+			})
+			
+			
+			// setTimeout(() => {
+			// 	this.listData = [...this.listData, ...temp];
+			// }, 1000);
 		},
 		fabClick() {
 			uni.navigateTo({
