@@ -25,6 +25,11 @@ export default [
 		method:'post',
 		url:'/api/user/getReviewer'
 	},
+	{
+		name:"getUserList",
+		method:'post',
+		url:'/api/user/searchUserListNew'
+	},
 	
 	
 	
