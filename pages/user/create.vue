@@ -114,9 +114,9 @@
 				</uni-list-item>
 				<uni-list-item title="角色">
 					<view slot="footer">
-						<picker :value="form.role" @change="changeRole" :range="roleOptions" range-key="name">
+						<picker :value="form.roleName" @change="changeRole" :range="roleOptions" range-key="name">
 							<!-- <text class="cuIcon-right right-icon"></text> -->
-							<input placeholder="请选择" placeholder-style="color:#B5B5B5;" name="input" :value="form.role" readonly style="float:right" />
+							<input placeholder="请选择" placeholder-style="color:#B5B5B5;" name="input" :value="form.roleName" readonly style="float:right" />
 						</picker>
 					</view>
 				</uni-list-item>
@@ -142,7 +142,7 @@ export default {
 				email: '',
 				companyCode: '',
 				deptName: '',
-				role: ''
+				roleName: ''
 			},
 			errMsg: {
 				username: '',
