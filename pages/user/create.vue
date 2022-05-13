@@ -200,7 +200,7 @@ export default {
 			if (this.errMsg[field]) this.errMsg[field] = '';
 		},
 		changeRole(event) {
-			this.form.role = this.roleOptions[event.detail.value];
+			this.form.roleName = this.roleOptions[event.detail.value];
 		},
 		onchange(e) {
 			if (e.detail.value.length > 0) {
