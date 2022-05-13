@@ -30,6 +30,11 @@ export default [
 		method:'post',
 		url:'/api/user/searchUserListNew'
 	},
+	{
+		name:"getRole",
+		method:'post',
+		url:'/api/user/getRole'
+	},
 	
 	
 	
