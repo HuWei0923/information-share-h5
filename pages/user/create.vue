@@ -13,10 +13,10 @@
 							placeholder-style="color:#B5B5B5;"
 							name="input"
 							style="width: 280rpx;"
-							:value="form.code"
+							:value="form.username"
 							@input="inputChange($event, 'code')"
 						/>
-						<view class="error-style" v-if="errMsg.code != ''">{{ errMsg.code }}</view>
+						<view class="error-style" v-if="errMsg.username != ''">{{ errMsg.username }}</view>
 					</view>
 				</uni-list-item>
 				<uni-list-item>
@@ -88,13 +88,13 @@
 							ref="picker"
 							placeholder="请选择"
 							:localdata="dataTree"
-							v-model="form.institution"
+							v-model="form.companyCode"
 							:map="{ text: 'name', value: 'code' }"
 							@change="onchange"
 						></uni-data-picker>
 					</view>
 				</uni-list-item>
-				<uni-list-item :rightText="form.institution">
+				<uni-list-item :rightText="form.companyCode">
 					<view slot="header" class="form-title">
 						公司代码
 						<text class="required-s">*</text>
@@ -107,7 +107,7 @@
 							placeholder-style="color:#B5B5B5;"
 							name="input"
 							style="width: 280rpx;"
-							:value="form.dept"
+							:value="form.deptName"
 							@input="inputChange($event, 'dept')"
 						/>
 					</view>
@@ -129,26 +129,26 @@
 </template>
 
 <script>
-import { companyAPI } from 'api/index.js';
+import { companyAPI,userAPI } from 'api/index.js';
 import Utils from '@/utils/tool.js';
 export default {
 	data() {
 		return {
 			form: {
-				code: '',
+				username: '',
 				name: '',
 				password: '',
 				mobile: '',
 				email: '',
-				institution: '',
-				dept: '',
+				companyCode: '',
+				deptName: '',
 				role: ''
 			},
 			errMsg: {
-				code: '',
+				username: '',
 				name: '',
 				password: '',
-				institution: ''
+				companyCode: ''
 			},
 			dataTree: [],
 			roleOptions: []
@@ -157,7 +157,7 @@ export default {
 	onLoad(options) {
 		console.log(options);
 		if (options.userId) {
-			this.getUserDetail();
+			this.getUserDetail(options.userId);
 			uni.setNavigationBarTitle({
 				title: '编辑用户'
 			});
@@ -167,16 +167,23 @@ export default {
 	},
 	methods: {
 		getUserDetail(userId) {
-			this.form = {
-				code: '18477543',
-				name: '张三',
-				password: '222222',
-				mobile: '13512121212',
-				email: 'dfewe@163.com',
-				institution: '1075',
-				dept: 'test',
-				role: ''
-			};
+			// this.form = {
+			// 	code: '18477543',
+			// 	name: '张三',
+			// 	password: '222222',
+			// 	mobile: '13512121212',
+			// 	email: 'dfewe@163.com',
+			// 	institution: '1075',
+			// 	dept: 'test',
+			// 	role: ''
+			// };
+			userAPI
+				.getUserInfo({
+					userId: userId
+				})
+				.then(res => {
+					this.form = res.data.user;
+				});
 		},
 		getAllCompanyLevel() {
 			//组织架构查询
@@ -202,7 +209,7 @@ export default {
 		},
 		checkForm() {
 			let flag = true;
-			if (this.form.code == '') {
+			if (this.form.username == '') {
 				this.errMsg.code = '请填写工号';
 				flag = false;
 			} else if (this.form.name == '') {
@@ -211,7 +218,7 @@ export default {
 			} else if (this.form.password == '') {
 				this.errMsg.code = '请填写密码';
 				flag = false;
-			} else if (this.form.institution == '') {
+			} else if (this.form.companyCode == '') {
 				this.errMsg.code = '请填写公司名称';
 				flag = false;
 			}
