@@ -58,3 +58,23 @@ textarea {
 	display: inline-block;
 	vertical-align: top;
 }
+.download-box {
+	width: 100vw;
+	height: 70vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+.download {
+	border: 1px solid #b7bdc6;
+	border-radius: 50%;
+	width: 200rpx;
+	height: 200rpx;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+::v-deep .uni-steps__row-title{
+	font-size: 12px!important;
+}
