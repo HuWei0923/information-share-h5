@@ -175,7 +175,7 @@ export default {
 		},
 		edit(item){
 			uni.navigateTo({
-				url:`/pages/user/create?userId=${item.code}`
+				url:`/pages/user/create?userId=${item.userId}`
 			})
 		},
 		onchange(e) {
