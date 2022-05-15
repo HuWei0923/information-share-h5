@@ -104,9 +104,10 @@
 				}
 				const common = '请选择'
 				const placeholder = text[this.collection]
-				return placeholder ?
-					common + placeholder :
-					common
+				// return placeholder ?
+				// 	common + placeholder :
+				// 	common
+				return this.placeholder
 			}
 		},
 		watch: {

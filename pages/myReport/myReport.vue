@@ -2,7 +2,7 @@
 	<view class="content">
 		<uni-row :gutter="20" style="padding: 0 20rpx;">
 			<uni-col :span="8"><uni-easyinput class="uni-mt-5" trim="all" v-model="form.xcode" placeholder="信保代码"></uni-easyinput></uni-col>
-			<uni-col :span="8"><uni-combox class="uni-mt-5" :candidates="candidates" placeholder="审批标识" v-model="form.approve"></uni-combox></uni-col>
+			<uni-col :span="8"><uni-data-select class="uni-mt-5" v-model="form.approve" placeholder="审批标识" :localdata="selectOptions" ></uni-data-select></uni-col>
 			<uni-col :span="8"><uni-easyinput class="uni-mt-5" trim="all" v-model="form.companyName" placeholder="中/英文名称"></uni-easyinput></uni-col>
 		</uni-row>
 		<view style="padding: 10rpx 20rpx 0;">
@@ -67,7 +67,8 @@ export default {
 			pageSize: 10,
 			total: 0,
 			loadStatus: 'more' ,//more/loading/noMore，
-			candidates:['通过','不通过','待审核','异常']
+			// candidates:['通过','不通过','待审核','异常'],
+			selectOptions: [{ value: '通过', text: '通过' }, { value: '不通过', text: '不通过' },{ value: '待审核', text: '待审核' }, { value: '异常', text: '异常' }],
 		};
 	},
 	watch:{
@@ -263,5 +264,21 @@ export default {
 ::v-deep .uni-combox__input-plac {
 	font-size: 24rpx;
 	font-weight: 200;
+}
+::v-deep .uni-select__input-text {
+	width: 160rpx;
+}
+::v-deep .uni-stat__select {
+	padding: 0;
+}
+::v-deep .uni-stat__actived {
+	outline: none;
+}
+::v-deep .uni-select__input-box {
+	min-height: 34px;
+}
+::v-deep .uni-select__input-placeholder{
+	font-weight: 100;
+	font-size: 12px;
 }
 </style>

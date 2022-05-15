@@ -111,6 +111,9 @@ export default {
 		},
 		goToPage(item){
 			console.log(item)
+			// uni.navigateTo({
+			// 	url:`/pages/zcx/pageWrapper?pageIndex=${this.pageIndex}&companyId=${item.companyId}&companyName=${item.companyName}&creditCode=${item.creditCode}`
+			// })
 			uni.navigateTo({
 				url:`/pages/zcx/${this.pageIndex}?companyId=${item.companyId}&companyName=${item.companyName}&creditCode=${item.creditCode}`
 			})

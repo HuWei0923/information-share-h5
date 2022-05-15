@@ -3,8 +3,14 @@
 		<uni-row :gutter="20" style="padding: 0 20rpx;">
 			<uni-col :span="8"><uni-easyinput class="uni-mt-5" trim="all" v-model="search.name" placeholder="姓名"></uni-easyinput></uni-col>
 			<uni-col :span="8"><uni-easyinput class="uni-mt-5" trim="all" v-model="search.code" placeholder="工号"></uni-easyinput></uni-col>
-			<uni-col :span="8"><uni-combox class="uni-mt-5" :candidates="statusOptions" placeholder="状态" v-model="search.status"></uni-combox></uni-col>
-			<uni-col :span="8"><uni-combox class="uni-mt-5" :candidates="roleOptions" placeholder="角色" v-model="search.role"></uni-combox></uni-col>
+			<uni-col :span="8">
+				<uni-data-select class="uni-mt-5" v-model="search.status" placeholder="状态" :localdata="statusOptions" ></uni-data-select>
+				<!-- <uni-combox class="uni-mt-5" :candidates="statusOptions" placeholder="状态" v-model="search.status"></uni-combox> -->
+				</uni-col>
+			<uni-col :span="8">
+				<uni-data-select class="uni-mt-5" v-model="search.role" placeholder="角色" :localdata="roleOptions" ></uni-data-select>
+				<!-- <uni-combox class="uni-mt-5" :candidates="roleOptions" placeholder="角色" v-model="search.role"></uni-combox> -->
+				</uni-col>
 			<uni-col :span="16">
 				<uni-data-picker
 					placeholder="组织机构"
@@ -24,7 +30,9 @@
 		<view v-if="listData.length > 0">
 			<uni-group mode="card" v-for="(item, index) in listData" :key="index">
 				<view slot="title" class="card-title">
-					<text style="font-weight: bold;">{{ item.name }}-{{ item.username }}</text>
+					<text style="font-weight: bold;">
+					<uni-icons style="position: relative;top:1px" type="person-filled" size="18" color="#fff" v-if="item.permissionRoles.indexOf('sub_admin')>-1"></uni-icons>
+					{{ item.name }}-{{ item.username }}</text>
 					<text>
 						<uni-tag text="已启用" type="primary" v-if="item.status == 1"></uni-tag>
 						<uni-tag text="已停用" v-else-if="item.status == 0"></uni-tag>
@@ -66,8 +74,8 @@ export default {
 				role: '',
 				institution: ''
 			},
-			statusOptions: ['已启用', '未启用'],
-			roleOptions: ['A', 'B'],
+			statusOptions: [{ value: '已启用', text: '已启用' },{ value: '未启用', text: '未启用' }],
+			roleOptions: [{ value: 'A', text: 'A' },{ value: 'B', text: 'B' }],
 			dataTree: [],
 			listData: [],
 			currentPage: 1,
@@ -118,6 +126,7 @@ export default {
 			//组织架构查询
 			companyAPI.getAllCompanyLevel({ userId: uni.getStorageSync('userId') }).then(res => {
 				if (res.data.code == 0) {
+					console.log(res.data)
 					let arr = Utils.formatTreeData(res.data.treeData, 'code', 'scode', null);
 					this.dataTree = arr;
 				}
@@ -226,5 +235,21 @@ export default {
 	background-color: #4f9be1;
 	font-weight: normal;
 	color: #fff;
+}
+::v-deep .uni-select__input-text {
+	width: 160rpx;
+}
+::v-deep .uni-stat__select {
+	padding: 0;
+}
+::v-deep .uni-stat__actived {
+	outline: none;
+}
+::v-deep .uni-select__input-box {
+	min-height: 34px;
+}
+::v-deep .uni-select__input-placeholder{
+	font-weight: 100;
+	font-size: 12px;
 }
 </style>
