@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { zcxAPI } from 'api/index.js';
+import { zcxAPI,companyAPI } from 'api/index.js';
 export default {
 	data() {
 		return {
@@ -58,6 +58,7 @@ export default {
 	},
 	methods: {
 		getRiskScreenHtml() {
+			
 			let param = {
 				companyId: this.companyId,
 				creditCode: this.creditCode,
