@@ -127,7 +127,6 @@ export default {
 	},
 	methods: {
 		getData() {
-			alert('111111')
 			this.loadStatus = 'loading';
 			companyAPI.getPDFListAll({
 				pageIndex:  this.currentPage,
