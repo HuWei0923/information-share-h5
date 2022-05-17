@@ -228,11 +228,24 @@ export default {
 		commit() {
 			let flag = this.checkForm();
 			if (flag) {
-				uni.showToast({
-					icon: 'none',
-					title: '保存成功。',
-					success: () => {
-						uni.navigateBack();
+			userAPI
+				.updateUser({
+					userId:this.form.userId,
+					username:this.form.username,
+					name:this.form.name,
+					password:this.form.password,
+					mobile:this.form.mobile,
+					email:this.form.email,
+					companyCode:this.form.companyCode,
+					deptName:this.form.deptName,
+					roleName:this.form.roleName
+				})
+				.then(res => {
+					if (res.data.code == 0) {
+						uni.showToast({
+							icon: 'none',
+							title: '保存成功。'
+						});
 					}
 				});
 			}
