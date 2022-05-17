@@ -182,7 +182,7 @@ export default {
 					status: '',
 					operator: uni.getStorageSync('userCode'),
 					isSubAdmin: '',
-					companyCode: '010',
+					companyCode: this.search.institution,
 					isLevel: true
 				})
 				.then(res => {
