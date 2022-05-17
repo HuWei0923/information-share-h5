@@ -19,6 +19,8 @@
 					v-model="search.institution"
 					:map="{ text: 'name', value: 'code' }"
 					@change="onchange"
+					@nodeclick="nodeclick"
+					@popupclosed="popupclosed"
 				></uni-data-picker>
 			</uni-col>
 		</uni-row>
@@ -216,6 +218,12 @@ export default {
 		},
 		onchange(e) {
 			console.log('onchange:', e);
+		},
+		nodeclick(e){
+			this.tempInstitute=e;
+		},
+		popupclosed(){
+			this.search.institution=this.tempInstitute.code;
 		}
 	}
 };
