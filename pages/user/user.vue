@@ -75,7 +75,7 @@ export default {
 				role: '',
 				institution: ''
 			},
-			statusOptions: [{ value: '1', text: '已启用' }, { value: '0', text: '未启用' }],
+			statusOptions: [{ value: '1', text: '已启用' }, { value: '0', text: '已停用' }],
 			roleOptions: [{}],
 			//roleOptions: [],
 			dataTree: [],
@@ -143,7 +143,7 @@ export default {
 				this.roleOptions =res.data.allRole.map(item=>{
 					return{
 						text:item,
-						label:item
+						value:item
 					}
 				})
 					// let dataArray = [];
@@ -182,7 +182,7 @@ export default {
 					status: this.search.status,
 					operator: uni.getStorageSync('userCode'),
 					isSubAdmin: this.search.role,
-					companyCode: '010',
+					companyCode: this.search.institution,
 					isLevel: true
 				})
 				.then(res => {
