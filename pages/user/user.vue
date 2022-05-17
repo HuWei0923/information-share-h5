@@ -31,7 +31,7 @@
 			<uni-group mode="card" v-for="(item, index) in listData" :key="index">
 				<view slot="title" class="card-title">
 					<text style="font-weight: bold;">
-						<uni-icons style="position: relative;top:1px" type="person-filled" size="18" color="#fff" v-if="item.permissionRoles.indexOf('sub_admin') > -1"></uni-icons>
+						<uni-icons style="position: relative;top:1px" type="person-filled" size="18" color="#fff" v-if="item.permissionRoles&&item.permissionRoles.indexOf('sub_admin') > -1"></uni-icons>
 						{{ item.name }}-{{ item.username }}
 					</text>
 					<text>
@@ -73,7 +73,7 @@ export default {
 				code: '',
 				status: '',
 				role: '',
-				institution: '010'
+				institution: ''
 			},
 			statusOptions: [{ value: '已启用', text: '已启用' }, { value: '未启用', text: '未启用' }],
 			roleOptions: [{}],
