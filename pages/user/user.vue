@@ -72,7 +72,7 @@ export default {
 				code: '',
 				status: '',
 				role: '',
-				institution: ''
+				institution: '010'
 			},
 			statusOptions: [{ value: '已启用', text: '已启用' },{ value: '未启用', text: '未启用' }],
 			roleOptions: [{ value: 'A', text: 'A' },{ value: 'B', text: 'B' }],
@@ -180,7 +180,7 @@ export default {
 				status: '',
 				operator: uni.getStorageSync('userCode'),
 				isSubAdmin:'',
-				companyCode:'010',
+				companyCode:this.search.institution,
 				isLevel:true
 			})
 			.then(res => {
