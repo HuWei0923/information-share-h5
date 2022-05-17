@@ -179,7 +179,7 @@ export default {
 					pageSize: this.pageSize,
 					username: this.search.code,
 					name: this.search.name,
-					status: '',
+					status: this.search.status,
 					operator: uni.getStorageSync('userCode'),
 					isSubAdmin: '',
 					companyCode: this.search.institution,
