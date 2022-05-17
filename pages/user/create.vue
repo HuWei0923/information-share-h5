@@ -112,14 +112,22 @@
 						/>
 					</view>
 				</uni-list-item>
-				<uni-list-item title="角色">
-					<view slot="footer">
-						<picker :value="form.roleName" @change="changeRole" :range="roleOptions" range-key="name">
-							<!-- <text class="cuIcon-right right-icon"></text> -->
-							<input placeholder="请选择" placeholder-style="color:#B5B5B5;" name="input" :value="form.roleName" readonly style="float:right" />
-						</picker>
-					</view>
-				</uni-list-item>
+	<uni-list-item>
+		<view slot="header" class="form-title">
+			角色
+			<text class="required-s">*</text>
+		</view>
+		<view slot="footer">
+			<uni-data-picker
+				ref="picker"
+				placeholder="请选择"
+				:localdata="roleOptions"
+				v-model="form.roleName"
+				:map="{ text: 'name', value: 'code' }"
+				@change="onchange"
+			></uni-data-picker>
+		</view>
+	</uni-list-item>
 			</uni-list>
 		</view>
 		<uni-row class="content" :gutter="20" style="padding: 50rpx;">
@@ -164,6 +172,7 @@ export default {
 			});
 		}
 		this.getAllCompanyLevel();
+		this.getAllRole();
 		// this.getData();
 	},
 	methods: {
@@ -195,6 +204,33 @@ export default {
 				}
 			});
 		},
+		getAllRole() {
+			
+			debugger
+			this.roleOptions=[]
+			userAPI.getRole().then(res => {
+				this.roleOptions =res.data.allRole.map(item=>{
+					return{
+						text:item,
+						value:item
+					}
+				})
+					// let dataArray = [];
+				// for (let j = 0; j < res.data.allRole.length; j++) {
+				// 	let roleTemp = {
+				// 		value: res.data.allRole[j],
+				// 		text: res.data.allRole[j]
+				// 	};
+				// 	dataArray.push(roleTemp);
+				// }
+				// this.roleOptions = dataArray;
+				debugger
+				let fdf = this.roleOptions;
+				console.log(this.roleOptions);
+			});
+		},
+		
+		
 		inputChange(event, field) {
 			console.log(event, field);
 			this.form[field] = event.detail.value;
