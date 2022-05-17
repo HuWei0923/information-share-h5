@@ -75,7 +75,7 @@ export default {
 				role: '',
 				institution: ''
 			},
-			statusOptions: [{ value: '已启用', text: '已启用' }, { value: '未启用', text: '未启用' }],
+			statusOptions: [{ value: '1', text: '已启用' }, { value: '0', text: '未启用' }],
 			roleOptions: [{}],
 			//roleOptions: [],
 			dataTree: [],
@@ -91,7 +91,7 @@ export default {
 	watch: {
 		search: {
 			handler(val) {
-				console.log(val);
+				//console.log(val);
 				this.currentPage = 1;
 				this.listData = [];
 				this.getData();
@@ -181,8 +181,8 @@ export default {
 					name: this.search.name,
 					status: this.search.status,
 					operator: uni.getStorageSync('userCode'),
-					isSubAdmin: '',
-					companyCode: this.search.institution,
+					isSubAdmin: this.search.role,
+					companyCode: '010',
 					isLevel: true
 				})
 				.then(res => {
