@@ -72,7 +72,10 @@ export default {
 		};
 	},
 	onLoad() {
-		
+		// var link = document.createElement('link');
+		// link.href='http://cmp/v/css/cmp.css';
+		// link.rel='stylesheet';
+		// document.body.appendChild(link);
 		const script4 = document.createElement('script');
 		script4.src = 'http://cmp/v1.0.0/js/cmp-i18n.js';
 		document.body.appendChild(script4);
@@ -124,6 +127,7 @@ export default {
 	},
 	methods: {
 		getData() {
+			alert('111111')
 			this.loadStatus = 'loading';
 			companyAPI.getPDFListAll({
 				pageIndex:  this.currentPage,
@@ -133,6 +137,7 @@ export default {
 			})
 			.then(res => {
 				this.total=res.data.totalRecords;
+				debugger;
 				if (res.data.pdfList) {
 					for (let i in res.data.pdfList) {
 						res.data.pdfList[i].showMore=false;

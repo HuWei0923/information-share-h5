@@ -76,6 +76,7 @@ export default {
 			},
 			statusOptions: [{ value: '已启用', text: '已启用' },{ value: '未启用', text: '未启用' }],
 			roleOptions: [{ value: 'A', text: 'A' },{ value: 'B', text: 'B' }],
+			//roleOptions: [],
 			dataTree: [],
 			listData: [],
 			currentPage: 1,
@@ -97,8 +98,10 @@ export default {
 			deep:true
 		}
 	},
-	onLoad() {
+	async onLoad() {
+		await this.getAllRole();
 		this.getAllCompanyLevel();
+		
 	},
 	onShow(){
 		this.getData();
@@ -132,6 +135,28 @@ export default {
 				}
 			});
 		},
+		//查询角色
+		
+		async getAllRole(){
+			debugger
+			
+			console.log(this.roleOptions)
+			await userAPI.getRole().then(res=>{
+				console.log(res.data)
+				let dataArray = [];
+				for(let j = 0;j < res.data.allRole.length;j++) {
+					let roleTemp = {
+					  value: res.data.allRole[j],
+					  text: res.data.allRole[j]
+					}
+				  dataArray.push(roleTemp);
+				}
+				this.roleOptions =  dataArray;
+				console.log(this.roleOptions)
+				
+			})
+		},
+		
 		getData() {
 			// let temp = [
 			// 	{ name: '沈旗', code: '70107165', email: 'test@163.com', mobile: '13513213322', company: '浙江康恩贝制药浙江康恩贝制药浙江康恩贝制药浙江康恩贝制药浙江康恩贝制药', status: 0, showMenu: false },
@@ -147,6 +172,7 @@ export default {
 			// ];
 			this.loadStatus = 'loading';
 			userAPI.getUserList({
+			
 				pageIndex:  this.currentPage,
 				pageSize: this.pageSize,
 				username: this.search.code,

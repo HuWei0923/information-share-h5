@@ -40,4 +40,9 @@ export default [
 		url:'/api/company/getPDF',
 		filetype:true,
 	},
+	{
+		name:"getReportList",
+		method:'post',
+		url:'/api/company/zhongChengXin/getReportList'
+	},
 ]

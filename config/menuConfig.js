@@ -100,7 +100,7 @@ const menuData = [{
 		]
 	},
 	{
-		title: '天眼查',
+		title: '工商舆情',
 		children: [{
 			title: '检索入口',
 			icon: require('@/static/img/index/jsrk.png'),
