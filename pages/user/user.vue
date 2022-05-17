@@ -4,13 +4,13 @@
 			<uni-col :span="8"><uni-easyinput class="uni-mt-5" trim="all" v-model="search.name" placeholder="姓名"></uni-easyinput></uni-col>
 			<uni-col :span="8"><uni-easyinput class="uni-mt-5" trim="all" v-model="search.code" placeholder="工号"></uni-easyinput></uni-col>
 			<uni-col :span="8">
-				<uni-data-select class="uni-mt-5" v-model="search.status" placeholder="状态" :localdata="statusOptions" ></uni-data-select>
+				<uni-data-select class="uni-mt-5" v-model="search.status" placeholder="状态" :localdata="statusOptions"></uni-data-select>
 				<!-- <uni-combox class="uni-mt-5" :candidates="statusOptions" placeholder="状态" v-model="search.status"></uni-combox> -->
-				</uni-col>
+			</uni-col>
 			<uni-col :span="8">
-				<uni-data-select class="uni-mt-5" v-model="search.role" placeholder="角色" :localdata="roleOptions" ></uni-data-select>
+				<uni-data-select class="uni-mt-5" v-model="search.role" placeholder="角色" :localdata="roleOptions" v-if="roleOptions.length>0"></uni-data-select>
 				<!-- <uni-combox class="uni-mt-5" :candidates="roleOptions" placeholder="角色" v-model="search.role"></uni-combox> -->
-				</uni-col>
+			</uni-col>
 			<uni-col :span="16">
 				<uni-data-picker
 					placeholder="组织机构"
@@ -31,8 +31,9 @@
 			<uni-group mode="card" v-for="(item, index) in listData" :key="index">
 				<view slot="title" class="card-title">
 					<text style="font-weight: bold;">
-					<uni-icons style="position: relative;top:1px" type="person-filled" size="18" color="#fff" v-if="item.permissionRoles.indexOf('sub_admin')>-1"></uni-icons>
-					{{ item.name }}-{{ item.username }}</text>
+						<uni-icons style="position: relative;top:1px" type="person-filled" size="18" color="#fff" v-if="item.permissionRoles.indexOf('sub_admin') > -1"></uni-icons>
+						{{ item.name }}-{{ item.username }}
+					</text>
 					<text>
 						<uni-tag text="已启用" type="primary" v-if="item.status == 1"></uni-tag>
 						<uni-tag text="已停用" v-else-if="item.status == 0"></uni-tag>
@@ -62,8 +63,8 @@
 </template>
 
 <script>
-import { companyAPI,userAPI } from 'api/index.js';
-	import Utils from '@/utils/tool.js'
+import { companyAPI, userAPI } from 'api/index.js';
+import Utils from '@/utils/tool.js';
 export default {
 	data() {
 		return {
@@ -74,8 +75,8 @@ export default {
 				role: '',
 				institution: '010'
 			},
-			statusOptions: [{ value: '已启用', text: '已启用' },{ value: '未启用', text: '未启用' }],
-			roleOptions: [{ value: 'A', text: 'A' },{ value: 'B', text: 'B' }],
+			statusOptions: [{ value: '已启用', text: '已启用' }, { value: '未启用', text: '未启用' }],
+			roleOptions: [{}],
 			//roleOptions: [],
 			dataTree: [],
 			listData: [],
@@ -87,23 +88,22 @@ export default {
 			horizontal: 'right'
 		};
 	},
-	watch:{
-		search:{
-			handler(val){
-				console.log(val)
+	watch: {
+		search: {
+			handler(val) {
+				console.log(val);
 				this.currentPage = 1;
 				this.listData = [];
 				this.getData();
 			},
-			deep:true
+			deep: true
 		}
 	},
-	async onLoad() {
-		await this.getAllRole();
+	onLoad() {
+		this.getAllRole();
 		this.getAllCompanyLevel();
-		
 	},
-	onShow(){
+	onShow() {
 		this.getData();
 	},
 	//上拉加载更多
@@ -129,34 +129,36 @@ export default {
 			//组织架构查询
 			companyAPI.getAllCompanyLevel({ userId: uni.getStorageSync('userId') }).then(res => {
 				if (res.data.code == 0) {
-					console.log(res.data)
+					console.log(res.data);
 					let arr = Utils.formatTreeData(res.data.treeData, 'code', 'scode', null);
 					this.dataTree = arr;
 				}
 			});
 		},
 		//查询角色
-		
-		async getAllRole(){
-			debugger
-			
-			console.log(this.roleOptions)
-			await userAPI.getRole().then(res=>{
-				console.log(res.data)
-				let dataArray = [];
-				for(let j = 0;j < res.data.allRole.length;j++) {
-					let roleTemp = {
-					  value: res.data.allRole[j],
-					  text: res.data.allRole[j]
+
+		getAllRole() {
+			this.roleOptions=[]
+			userAPI.getRole().then(res => {
+				this.roleOptions =res.data.allRole.map(item=>{
+					return{
+						text:item,
+						label:item
 					}
-				  dataArray.push(roleTemp);
-				}
-				this.roleOptions =  dataArray;
-				console.log(this.roleOptions)
-				
-			})
+				})
+					// let dataArray = [];
+				// for (let j = 0; j < res.data.allRole.length; j++) {
+				// 	let roleTemp = {
+				// 		value: res.data.allRole[j],
+				// 		text: res.data.allRole[j]
+				// 	};
+				// 	dataArray.push(roleTemp);
+				// }
+				// this.roleOptions = dataArray;
+				console.log(this.roleOptions);
+			});
 		},
-		
+
 		getData() {
 			// let temp = [
 			// 	{ name: '沈旗', code: '70107165', email: 'test@163.com', mobile: '13513213322', company: '浙江康恩贝制药浙江康恩贝制药浙江康恩贝制药浙江康恩贝制药浙江康恩贝制药', status: 0, showMenu: false },
@@ -171,51 +173,50 @@ export default {
 			// 	{ name: '沈旗', code: '70107165', email: 'test@163.com', mobile: '13513213322', company: '浙江康恩贝制药', status: 0, showMenu: false }
 			// ];
 			this.loadStatus = 'loading';
-			userAPI.getUserList({
-			
-				pageIndex:  this.currentPage,
-				pageSize: this.pageSize,
-				username: this.search.code,
-				name: this.search.name,
-				status: '',
-				operator: uni.getStorageSync('userCode'),
-				isSubAdmin:'',
-				companyCode:this.search.institution,
-				isLevel:true
-			})
-			.then(res => {
-				this.total=res.data.totalRecords;
-				if (res.data.userList) {
-					for (let i in res.data.userList) {
-						res.data.userList[i].showMore=false;
-						res.data.userList[i].showMenu=false;
-						if(res.data.userList[i].reportbuyerno==null){
-							res.data.userList[i].reportbuyerno='';
+			userAPI
+				.getUserList({
+					pageIndex: this.currentPage,
+					pageSize: this.pageSize,
+					username: this.search.code,
+					name: this.search.name,
+					status: '',
+					operator: uni.getStorageSync('userCode'),
+					isSubAdmin: '',
+					companyCode: '010',
+					isLevel: true
+				})
+				.then(res => {
+					this.total = res.data.totalRecords;
+					if (res.data.userList) {
+						for (let i in res.data.userList) {
+							res.data.userList[i].showMore = false;
+							res.data.userList[i].showMenu = false;
+							if (res.data.userList[i].reportbuyerno == null) {
+								res.data.userList[i].reportbuyerno = '';
+							}					
 						}
+						this.loadStatus = 'more';
+						this.listData = [...this.listData, ...res.data.userList];
 					}
-					this.loadStatus = 'more';
-					this.listData = [...this.listData, ...res.data.userList];
-				}
-			})
-			
-			
+				});
+
 			// setTimeout(() => {
 			// 	this.listData = [...this.listData, ...temp];
 			// }, 1000);
 		},
 		fabClick() {
 			uni.navigateTo({
-				url:'/pages/user/create'
-			})
+				url: '/pages/user/create'
+			});
 		},
-		edit(item){
+		edit(item) {
 			uni.navigateTo({
-				url:`/pages/user/create?userId=${item.userId}`
-			})
+				url: `/pages/user/create?userId=${item.userId}`
+			});
 		},
 		onchange(e) {
 			console.log('onchange:', e);
-		},
+		}
 	}
 };
 </script>
@@ -263,7 +264,7 @@ export default {
 	color: #fff;
 }
 ::v-deep .uni-select__input-text {
-	width: 160rpx;
+	width: 170rpx;
 }
 ::v-deep .uni-stat__select {
 	padding: 0;
@@ -274,7 +275,7 @@ export default {
 ::v-deep .uni-select__input-box {
 	min-height: 34px;
 }
-::v-deep .uni-select__input-placeholder{
+::v-deep .uni-select__input-placeholder {
 	font-weight: 100;
 	font-size: 12px;
 }

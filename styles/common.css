@@ -78,3 +78,6 @@ textarea {
 ::v-deep .uni-steps__row-title{
 	font-size: 12px!important;
 }
+::v-deep .uni-select__selector-item{
+	font-size: 12px!important;
+	}
