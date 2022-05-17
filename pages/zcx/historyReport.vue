@@ -8,16 +8,14 @@
 					<view>行业：{{ item.industry || '/' }}</view>
 					<view>企业类型：{{ item.industryType || '/' }}</view>
 					<view>更新时间：{{ item.updateTime || '/' }}</view>
-					<view class="btn-box">
-						<uni-icons type="more-filled" size="20" @click="item.showMenu = !item.showMenu"></uni-icons>
-					</view>
+					<view class="btn-box"><uni-icons type="more-filled" size="20" @click="item.showMenu = !item.showMenu"></uni-icons></view>
 				</view>
-				
+
 				<uni-transition mode-class="fade" :duration="200" :show="item.showMenu">
 					<view style="margin-top: 20rpx;padding-top: 20rpx;text-align: right;border-top: 1px solid #efefef;">
-						<uni-tag  text="预览" type="primary" style="margin-right: 10rpx;" ></uni-tag>
-						<uni-tag  text="下载" type="success" style="margin-right: 10rpx;"  ></uni-tag>
-						<uni-tag  text="查看历史报告" type="warning"></uni-tag>
+						<uni-tag text="预览" type="primary" style="margin-right: 10rpx;"></uni-tag>
+						<uni-tag text="下载" type="success" style="margin-right: 10rpx;"></uni-tag>
+						<uni-tag text="查看历史报告" type="warning" @click="checkHistoryList(item)"></uni-tag>
 					</view>
 				</uni-transition>
 			</uni-group>
@@ -45,7 +43,7 @@ export default {
 				{ img: '/static/img/index/cwpl.png', code: 'cwpl', name: '财务排雷' },
 				{ img: '/static/img/index/cyqypj.png', code: 'cyqyxypj', name: '产业企业评价' },
 				{ img: '/static/img/index/qyxypj.png', code: 'qyxypj', name: '区域信用评价' },
-				{ img: '/static/img/index/ctqypj.png', code: 'ctqyxypj', name: '城投企业评价' },
+				{ img: '/static/img/index/ctqypj.png', code: 'ctqyxypj', name: '城投企业评价' }
 			],
 			listData: [
 				{
@@ -54,7 +52,7 @@ export default {
 					industry: '综合',
 					industryType: '民企上市公司',
 					updateTime: '2022-05-14 09:22:12',
-					showMenu:false
+					showMenu: false
 				},
 				{
 					reportType: '产业企业信用评价',
@@ -62,7 +60,7 @@ export default {
 					industry: '综合',
 					industryType: '民企上市公司',
 					updateTime: '2022-05-14 09:22:12',
-					showMenu:false
+					showMenu: false
 				},
 				{
 					reportType: '区域信用评价',
@@ -70,7 +68,7 @@ export default {
 					industry: '综合',
 					industryType: '民企上市公司',
 					updateTime: '2022-05-14 09:22:12',
-					showMenu:false
+					showMenu: false
 				},
 				{
 					reportType: '财务排雷',
@@ -78,7 +76,7 @@ export default {
 					industry: '综合',
 					industryType: '民企上市公司',
 					updateTime: '2022-05-14 09:22:12',
-					showMenu:false
+					showMenu: false
 				},
 				{
 					reportType: '产业企业信用评价',
@@ -86,12 +84,12 @@ export default {
 					industry: '综合',
 					industryType: '民企上市公司',
 					updateTime: '2022-05-14 09:22:12',
-					showMenu:false
+					showMenu: false
 				}
 			],
 			companyId: '',
 			companyName: '',
-			creditCode: '',
+			creditCode: ''
 		};
 	},
 	onLoad(options) {
@@ -100,11 +98,14 @@ export default {
 		this.companyName = options.companyName;
 		this.creditCode = options.creditCode;
 	},
-	methods:{
-		goToPage(item){
+	methods: {
+		goToPage(item) {
 			uni.navigateTo({
-				url:`/pages/zcx/${item.code}?companyId=${this.companyId}&companyName=${this.companyName}&creditCode=${this.creditCode}`
-			})
+				url: `/pages/zcx/${item.code}?companyId=${this.companyId}&companyName=${this.companyName}&creditCode=${this.creditCode}`
+			});
+		},
+		checkHistoryList(item) {
+			uni.navigateTo({ url: '/pages/zcx/historyReportList' });
 		}
 	}
 };
