@@ -14,7 +14,7 @@
 							name="input"
 							style="width: 280rpx;"
 							:value="form.username"
-							@input="inputChange($event, 'code')"
+							@input="inputChange($event, 'username')"
 						/>
 						<view class="error-style" v-if="errMsg.username != ''">{{ errMsg.username }}</view>
 					</view>
@@ -90,7 +90,7 @@
 							:localdata="dataTree"
 							v-model="form.companyCode"
 							:map="{ text: 'name', value: 'code' }"
-							@change="onchange"
+							@change="onchange($event, 'companyName')"
 						></uni-data-picker>
 					</view>
 				</uni-list-item>
@@ -139,7 +139,6 @@
 import { companyAPI,userAPI } from 'api/index.js';
 import Utils from '@/utils/tool.js';
 export default {
-	//测试提交11222222
 	data() {
 		return {
 			form: {
@@ -149,6 +148,7 @@ export default {
 				mobile: '',
 				email: '',
 				companyCode: '',
+				companyName:'',
 				deptName: '',
 				roleName: ''
 			},
@@ -204,8 +204,6 @@ export default {
 			});
 		},
 		getAllRole() {
-			
-			debugger
 			this.roleOptions=[]
 			userAPI.getRole().then(res => {
 				this.roleOptions =res.data.allRole.map(item=>{
@@ -214,17 +212,6 @@ export default {
 						value:item
 					}
 				})
-					// let dataArray = [];
-				// for (let j = 0; j < res.data.allRole.length; j++) {
-				// 	let roleTemp = {
-				// 		value: res.data.allRole[j],
-				// 		text: res.data.allRole[j]
-				// 	};
-				// 	dataArray.push(roleTemp);
-				// }
-				// this.roleOptions = dataArray;
-				debugger
-				let fdf = this.roleOptions;
 				console.log(this.roleOptions);
 			});
 		},
@@ -261,6 +248,7 @@ export default {
 			return flag;
 		},
 		commit() {
+			debugger
 			let flag = this.checkForm();
 			if (flag) {
 			userAPI
@@ -272,8 +260,10 @@ export default {
 					mobile:this.form.mobile,
 					email:this.form.email,
 					companyCode:this.form.companyCode,
-					deptName:this.form.deptName,
-					roleName:this.form.roleName
+					companyName:this.form.companyName,
+					deptName:this.form.dept,
+					//因为后台接口根据permissionRoles字段判断角色则取
+					permissionRoles:this.form.roleName
 				})
 				.then(res => {
 					if (res.data.code == 0) {
