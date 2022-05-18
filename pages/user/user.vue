@@ -21,7 +21,9 @@
 					@change="onchange"
 					@nodeclick="nodeclick"
 					@popupclosed="popupclosed"
-				></uni-data-picker>
+				>
+				<uni-easyinput class="uni-mt-5" trim="all" v-model="search.institutionName" placeholder="组织机构" readonly></uni-easyinput>
+				</uni-data-picker>
 			</uni-col>
 		</uni-row>
 		<view style="padding: 10rpx 20rpx 0;">
@@ -75,7 +77,8 @@ export default {
 				code: '',
 				status: '',
 				role: '',
-				institution: ''
+				institution: '',
+				institutionName:''
 			},
 			statusOptions: [{ value: '1', text: '已启用' }, { value: '0', text: '已停用' }],
 			roleOptions: [{}],
@@ -217,13 +220,15 @@ export default {
 			});
 		},
 		onchange(e) {
-			console.log('onchange:', e);
+			console.log(e);
+			this.search.institutionName=e.detail.value[e.detail.value.length-1].text
 		},
 		nodeclick(e){
 			this.tempInstitute=e;
 		},
 		popupclosed(){
 			this.search.institution=this.tempInstitute.code;
+			this.search.institutionName=this.tempInstitute.name
 		}
 	}
 };

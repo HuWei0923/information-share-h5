@@ -90,8 +90,11 @@
 							:localdata="dataTree"
 							v-model="form.companyCode"
 							:map="{ text: 'name', value: 'code' }"
-							@change="onchange($event, 'companyName')"
-						></uni-data-picker>
+							@change="onchange"
+						>
+							<input placeholder="请选择" placeholder-style="color:#B5B5B5;" name="input" style="width: 280rpx;" :value="form.companyName" readonly />
+						</uni-data-picker>
+						<view class="error-style" v-if="errMsg.companyCode != ''">{{ errMsg.companyCode }}</view>
 					</view>
 				</uni-list-item>
 				<uni-list-item :rightText="form.companyCode">
@@ -112,21 +115,25 @@
 						/>
 					</view>
 				</uni-list-item>
-	<uni-list-item>
-		<view slot="header" class="form-title">
-			角色
-			<text class="required-s">*</text>
-		</view>
-		<view slot="footer">
-			<uni-data-picker
+				<uni-list-item>
+					<view slot="header" class="form-title">
+						角色
+						<text class="required-s">*</text>
+					</view>
+					<view slot="footer">
+						<!-- <uni-data-picker
 				ref="picker"
 				placeholder="请选择"
 				:localdata="roleOptions"
 				v-model="form.roleName"
-				@change="onchange"
-			></uni-data-picker>
-		</view>
-	</uni-list-item>
+				@change="changeRole"
+			></uni-data-picker> -->
+						<picker :value="form.roleName" @change="changeRole" :range="roleOptions">
+							<input placeholder="请选择" placeholder-style="color:#B5B5B5;" name="input" :value="form.roleName" readonly style="float:right" />
+						</picker>
+						<view class="error-style" v-if="errMsg.roleName != ''">{{ errMsg.roleName }}</view>
+					</view>
+				</uni-list-item>
 			</uni-list>
 		</view>
 		<uni-row class="content" :gutter="20" style="padding: 50rpx;">
@@ -136,7 +143,7 @@
 </template>
 
 <script>
-import { companyAPI,userAPI } from 'api/index.js';
+import { companyAPI, userAPI } from 'api/index.js';
 import Utils from '@/utils/tool.js';
 export default {
 	data() {
@@ -148,7 +155,7 @@ export default {
 				mobile: '',
 				email: '',
 				companyCode: '',
-				companyName:'',
+				companyName: '',
 				deptName: '',
 				roleName: ''
 			},
@@ -176,16 +183,6 @@ export default {
 	},
 	methods: {
 		getUserDetail(userId) {
-			// this.form = {
-			// 	code: '18477543',
-			// 	name: '张三',
-			// 	password: '222222',
-			// 	mobile: '13512121212',
-			// 	email: 'dfewe@163.com',
-			// 	institution: '1075',
-			// 	dept: 'test',
-			// 	role: ''
-			// };
 			userAPI
 				.getUserInfo({
 					userId: userId
@@ -204,75 +201,83 @@ export default {
 			});
 		},
 		getAllRole() {
-			this.roleOptions=[]
+			this.roleOptions = [];
 			userAPI.getRole().then(res => {
-				this.roleOptions =res.data.allRole.map(item=>{
-					return{
-						text:item,
-						value:item
-					}
-				})
+				this.roleOptions = res.data.allRole;
+				// this.roleOptions =res.data.allRole.map(item=>{
+				// 	return{
+				// 		text:item,
+				// 		value:item
+				// 	}
+				// })
 				console.log(this.roleOptions);
 			});
 		},
-		
-		
+
 		inputChange(event, field) {
 			console.log(event, field);
 			this.form[field] = event.detail.value;
 			if (this.errMsg[field]) this.errMsg[field] = '';
 		},
-		changeRole(event) {
-			this.form.roleName = this.roleOptions[event.detail.value];
+		changeRole(e) {
+			this.form.roleName = this.roleOptions[e.detail.value];
+			this.errMsg.roleName = '';
 		},
 		onchange(e) {
 			if (e.detail.value.length > 0) {
-				this.form.institutionName = e.detail.value[e.detail.value.length - 1].text;
+				this.form.companyName = e.detail.value[e.detail.value.length - 1].text;
 			}
+			this.errMsg.companyCode = '';
 		},
 		checkForm() {
 			let flag = true;
 			if (this.form.username == '') {
-				this.errMsg.code = '请填写工号';
+				this.errMsg.username = '请填写工号';
 				flag = false;
-			} else if (this.form.name == '') {
-				this.errMsg.code = '请填写姓名';
+			}
+			if (this.form.name == '') {
+				this.errMsg.name = '请填写姓名';
 				flag = false;
-			} else if (this.form.password == '') {
-				this.errMsg.code = '请填写密码';
+			}
+			if (this.form.password == '') {
+				this.errMsg.password = '请填写密码';
 				flag = false;
-			} else if (this.form.companyCode == '') {
-				this.errMsg.code = '请填写公司名称';
+			}
+			if (this.form.companyCode == '') {
+				this.errMsg.companyCode = '请选择公司名称';
+				flag = false;
+			}
+			if (this.form.roleName == '') {
+				this.errMsg.roleName = '请选择角色';
 				flag = false;
 			}
 			return flag;
 		},
 		commit() {
-			debugger
 			let flag = this.checkForm();
 			if (flag) {
-			userAPI
-				.updateUser({
-					userId:this.form.userId,
-					username:this.form.username,
-					name:this.form.name,
-					password:this.form.password,
-					mobile:this.form.mobile,
-					email:this.form.email,
-					companyCode:this.form.companyCode,
-					companyName:this.form.companyName,
-					deptName:this.form.dept,
-					//因为后台接口根据permissionRoles字段判断角色则取
-					permissionRoles:this.form.roleName
-				})
-				.then(res => {
-					if (res.data.code == 0) {
-						uni.showToast({
-							icon: 'none',
-							title: '保存成功。'
-						});
-					}
-				});
+				userAPI
+					.updateUser({
+						userId: this.form.userId,
+						username: this.form.username,
+						name: this.form.name,
+						password: this.form.password,
+						mobile: this.form.mobile,
+						email: this.form.email,
+						companyCode: this.form.companyCode,
+						companyName: this.form.companyName,
+						deptName: this.form.dept,
+						//因为后台接口根据permissionRoles字段判断角色则取
+						permissionRoles: this.form.roleName
+					})
+					.then(res => {
+						if (res.data.code == 0) {
+							uni.showToast({
+								icon: 'none',
+								title: '保存成功。'
+							});
+						}
+					});
 			}
 		}
 	}
