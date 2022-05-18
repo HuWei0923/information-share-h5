@@ -8,10 +8,10 @@
 				<!-- <uni-combox class="uni-mt-5" :candidates="statusOptions" placeholder="状态" v-model="search.status"></uni-combox> -->
 			</uni-col>
 			<uni-col :span="8">
-				<uni-data-select class="uni-mt-5" v-model="search.role" placeholder="角色" :localdata="roleOptions" v-if="roleOptions.length>0"></uni-data-select>
+				<uni-data-select class="uni-mt-5" v-model="search.role" placeholder="角色" :localdata="roleOptions" v-if="roleOptions.length > 0"></uni-data-select>
 				<!-- <uni-combox class="uni-mt-5" :candidates="roleOptions" placeholder="角色" v-model="search.role"></uni-combox> -->
 			</uni-col>
-			<uni-col :span="16">
+			<uni-col :span="16" style="position: relative;">
 				<uni-data-picker
 					placeholder="组织机构"
 					:localdata="dataTree"
@@ -21,9 +21,20 @@
 					@change="onchange"
 					@nodeclick="nodeclick"
 					@popupclosed="popupclosed"
-				>
-				<uni-easyinput class="uni-mt-5" trim="all" v-model="search.institutionName" placeholder="组织机构" readonly></uni-easyinput>
-				</uni-data-picker>
+					ref="dataPicker"
+				></uni-data-picker>
+				<view style="background: #fff;position: absolute;left:0;top:0;z-index:2;width: 100%;">
+					<uni-easyinput
+						class="uni-mt-5"
+						:suffixIcon="search.institutionName !== '' ? 'clear' : ''"
+						trim="all"
+						v-model="search.institutionName"
+						placeholder="组织机构"
+						readonly
+						@focus="$refs.dataPicker.show()"
+						@iconClick="closeDataPicker"
+					></uni-easyinput>
+				</view>
 			</uni-col>
 		</uni-row>
 		<view style="padding: 10rpx 20rpx 0;">
@@ -35,7 +46,13 @@
 			<uni-group mode="card" v-for="(item, index) in listData" :key="index">
 				<view slot="title" class="card-title">
 					<text style="font-weight: bold;">
-						<uni-icons style="position: relative;top:1px" type="person-filled" size="18" color="#fff" v-if="item.permissionRoles&&item.permissionRoles.indexOf('sub_admin') > -1"></uni-icons>
+						<uni-icons
+							style="position: relative;top:1px"
+							type="person-filled"
+							size="18"
+							color="#fff"
+							v-if="item.permissionRoles && item.permissionRoles.indexOf('sub_admin') > -1"
+						></uni-icons>
 						{{ item.name }}-{{ item.username }}
 					</text>
 					<text>
@@ -78,7 +95,7 @@ export default {
 				status: '',
 				role: '',
 				institution: '',
-				institutionName:''
+				institutionName: ''
 			},
 			statusOptions: [{ value: '1', text: '已启用' }, { value: '0', text: '已停用' }],
 			roleOptions: [{}],
@@ -143,15 +160,15 @@ export default {
 		//查询角色
 
 		getAllRole() {
-			this.roleOptions=[]
+			this.roleOptions = [];
 			userAPI.getRole().then(res => {
-				this.roleOptions =res.data.allRole.map(item=>{
-					return{
-						text:item,
-						value:item
-					}
-				})
-					// let dataArray = [];
+				this.roleOptions = res.data.allRole.map(item => {
+					return {
+						text: item,
+						value: item
+					};
+				});
+				// let dataArray = [];
 				// for (let j = 0; j < res.data.allRole.length; j++) {
 				// 	let roleTemp = {
 				// 		value: res.data.allRole[j],
@@ -198,7 +215,7 @@ export default {
 							res.data.userList[i].showMenu = false;
 							if (res.data.userList[i].reportbuyerno == null) {
 								res.data.userList[i].reportbuyerno = '';
-							}					
+							}
 						}
 						this.loadStatus = 'more';
 						this.listData = [...this.listData, ...res.data.userList];
@@ -221,14 +238,21 @@ export default {
 		},
 		onchange(e) {
 			console.log(e);
-			this.search.institutionName=e.detail.value[e.detail.value.length-1].text
+			if (e.detail.value.length > 0) this.search.institutionName = e.detail.value[e.detail.value.length - 1].text;
 		},
-		nodeclick(e){
-			this.tempInstitute=e;
+		nodeclick(e) {
+			this.tempInstitute = e;
 		},
-		popupclosed(){
-			this.search.institution=this.tempInstitute.code;
-			this.search.institutionName=this.tempInstitute.name
+		popupclosed() {
+			if (this.tempInstitute) {
+				this.search.institution = this.tempInstitute.code;
+				this.search.institutionName = this.tempInstitute.name;
+			}
+		},
+		closeDataPicker() {
+			this.$refs.dataPicker.hide();
+			this.$refs.dataPicker.clear();
+			this.search.institutionName = '';
 		}
 	}
 };
