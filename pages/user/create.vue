@@ -230,6 +230,7 @@ export default {
 				this.form.institutionName = e.detail.value[e.detail.value.length - 1].text;
 			}
 		},
+
 		checkForm() {
 			let flag = true;
 			if (this.form.username == '') {
@@ -248,7 +249,6 @@ export default {
 			return flag;
 		},
 		commit() {
-			debugger
 			let flag = this.checkForm();
 			if (flag) {
 			userAPI
@@ -269,11 +269,15 @@ export default {
 					if (res.data.code == 0) {
 						uni.showToast({
 							icon: 'none',
-							title: '保存成功。'
+							title: '保存成功。',
+						
 						});
 					}
 				});
 			}
+				uni.navigateTo({
+					url: '/pages/user/create'
+				});
 		}
 	}
 };
