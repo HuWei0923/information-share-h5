@@ -123,7 +123,6 @@
 				placeholder="请选择"
 				:localdata="roleOptions"
 				v-model="form.roleName"
-				:map="{ text: 'name', value: 'code' }"
 				@change="onchange"
 			></uni-data-picker>
 		</view>
