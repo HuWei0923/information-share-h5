@@ -88,7 +88,7 @@
           </view>
           <view slot="footer">
             <uni-data-picker
-              ref="picker"
+              ref="dataPicker"
               placeholder="请选择"
               :localdata="dataTree"
               v-model="form.companyCode"
@@ -101,12 +101,13 @@
                 placeholder="请选择"
                 placeholder-style="color:#B5B5B5;"
                 name="input"
-                style="width: 280rpx"
+                style="width:450rpx"
                 :value="form.companyName"
                 readonly
 				@focus="$refs.dataPicker.show()"
 				@iconClick="closeDataPicker"
               />
+			 
             </uni-data-picker>
             <view class="error-style" v-if="errMsg.companyCode != ''">{{ errMsg.companyCode }}</view>
           </view>
@@ -191,6 +192,7 @@ export default {
       },
       dataTree: [],
       roleOptions: [],
+	  tempInstitute:null
     }
   },
   onLoad(options) {
