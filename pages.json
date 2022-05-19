@@ -153,6 +153,24 @@
             }
             
         }
+        ,{
+            "path" : "pages/roleManage/roleManage",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "角色管理",
+                "enablePullDownRefresh": true
+            }
+            
+        }
+        ,{
+            "path" : "pages/roleManage/create",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "新建角色",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

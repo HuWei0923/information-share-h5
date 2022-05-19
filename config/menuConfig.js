@@ -1,5 +1,6 @@
 //白名单(不需要权限可看的菜单)
 const whiteList = ['common.attention', //关注清单
+	'common.roleManage',//角色管理
 	'common.message', //消息中心
 	'common.blackList', //黑灰名单
 	'zcx.fxcs', //风险初筛
@@ -8,6 +9,7 @@ const whiteList = ['common.attention', //关注清单
 	'zcx.qyxypj', //区域信用评价
 	'zcx.ctqypj', //城投企业评价
 	'tyc:check' //检索入口
+	
 ]
 
 const menuData = [{
@@ -33,7 +35,13 @@ const menuData = [{
 				flag: 'user.manage',
 				flag2: 'user.sub_manage',
 				url: '/pages/user/user'
-			}
+			},
+			{
+				title: '角色管理',
+				icon: require('@/static/img/index/fxcs.png'),
+				flag: 'common.roleManage',
+				url:'/pages/roleManage/roleManage'
+			},
 		]
 	},
 	{
