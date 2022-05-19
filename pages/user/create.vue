@@ -94,6 +94,8 @@
               v-model="form.companyCode"
               :map="{ text: 'name', value: 'code' }"
               @change="onchange"
+			  @nodeclick="nodeclick"
+			  @popupclosed="popupclosed"
             >
               <input
                 placeholder="请选择"
@@ -102,6 +104,8 @@
                 style="width: 280rpx"
                 :value="form.companyName"
                 readonly
+				@focus="$refs.dataPicker.show()"
+				@iconClick="closeDataPicker"
               />
             </uni-data-picker>
             <view class="error-style" v-if="errMsg.companyCode != ''">{{ errMsg.companyCode }}</view>
@@ -249,6 +253,20 @@ export default {
       }
       this.errMsg.companyCode = ''
     },
+	nodeclick(e) {
+		this.tempInstitute = e;
+	},
+	popupclosed() {
+		if (this.tempInstitute) {
+			this.form.companyCode = this.tempInstitute.code;
+			this.form.companyName = this.tempInstitute.name;
+		}
+	},
+	closeDataPicker() {
+		this.$refs.dataPicker.hide();
+		this.$refs.dataPicker.clear();
+		this.form.companyName = '';
+	},
 	
 
     checkForm() {
