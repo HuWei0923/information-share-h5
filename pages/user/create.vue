@@ -144,6 +144,7 @@
                 readonly
                 style="float: right"
               />
+		<!-- 	  <text v-if="roleName" class="icon_close" @click="close"></text> -->
             </picker>
             <view class="error-style" v-if="errMsg.roleName != ''">{{ errMsg.roleName }}</view>
           </view>
@@ -178,6 +179,7 @@ export default {
         name: '',
         password: '',
         companyCode: '',
+		mobile:'',
       },
       dataTree: [],
       roleOptions: [],
@@ -243,6 +245,7 @@ export default {
       }
       this.errMsg.companyCode = ''
     },
+	
 
     checkForm() {
       let flag = true
@@ -266,6 +269,13 @@ export default {
         this.errMsg.roleName = '请选择角色'
         flag = false
       }
+	  if(this.form.mobile!==''){
+		  let reg = /^1[0-9]{10}$/
+		  if(!reg.test(this.form.mobile)){
+		   this.errMsg.mobile = '请输入正确的手机号'
+		    flag = false
+		  }
+	  }
       return flag
     },
     commit() {
@@ -293,11 +303,11 @@ export default {
               })
             }
           })
+		  //保存后页面跳转
+		  uni.navigateTo({
+		    url: '/pages/user/user',
+		  });
       }
-      //保存后页面跳转
-      uni.navigateTo({
-        url: '/pages/user/create',
-      })
     },
   },
 }
