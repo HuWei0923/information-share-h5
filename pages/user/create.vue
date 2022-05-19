@@ -64,7 +64,9 @@
               :value="form.mobile"
               @input="inputChange($event, 'mobile')"
             />
+			 <view class="error-style" v-if="errMsg.mobile != ''">{{ errMsg.mobile }}</view>
           </view>
+		  
         </uni-list-item>
         <uni-list-item title="邮箱">
           <view slot="footer">
@@ -76,6 +78,7 @@
               :value="form.email"
               @input="inputChange($event, 'email')"
             />
+			<view class="error-style" v-if="errMsg.email != ''">{{ errMsg.email }}</view>
           </view>
         </uni-list-item>
         <uni-list-item>
@@ -180,6 +183,7 @@ export default {
         password: '',
         companyCode: '',
 		mobile:'',
+		email:'',
       },
       dataTree: [],
       roleOptions: [],
@@ -269,6 +273,13 @@ export default {
         this.errMsg.roleName = '请选择角色'
         flag = false
       }
+	  if(this.form.email!==''){
+		  let reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+		  if(!reg.test(this.form.email)){
+			  this.errMsg.email = '请收入正确的邮箱'
+			  flag = false;
+		  }
+	  }
 	  if(this.form.mobile!==''){
 		  let reg = /^1[0-9]{10}$/
 		  if(!reg.test(this.form.mobile)){
