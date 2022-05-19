@@ -273,6 +273,7 @@ export default {
         this.errMsg.roleName = '请选择角色'
         flag = false
       }
+	  //邮箱校验
 	  if(this.form.email!==''){
 		  let reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
 		  if(!reg.test(this.form.email)){
