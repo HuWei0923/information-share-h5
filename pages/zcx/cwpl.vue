@@ -54,6 +54,7 @@
 				<uni-col :span="8"><button @click="preview" type="primary" :disabled="active == 0" size="mini">上一步</button></uni-col>
 				<uni-col :span="8"><button size="mini" @click="next" type="primary" :disabled="active == stepList.length - 1">下一步</button></uni-col>
 				<uni-col :span="8"><button class="button" size="mini" type="primary" @click="$refs.popup.open('bottom')">跳转至</button></uni-col>
+				<uni-col :span="8"><button class="button" size="mini" type="primary" @click="returnindex()">返回</button></uni-col>
 			</uni-row>
 		</view>
 		<uni-popup ref="popup" background-color="#fff">
@@ -157,6 +158,11 @@ export default {
 				if (this.active < this.stepList.length - 1) this.active++;
 			}
 		},
+		returnindex() {
+		uni.navigateTo({
+			url: '/pages/index/index'
+		});
+	},
 		goToPage(item){
 			uni.navigateTo({
 				url:`/pages/zcx/${item.code}?companyId=${this.companyId}&companyName=${this.companyName}&creditCode=${this.creditCode}`
