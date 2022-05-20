@@ -276,23 +276,41 @@ export default {
       if (this.form.username == '') {
         this.errMsg.username = '请填写工号'
         flag = false
-      }
-      if (this.form.name == '') {
+      }else{
+		  userAPI.userExists({
+			   username: this.form.username,
+		  })
+		  .then((res) => {
+			 if(res.status==200){
+				 if(res.data.userExists){
+				        this.errMsg.username = '工号已存在'
+						flag = false
+				   }
+			 }
+		  })
+	  }
+	if (this.form.name == '') {
         this.errMsg.name = '请填写姓名'
         flag = false
       }
       if (this.form.password == '') {
         this.errMsg.password = '请填写密码'
         flag = false
-      }
+      }else{
+		  if(!/^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$)([^\u4e00-\u9fa5\s]){8,20}$/.test(this.form.password)){
+			   this.errMsg.password = '密码必须由8位以上数字和字母组合'
+			   flag = false
+		  }
+		 
+	  }
       if (this.form.companyCode == '') {
         this.errMsg.companyCode = '请选择公司名称'
         flag = false
       }
-      if (this.form.roleName == '') {
-        this.errMsg.roleName = '请选择角色'
-        flag = false
-      }
+      // if (this.form.roleName == '') {
+      //   this.errMsg.roleName = '请选择角色'
+      //   flag = false
+      // }
 	  //邮箱校验
 	  if(this.form.email!==''){
 		  let reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
@@ -325,7 +343,7 @@ export default {
             companyName: this.form.companyName,
             deptName: this.form.dept,
             //因为后台接口根据permissionRoles字段判断角色则取
-            permissionRoles: this.form.roleName,
+		
           })
           .then((res) => {
             if (res.data.code == 0) {

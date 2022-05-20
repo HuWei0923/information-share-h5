@@ -31,6 +31,11 @@ export default [
 		url:'/api/user/searchUserListNew'
 	},
 	{
+		name:"userExists",
+		method:'post',
+		url:'/api/user/userExists'
+	},
+	{
 		name:"getRole",
 		method:'post',
 		url:'/api/user/getRole'

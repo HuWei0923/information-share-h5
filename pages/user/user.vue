@@ -46,6 +46,8 @@
 			<uni-group mode="card" v-for="(item, index) in listData" :key="index">
 				<view slot="title" class="card-title">
 					<text style="font-weight: bold;">
+						
+						{{ item.name }}-{{ item.username }}
 						<uni-icons
 							style="position: relative;top:1px"
 							type="person-filled"
@@ -53,11 +55,12 @@
 							color="#fff"
 							v-if="item.permissionRoles && item.permissionRoles.indexOf('sub_admin') > -1"
 						></uni-icons>
-						{{ item.name }}-{{ item.username }}
 					</text>
 					<text>
-						<uni-tag text="已启用" type="primary" v-if="item.status == 1"></uni-tag>
-						<uni-tag text="已停用" v-else-if="item.status == 0"></uni-tag>
+						<uni-tag text="已启用" type="primary" v-if="item.status == 1" ></uni-tag>
+						<uni-tag text="已停用" v-else-if="item.status == 0" ></uni-tag>
+						<uni-tag text="点击停用"  v-if="item.status == 1" type="error" style="margin-right: 10rpx;" @click="statusdisenable(item)"></uni-tag>
+						<uni-tag text="点击启用"  v-else-if="item.status == 0" type="error" style="margin-right: 10rpx;" @click="statusenable(item)"></uni-tag>
 					</text>
 					<!-- <text>{{ item.code }}</text> -->
 				</view>
@@ -236,6 +239,40 @@ export default {
 				url: `/pages/user/create?userId=${item.userId}`
 			});
 		},
+		statusenable(item){
+			userAPI.updateUser({
+				 userId: item.userId,
+				 status:1,
+			}) .then((res) => {
+            if (res.data.code == 0) {
+              uni.showToast({
+                icon: 'none',
+                title: '启用成功。',
+              })
+            }
+          })
+			uni.navigateTo({
+			  url: '/pages/user/user',
+			});
+		},
+		
+		statusdisenable(item){
+			userAPI.updateUser({
+				 userId: item.userId,
+				 status:0,
+			}) .then((res) => {
+            if (res.data.code == 0) {
+              uni.showToast({
+                icon: 'none',
+                title: '停用成功。',
+              })
+            }
+          })
+			uni.navigateTo({
+			  url: '/pages/user/user',
+			});
+		},
+		
 		onchange(e) {
 			console.log(e);
 			if (e.detail.value.length > 0) this.search.institutionName = e.detail.value[e.detail.value.length - 1].text;
