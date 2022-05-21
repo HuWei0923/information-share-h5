@@ -1,17 +1,21 @@
 <template>
 	<view class="content">
 		<view style="margin-top: 20rpx;"><uni-steps :options="stepList" :active="active" /></view>
-		<scroll-view v-if="active == 0" scroll-y scroll-x style="width: 100vw;height:70vh;position: relative;" class="uni-mt-10">
-			<text class="html-text-box" v-html="html"></text>
+		<scroll-view v-if="active == 0" scroll-y scroll-x style="width: 100vw;height:60vh;position: relative;" class="uni-mt-10">
+			<view class="html-text-box" v-html="html"></view>
 		</scroll-view>
 		<view v-else class="uni-mt-10 download-box">
 			<view class="download" @click="download"><uni-icons type="pulldown" size="60" color="#B7BDC6"></uni-icons></view>
 			<view style="color: #B7BDC6;" class="uni-mt-5">报告下载</view>
 		</view>
-		<uni-row :gutter="10" style="padding: 50rpx 100rpx;text-align: center;">
-			<uni-col :span="8"><button @click="preview" type="primary" :disabled="active == 0" size="mini">上一步</button></uni-col>
-			<uni-col :span="8"><button size="mini" @click="next" type="primary" :disabled="active == stepList.length - 1">下一步</button></uni-col>
-			<uni-col :span="8"><button class="button" size="mini" type="primary" @click="$refs.popup.open('bottom')">跳转至</button></uni-col>
+		<view class=" flex flex-direction" style="padding: 50rpx 50rpx 0;" v-if="active == 0">
+			<button class="cu-btn line-blue " @click="goToPage({ code: 'historyReport' })">查看历史报告</button>
+		</view>
+		<uni-row :gutter="10" style="padding: 50rpx;text-align: center;">
+			<uni-col :span="6"><button @click="preview" type="primary" :disabled="active == 0" size="mini">上一步</button></uni-col>
+			<uni-col :span="6"><button size="mini" @click="next" type="primary" :disabled="active == stepList.length - 1">下一步</button></uni-col>
+			<uni-col :span="6"><button class="button" size="mini" type="primary" @click="$refs.popup.open('bottom')">跳转至</button></uni-col>
+			<uni-col :span="6"><button class="button" size="mini" type="primary" @click="goToFirstPage">首 页</button></uni-col>
 		</uni-row>
 		<uni-popup ref="popup" background-color="#fff">
 			<view class="header" style="text-align: center;margin: 20rpx auto;">跳转至</view>
@@ -27,7 +31,7 @@
 </template>
 
 <script>
-import { zcxAPI,companyAPI } from 'api/index.js';
+import { zcxAPI, companyAPI } from 'api/index.js';
 export default {
 	data() {
 		return {
@@ -45,8 +49,8 @@ export default {
 				{ img: '/static/img/index/cwpl.png', code: 'cwpl', name: '财务排雷' },
 				{ img: '/static/img/index/cyqypj.png', code: 'cyqyxypj', name: '产业企业评价' },
 				{ img: '/static/img/index/qyxypj.png', code: 'qyxypj', name: '区域信用评价' },
-				{ img: '/static/img/index/ctqypj.png', code: 'ctqyxypj', name: '城投企业评价' },
-				{ img: '/static/img/index/xxzx.png', code: 'historyReport', name: '历史报告' }
+				{ img: '/static/img/index/ctqypj.png', code: 'ctqyxypj', name: '城投企业评价' }
+				// { img: '/static/img/index/xxzx.png', code: 'historyReport', name: '历史报告' }
 			]
 		};
 	},
@@ -58,7 +62,6 @@ export default {
 	},
 	methods: {
 		getRiskScreenHtml() {
-			
 			let param = {
 				companyId: this.companyId,
 				creditCode: this.creditCode,
@@ -75,10 +78,15 @@ export default {
 		next() {
 			if (this.active < this.stepList.length - 1) this.active++;
 		},
-		goToPage(item){
+		goToPage(item) {
 			uni.navigateTo({
-				url:`/pages/zcx/${item.code}?companyId=${this.companyId}&companyName=${this.companyName}&creditCode=${this.creditCode}`
-			})
+				url: `/pages/zcx/${item.code}?companyId=${this.companyId}&companyName=${this.companyName}&creditCode=${this.creditCode}`
+			});
+		},
+		goToFirstPage() {
+			uni.switchTab({
+				url: '/pages/index/index'
+			});
 		}
 	}
 };

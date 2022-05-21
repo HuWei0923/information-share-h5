@@ -12,7 +12,15 @@
 				<!-- <uni-combox class="uni-mt-5" :candidates="roleOptions" placeholder="角色" v-model="search.role"></uni-combox> -->
 			</uni-col>
 			<uni-col :span="16" style="position: relative;">
-				<uni-data-picker
+				<uni-easyinput
+					class="uni-mt-5"
+					trim="all"
+					v-model="search.institutionName"
+					placeholder="组织机构"
+					readonly
+					@focus="$refs.tkitree._show()"
+				></uni-easyinput>
+				<!-- <uni-data-picker
 					placeholder="组织机构"
 					:localdata="dataTree"
 					class="uni-mt-5"
@@ -34,7 +42,7 @@
 						@focus="$refs.dataPicker.show()"
 						@iconClick="closeDataPicker"
 					></uni-easyinput>
-				</view>
+				</view> -->
 			</uni-col>
 		</uni-row>
 		<view style="padding: 10rpx 20rpx 0;">
@@ -46,7 +54,6 @@
 			<uni-group mode="card" v-for="(item, index) in listData" :key="index">
 				<view slot="title" class="card-title">
 					<text style="font-weight: bold;">
-						
 						{{ item.name }}-{{ item.username }}
 						<uni-icons
 							style="position: relative;top:1px"
@@ -57,24 +64,26 @@
 						></uni-icons>
 					</text>
 					<text>
-						<uni-tag text="已启用" type="primary" v-if="item.status == 1" ></uni-tag>
-						<uni-tag text="已停用" v-else-if="item.status == 0" ></uni-tag>
-						<uni-tag text="点击停用"  v-if="item.status == 1" type="error" style="margin-right: 10rpx;" @click="statusdisenable(item)"></uni-tag>
-						<uni-tag text="点击启用"  v-else-if="item.status == 0" type="error" style="margin-right: 10rpx;" @click="statusenable(item)"></uni-tag>
+						<uni-tag text="已启用" type="primary" v-if="item.status == 1" class="uni-mr-2"></uni-tag>
+						<uni-tag text="已停用" v-else-if="item.status == 0" class="uni-mr-2"></uni-tag>
+						<uni-tag text="点击停用" v-if="item.status == 1" type="error" @click="statusdisenable(item)"></uni-tag>
+						<uni-tag text="点击启用" v-else-if="item.status == 0" type="error" @click="statusenable(item)"></uni-tag>
+						<uni-icons :type="item.showMore ? 'top' : 'bottom'" size="15" color="#fff" class="uni-ml-2" @click="item.showMenu = !item.showMenu"></uni-icons>
 					</text>
-					<!-- <text>{{ item.code }}</text> -->
 				</view>
-				<view style="position: relative;line-height: 48rpx;padding-right: 60rpx;">
-					<view>邮箱：{{ item.email }}</view>
-					<view>手机号：{{ item.mobile }}</view>
-					<view>所属公司名称：{{ item.companyName }}</view>
-					<view class="btn-box"><uni-icons type="more-filled" size="20" @click="item.showMenu = !item.showMenu"></uni-icons></view>
-				</view>
-				<uni-transition mode-class="fade" :duration="200" :show="item.showMenu">
+				<view style="padding: 15px;" v-if="item.showMenu">
+					<view style="position: relative;line-height: 48rpx;padding-right: 60rpx;">
+						<view>邮箱：{{ item.email }}</view>
+						<view>手机号：{{ item.mobile }}</view>
+						<view>所属公司名称：{{ item.companyName }}</view>
+						<!-- <view class="btn-box"><uni-icons type="more-filled" size="20" @click="item.showMenu = !item.showMenu"></uni-icons></view> -->
+					</view>
+					<!-- <uni-transition mode-class="fade" :duration="200" :show="item.showMenu"> -->
 					<view style="margin-top: 20rpx;padding-top: 20rpx;text-align: right;border-top: 1px solid #efefef;">
 						<uni-tag text="编辑" type="primary" style="margin-right: 10rpx;" @click="edit(item)"></uni-tag>
 					</view>
-				</uni-transition>
+					<!-- </uni-transition> -->
+				</view>
 			</uni-group>
 			<uni-load-more :status="loadStatus"></uni-load-more>
 		</view>
@@ -83,13 +92,22 @@
 			<view class="empty-text">暂无数据</view>
 		</view>
 		<uni-fab ref="fab" :horizontal="horizontal" :vertical="vertical" :popMenu="false" @fabClick="fabClick" />
+		<qian-tree ref="tkitree" :range="dataTree" rangeKey="name" idKey="code" confirmColor="#4e8af7" @confirm="confirm"> 
+			<view style="background-color: #fff;">
+				<uni-search-bar v-model="searchVal" placeholder="请输入搜索内容" radius="100"  cancelButton="none"  />
+			</view>
+		</qian-tree>
 	</view>
 </template>
 
 <script>
 import { companyAPI, userAPI } from 'api/index.js';
 import Utils from '@/utils/tool.js';
+import qianTree from "@/components/qian-tree/qian-tree.vue"
 export default {
+	components: {
+		qianTree
+	},
 	data() {
 		return {
 			search: {
@@ -110,10 +128,17 @@ export default {
 			total: 0,
 			loadStatus: 'more',
 			vertical: 'bottom',
-			horizontal: 'right'
+			horizontal: 'right',
+			backData:[],
+			searchVal:''
 		};
 	},
 	watch: {
+		searchVal(val){
+			let temp =this.backData.filter(item=>item.name.indexOf(val)!==-1)
+			let arr = Utils.formatTreeData(temp, 'code', 'scode', null);
+			this.dataTree = arr;
+		},
 		search: {
 			handler(val) {
 				//console.log(val);
@@ -127,9 +152,10 @@ export default {
 	onLoad() {
 		this.getAllRole();
 		this.getAllCompanyLevel();
+		this.getData();
 	},
 	onShow() {
-		this.getData();
+		
 	},
 	//上拉加载更多
 	onReachBottom() {
@@ -154,14 +180,13 @@ export default {
 			//组织架构查询
 			companyAPI.getAllCompanyLevel({ userId: uni.getStorageSync('userId') }).then(res => {
 				if (res.data.code == 0) {
-					console.log(res.data);
+					this.backData=res.data.treeData
 					let arr = Utils.formatTreeData(res.data.treeData, 'code', 'scode', null);
 					this.dataTree = arr;
 				}
 			});
 		},
 		//查询角色
-
 		getAllRole() {
 			this.roleOptions = [];
 			userAPI.getRole().then(res => {
@@ -239,40 +264,44 @@ export default {
 				url: `/pages/user/create?userId=${item.userId}`
 			});
 		},
-		statusenable(item){
-			userAPI.updateUser({
-				 userId: item.userId,
-				 status:1,
-			}) .then((res) => {
-            if (res.data.code == 0) {
-              uni.showToast({
-                icon: 'none',
-                title: '启用成功。',
-              })
-            }
-          })
+		statusenable(item) {
+			userAPI
+				.updateUser({
+					userId: item.userId,
+					status: 1
+				})
+				.then(res => {
+					if (res.data.code == 0) {
+						uni.showToast({
+							icon: 'none',
+							title: '启用成功。'
+						});
+					}
+				});
 			uni.navigateTo({
-			  url: '/pages/user/user',
+				url: '/pages/user/user'
 			});
 		},
-		
-		statusdisenable(item){
-			userAPI.updateUser({
+
+		statusdisenable(item) {
+			userAPI
+				.updateUser({
 				 userId: item.userId,
-				 status:0,
-			}) .then((res) => {
-            if (res.data.code == 0) {
-              uni.showToast({
-                icon: 'none',
-                title: '停用成功。',
-              })
-            }
-          })
+				 status: 0
+				})
+				.then(res => {
+					if (res.data.code == 0) {
+						uni.showToast({
+							icon: 'none',
+							title: '停用成功。'
+						});
+					}
+				});
 			uni.navigateTo({
-			  url: '/pages/user/user',
+				url: '/pages/user/user'
 			});
 		},
-		
+
 		onchange(e) {
 			console.log(e);
 			if (e.detail.value.length > 0) this.search.institutionName = e.detail.value[e.detail.value.length - 1].text;
@@ -290,6 +319,11 @@ export default {
 			this.$refs.dataPicker.hide();
 			this.$refs.dataPicker.clear();
 			this.search.institutionName = '';
+		},
+		confirm(data){
+			console.log(data)
+			this.search.institutionName=data[0].name
+			this.search.institution=data[0].code
 		}
 	}
 };
@@ -352,5 +386,8 @@ export default {
 ::v-deep .uni-select__input-placeholder {
 	font-weight: 100;
 	font-size: 12px;
+}
+::v-deep .uni-group__content {
+	padding: 0;
 }
 </style>

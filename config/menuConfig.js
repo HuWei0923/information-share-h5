@@ -21,12 +21,12 @@ const menuData = [{
 			},
 			{
 				title: '消息中心',
-				icon: require('@/static/img/index/xxzx.png'),
+				icon: require('@/static/img/index/hhmd.png'),
 				flag: 'common.message'
 			},
 			{
 				title: '黑灰名单',
-				icon: require('@/static/img/index/hhmd.png'),
+				icon: require('@/static/img/index/xxzx.png'),
 				flag: 'common.blackList'
 			},
 			{
