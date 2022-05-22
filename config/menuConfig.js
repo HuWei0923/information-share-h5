@@ -20,14 +20,14 @@ const menuData = [{
 				flag: 'common.attention'
 			},
 			{
-				title: '消息中心',
-				icon: require('@/static/img/index/hhmd.png'),
-				flag: 'common.message'
-			},
-			{
 				title: '黑灰名单',
 				icon: require('@/static/img/index/xxzx.png'),
 				flag: 'common.blackList'
+			},
+			{
+				title: '消息中心',
+				icon: require('@/static/img/index/hhmd.png'),
+				flag: 'common.message'
 			},
 			{
 				title: '用户中心',
