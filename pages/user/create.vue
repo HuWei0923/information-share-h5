@@ -329,14 +329,15 @@ export default {
 			//   flag = false
 			// }
 			//邮箱校验
-			if (this.form.email !== '') {
+			if(this.form.email.replace(/(^\s*)|(\s*$)/g, "").length >0){
 				let reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
 				if (!reg.test(this.form.email)) {
 					this.errMsg.email = '请收入正确的邮箱';
 					flag = false;
 				}
 			}
-			if (this.form.mobile !== '') {
+
+			if (this.form.mobile.replace(/(^\s*)|(\s*$)/g, "").length >0) {
 				let reg = /^1[0-9]{10}$/;
 				if (!reg.test(this.form.mobile)) {
 					this.errMsg.mobile = '请输入正确的手机号';
