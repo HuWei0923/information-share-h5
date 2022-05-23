@@ -39,6 +39,7 @@
 </template>
 
 <script>
+	import { companyAPI, userAPI } from 'api/index.js';
 	export default {
 		data() {
 			return {
@@ -86,7 +87,11 @@
 					this.loadStatus = 'noMore';
 				}
 			},
+			getAllRole(){
+				
+			},
 			fabClick() {
+				
 				uni.navigateTo({
 					url: '/pages/roleManage/create'
 				});
