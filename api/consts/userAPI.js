@@ -41,6 +41,10 @@ export default [
 		url:'/api/user/getRole'
 	},
 	
-	
+	{
+		name:"getAllRole",
+		method:'post',
+		url:'/api/user/getAllRole'
+	},
 	
 ]
