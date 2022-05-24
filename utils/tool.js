@@ -4,20 +4,21 @@ export default {
 		var arr = [];
 		for (var i = 0, l = data.length; i < l; i++) {
 			var item = data[i];
-			// if (item != null && item[parent] === topValue) {
-			// 	this.tranData(data, item, child, parent);
-			// 	arr.push(item);
-			// }
-			this.tranData(data, item, child, parent);
-			arr.push(item);
+			if (item != null && item[parent] === topValue) {
+				this.tranData(data, item, child, parent);
+				arr.push(item);
+			}
+			// this.tranData(data, item, child, parent);
+			// arr.push(item);
 		}
-		let temp = data.find(item=>!item.scode)
-		console.log(temp)
-		if(temp){
-			return [temp]
-		}else{
-			return arr;
-		}
+		return arr
+		// let temp = data.find(item=>!item.scode)
+		// console.log(temp)
+		// if(temp){
+		// 	return [temp]
+		// }else{
+		// 	return arr;
+		// }
 		
 	},
 	tranData: function(data, parent, idField, parentField) {

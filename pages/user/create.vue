@@ -197,13 +197,14 @@ export default {
 			tempInstitute: null,
 			backData: [],
 			searchVal: '',
-			ifOnly: true
+			ifOnly: true,
+			topValue: ''
 		};
 	},
 	watch: {
 		searchVal(val) {
 			let temp = this.backData.filter(item => item.name.indexOf(val) !== -1);
-			let arr = Utils.formatTreeData(temp, 'code', 'scode', null);
+			let arr = Utils.formatTreeData(temp, 'code', 'scode', this.topValue);
 			this.dataTree = arr;
 		}
 	},
@@ -233,8 +234,14 @@ export default {
 			//组织架构查询
 			companyAPI.getAllCompanyLevel({ userId: uni.getStorageSync('userId') }).then(res => {
 				if (res.data.code == 0) {
-					this.backData = res.data.treeData;
-					let arr = Utils.formatTreeData(res.data.treeData, 'code', 'scode', null);
+					this.backData = res.data.treeData.map(item => {
+						codeList.push(item.code);
+						return item;
+					});
+					res.data.treeData.map(item => {
+						if (codeList.indexOf(item.scode) == -1) this.topValue = item.scode;
+					});
+					let arr = Utils.formatTreeData(res.data.treeData, 'code', 'scode', this.topValue);
 					this.dataTree = arr;
 				}
 			});
@@ -295,7 +302,7 @@ export default {
 					if (res.data.userExists) {
 						this.errMsg.username = '工号已存在';
 						this.ifOnly = false;
-					}else{
+					} else {
 						this.errMsg.username = '';
 						this.ifOnly = true;
 					}
@@ -329,7 +336,7 @@ export default {
 			//   flag = false
 			// }
 			//邮箱校验
-			if(this.form.email.replace(/(^\s*)|(\s*$)/g, "").length >0){
+			if (this.form.email.replace(/(^\s*)|(\s*$)/g, '').length > 0) {
 				let reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
 				if (!reg.test(this.form.email)) {
 					this.errMsg.email = '请收入正确的邮箱';
@@ -337,7 +344,7 @@ export default {
 				}
 			}
 
-			if (this.form.mobile.replace(/(^\s*)|(\s*$)/g, "").length >0) {
+			if (this.form.mobile.replace(/(^\s*)|(\s*$)/g, '').length > 0) {
 				let reg = /^1[0-9]{10}$/;
 				if (!reg.test(this.form.mobile)) {
 					this.errMsg.mobile = '请输入正确的手机号';
@@ -348,7 +355,7 @@ export default {
 		},
 		commit() {
 			let flag = this.checkForm();
-			if (flag&&this.ifOnly) {
+			if (flag && this.ifOnly) {
 				userAPI
 					.updateUser({
 						userId: this.form.userId,

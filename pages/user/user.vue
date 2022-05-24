@@ -12,37 +12,9 @@
 				<!-- <uni-combox class="uni-mt-5" :candidates="roleOptions" placeholder="角色" v-model="search.role"></uni-combox> -->
 			</uni-col>
 			<uni-col :span="16" style="position: relative;">
-				<uni-easyinput
-					class="uni-mt-5"
-					trim="all"
-					v-model="search.institutionName"
-					placeholder="组织机构"
-					readonly
-					@focus="$refs.tkitree._show()"
-				></uni-easyinput>
-				<!-- <uni-data-picker
-					placeholder="组织机构"
-					:localdata="dataTree"
-					class="uni-mt-5"
-					v-model="search.institution"
-					:map="{ text: 'name', value: 'code' }"
-					@change="onchange"
-					@nodeclick="nodeclick"
-					@popupclosed="popupclosed"
-					ref="dataPicker"
-				></uni-data-picker>
-				<view style="background: #fff;position: absolute;left:0;top:0;z-index:2;width: 100%;">
-					<uni-easyinput
-						class="uni-mt-5"
-						:suffixIcon="search.institutionName !== '' ? 'clear' : ''"
-						trim="all"
-						v-model="search.institutionName"
-						placeholder="组织机构"
-						readonly
-						@focus="$refs.dataPicker.show()"
-						@iconClick="closeDataPicker"
-					></uni-easyinput>
-				</view> -->
+				<view @click="showInstitution">
+					<uni-easyinput ref="input" class="uni-mt-5" trim="all" placeholder="组织机构" v-model="search.institutionName"></uni-easyinput>
+				</view>
 			</uni-col>
 		</uni-row>
 		<view style="padding: 10rpx 20rpx 0;">
@@ -62,12 +34,13 @@
 							color="#fff"
 							v-if="item.permissionRoles && item.permissionRoles.indexOf('sub_admin') > -1"
 						></uni-icons>
+						<!-- <image src="@/static/img/stop.png" v-if="item.status==0" style="width: 20px;height:20px;position: relative;top:5px;left:5px"></image> -->
 					</text>
 					<text>
 						<uni-tag text="已启用" type="primary" v-if="item.status == 1" class="uni-mr-2"></uni-tag>
 						<uni-tag text="已停用" v-else-if="item.status == 0" class="uni-mr-2"></uni-tag>
 						<uni-tag text="点击停用" v-if="item.status == 1" type="error" @click="statusdisenable(item)"></uni-tag>
-						<uni-tag text="点击启用" v-else-if="item.status == 0" type="error" @click="statusenable(item)"></uni-tag>
+						<uni-tag text="点击启用" v-else-if="item.status == 0" type="primary" @click="statusenable(item)"></uni-tag>
 						<uni-icons :type="item.showMore ? 'top' : 'bottom'" size="15" color="#fff" class="uni-ml-2" @click="item.showMenu = !item.showMenu"></uni-icons>
 					</text>
 				</view>
@@ -79,7 +52,7 @@
 						<!-- <view class="btn-box"><uni-icons type="more-filled" size="20" @click="item.showMenu = !item.showMenu"></uni-icons></view> -->
 					</view>
 					<!-- <uni-transition mode-class="fade" :duration="200" :show="item.showMenu"> -->
-					<view style="margin-top: 20rpx;padding-top: 20rpx;text-align: right;border-top: 1px solid #efefef;">
+					<view style="margin-top: 20rpx;padding-top: 20rpx;text-align: right;border-top: 1px solid #efefef;" v-if="item.status == 1">
 						<uni-tag text="编辑" type="primary" style="margin-right: 10rpx;" @click="edit(item)"></uni-tag>
 					</view>
 					<!-- </uni-transition> -->
@@ -92,10 +65,8 @@
 			<view class="empty-text">暂无数据</view>
 		</view>
 		<uni-fab ref="fab" :horizontal="horizontal" :vertical="vertical" :popMenu="false" @fabClick="fabClick" />
-		<qian-tree ref="tkitree" :range="dataTree" rangeKey="name" idKey="code" confirmColor="#4e8af7" @confirm="confirm"> 
-			<view style="background-color: #fff;">
-				<uni-search-bar v-model="searchVal" placeholder="请输入搜索内容" radius="100"  cancelButton="none"  />
-			</view>
+		<qian-tree ref="tkitree" :range="dataTree" rangeKey="name" idKey="code" confirmColor="#4e8af7" @confirm="confirm">
+			<view style="background-color: #fff;"><uni-search-bar v-model="searchVal" placeholder="请输入搜索内容" radius="100" cancelButton="none" /></view>
 		</qian-tree>
 	</view>
 </template>
@@ -103,7 +74,7 @@
 <script>
 import { companyAPI, userAPI } from 'api/index.js';
 import Utils from '@/utils/tool.js';
-import qianTree from "@/components/qian-tree/qian-tree.vue"
+import qianTree from '@/components/qian-tree/qian-tree.vue';
 export default {
 	components: {
 		qianTree
@@ -129,14 +100,15 @@ export default {
 			loadStatus: 'more',
 			vertical: 'bottom',
 			horizontal: 'right',
-			backData:[],
-			searchVal:''
+			backData: [],
+			searchVal: '',
+			topValue: ''
 		};
 	},
 	watch: {
-		searchVal(val){
-			let temp =this.backData.filter(item=>item.name.indexOf(val)!==-1)
-			let arr = Utils.formatTreeData(temp, 'code', 'scode', null);
+		searchVal(val) {
+			let temp = this.backData.filter(item => item.name.indexOf(val) !== -1);
+			let arr = Utils.formatTreeData(temp, 'code', 'scode', this.topValue);
 			this.dataTree = arr;
 		},
 		search: {
@@ -154,9 +126,7 @@ export default {
 		this.getAllCompanyLevel();
 		this.getData();
 	},
-	onShow() {
-		
-	},
+	onShow() {},
 	//上拉加载更多
 	onReachBottom() {
 		if (this.listData.length < this.currentPage * this.pageSize) {
@@ -180,8 +150,15 @@ export default {
 			//组织架构查询
 			companyAPI.getAllCompanyLevel({ userId: uni.getStorageSync('userId') }).then(res => {
 				if (res.data.code == 0) {
-					this.backData=res.data.treeData
-					let arr = Utils.formatTreeData(res.data.treeData, 'code', 'scode', null);
+					let codeList = [];
+					this.backData = res.data.treeData.map(item => {
+						codeList.push(item.code);
+						return item;
+					});
+					res.data.treeData.map(item => {
+						if (codeList.indexOf(item.scode) == -1) this.topValue = item.scode;
+					});
+					let arr = Utils.formatTreeData(res.data.treeData, 'code', 'scode', this.topValue);
 					this.dataTree = arr;
 				}
 			});
@@ -286,8 +263,8 @@ export default {
 		statusdisenable(item) {
 			userAPI
 				.updateUser({
-				 userId: item.userId,
-				 status: 0
+					userId: item.userId,
+					status: 0
 				})
 				.then(res => {
 					if (res.data.code == 0) {
@@ -320,10 +297,13 @@ export default {
 			this.$refs.dataPicker.clear();
 			this.search.institutionName = '';
 		},
-		confirm(data){
-			console.log(data)
-			this.search.institutionName=data[0].name
-			this.search.institution=data[0].code
+		confirm(data) {
+			console.log(data);
+			this.search.institutionName = data[0].name;
+			this.search.institution = data[0].code;
+		},
+		showInstitution() {
+			this.$refs.tkitree._show();
 		}
 	}
 };
@@ -367,9 +347,17 @@ export default {
 	align-items: center;
 	padding: 0 15px;
 	height: 40px;
-	background-color: #4f9be1;
 	font-weight: normal;
+	background-color: #4f9be1;
 	color: #fff;
+}
+.active {
+	background-color: #4f9be1;
+	color: #fff;
+}
+.disabled {
+	background-color: #e3e3e3;
+	color: gray;
 }
 ::v-deep .uni-select__input-text {
 	width: 170rpx;
