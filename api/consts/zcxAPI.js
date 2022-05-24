@@ -38,4 +38,9 @@ export default [{
 		method: 'post',
 		url: '/api/company/zhongChengXin/getRegionInfo'
 	},
+	{
+		name:"getReportList",
+		method:'post',
+		url:'/api/company/zhongChengXin/getReportList'
+	},
 ]

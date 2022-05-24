@@ -39,7 +39,7 @@
 					</uni-list-item> -->
 				</uni-list>
 				<view class=" flex flex-direction" style="padding: 50rpx 50rpx 0;" >
-					<button class="cu-btn line-blue " @click="goToPage({ code: 'historyReport' })">查看历史报告</button>
+					<button class="cu-btn line-blue " @click="goToPage({ code: 'historyReportList' })">查看历史报告</button>
 				</view>
 			</view>
 			<scroll-view scroll-y scroll-x v-else-if="active == 1" class="uni-mt-10 main-box">
@@ -180,7 +180,7 @@ export default {
 				{ img: '/static/img/index/cwpl.png', code: 'cwpl', name: '财务排雷' },
 				{ img: '/static/img/index/cyqypj.png', code: 'cyqyxypj', name: '产业企业评价' },
 				{ img: '/static/img/index/qyxypj.png', code: 'qyxypj', name: '区域信用评价' },
-				// { img: '/static/img/index/xxzx.png', code: 'historyReport', name: '历史报告' }
+				// { img: '/static/img/index/xxzx.png', code: 'historyReportList', name: '历史报告' }
 			],
 			adjustData: [{ name: '非标风险事件', detail: '区域本级的城投企业未发生过非标风险事件', influence: '0', source: '系统' }]
 		};
@@ -312,7 +312,7 @@ export default {
 		},
 		goToPage(item) {
 			uni.navigateTo({
-				url: `/pages/zcx/${item.code}?companyId=${this.companyId}&companyName=${this.companyName}&creditCode=${this.creditCode}`
+				url: `/pages/zcx/${item.code}?companyId=${this.companyId}&companyName=${this.companyName}&creditCode=${this.creditCode}&pageFrom=城投企业信用评价`
 			});
 		},
 		goToFirstPage() {

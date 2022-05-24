@@ -87,7 +87,6 @@ export default {
 				api='directSearchList'
 			}
 			zcxAPI[api](param).then(res => {
-				console.log(res);
 				this.sourceType = res.data.sourceType;
 				this.listData = res.data.searchList;
 			});
@@ -111,9 +110,6 @@ export default {
 		},
 		goToPage(item){
 			console.log(item)
-			// uni.navigateTo({
-			// 	url:`/pages/zcx/pageWrapper?pageIndex=${this.pageIndex}&companyId=${item.companyId}&companyName=${item.companyName}&creditCode=${item.creditCode}`
-			// })
 			uni.navigateTo({
 				url:`/pages/zcx/${this.pageIndex}?companyId=${item.companyId}&companyName=${item.companyName}&creditCode=${item.creditCode}`
 			})

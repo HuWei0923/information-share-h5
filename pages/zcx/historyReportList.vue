@@ -13,8 +13,8 @@
 				<view style="position: relative;line-height: 48rpx;padding-right: 60rpx;">
 					<view>区域：{{ item.area||'/' }}</view>
 					<view>行业：{{ item.industry||'/' }}</view>
-					<view>企业类型：{{ item.industryType||'/' }}</view>
-					<view>更新时间：{{ item.updateTime||'/' }}</view>
+					<view>企业类型：{{ item.companyType||'/' }}</view>
+					<view>更新时间：{{ formatMsToDate(item.updateTime)||'/' }}</view>
 					<view class="btn-box"><uni-icons type="more-filled" size="20" @click="item.showMenu = !item.showMenu"></uni-icons></view>
 				</view>
 				<uni-transition mode-class="fade" :duration="200" :show="item.showMenu">
@@ -24,7 +24,7 @@
 					</view>
 				</uni-transition>
 			</uni-group>
-			<uni-load-more :status="loadStatus"></uni-load-more>
+			<!-- <uni-load-more :status="loadStatus"></uni-load-more> -->
 		</view>
 		<view class="empty-box" v-else>
 			<image src="@/static/img/empty-image.png" class="empty-image"></image>
@@ -34,6 +34,8 @@
 </template>
 
 <script>
+	import { zcxAPI } from 'api/index.js';
+	import Utils from '@/utils/tool.js';
 export default {
 	data() {
 		return {
@@ -41,49 +43,38 @@ export default {
 			currentPage: 1,
 			pageSize: 10,
 			total: 0,
-			loadStatus: 'more'
+			loadStatus: 'more',
+			companyId:'',
+			reportType:''
 		};
 	},
-	onLoad() {},
+	onLoad(options) {
+		console.log(options)
+		this.companyId=options.companyId
+		this.reportType=options.pageFrom
+	},
 	onShow() {
 		this.getData();
 	},
-	//上拉加载更多
-	onReachBottom() {
-		if (this.listData.length < this.currentPage * this.pageSize) {
-			this.loadStatus = 'noMore';
-			return;
-		}
-		this.currentPage++;
-		this.getData();
-	},
-	//下拉刷新
-	onPullDownRefresh() {
-		this.currentPage = 1;
-		this.listData = [];
-		this.getData();
-		// setTimeout(() => {
-		// 	uni.stopPullDownRefresh();
-		// }, 1000);
-	},
 	methods: {
 		getData() {
-			let temp = [
-				{reportType: '财务排雷',area: null,industry: '综合',industryType: '中央国有企业',updateTime: '2022-05-14 11:35:11',showMenu: false},
-				{reportType: '财务排雷',area: null,industry: '综合',industryType: '中央国有企业',updateTime: '2022-05-14 11:35:11',showMenu: false},
-				{reportType: '财务排雷',area: null,industry: '综合',industryType: '中央国有企业',updateTime: '2022-05-14 11:35:11',showMenu: false},
-				{reportType: '财务排雷',area: null,industry: '综合',industryType: '中央国有企业',updateTime: '2022-05-14 11:35:11',showMenu: false},
-				{reportType: '财务排雷',area: null,industry: '综合',industryType: '中央国有企业',updateTime: '2022-05-14 11:35:11',showMenu: false},
-				{reportType: '财务排雷',area: null,industry: '综合',industryType: '中央国有企业',updateTime: '2022-05-14 11:35:11',showMenu: false},
-				{reportType: '财务排雷',area: null,industry: '综合',industryType: '中央国有企业',updateTime: '2022-05-14 11:35:11',showMenu: false},
-				{reportType: '财务排雷',area: null,industry: '综合',industryType: '中央国有企业',updateTime: '2022-05-14 11:35:11',showMenu: false},
-				{reportType: '财务排雷',area: null,industry: '综合',industryType: '中央国有企业',updateTime: '2022-05-14 11:35:11',showMenu: false},
-				{reportType: '财务排雷',area: null,industry: '综合',industryType: '中央国有企业',updateTime: '2022-05-14 11:35:11',showMenu: false},
-			];
-			this.loadStatus = 'loading';
-			setTimeout(() => {
-				this.listData = [...this.listData, ...temp];
-			}, 1000);
+			let param={
+				companyId:this.companyId,
+				reportType:this.reportType
+			}
+			zcxAPI.getReportList(param).then(res=>{
+				if(res.data.code==0){
+					this.listData =res.data.reportList.map(item=>{
+						item.showMenu=false
+						return item
+					})
+					this.total=res.data.reportList.length
+				}
+			})
+		},
+		
+		formatMsToDate(time){
+		return	Utils.formatMsToDate(time)
 		}
 	}
 };
