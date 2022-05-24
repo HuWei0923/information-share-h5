@@ -2,12 +2,12 @@
 	<view class="container">
 		<view class="content">
 			<uni-list>
-				<uni-list-item>
+				<uni-list-item :rightText="isEdit?form.username:''">
 					<view slot="header" class="form-title">
 						工号
 						<text class="required-s">*</text>
 					</view>
-					<view slot="footer">
+					<view slot="footer" v-if="!isEdit">
 						<input
 							placeholder="请填写"
 							placeholder-style="color:#B5B5B5;"
@@ -44,6 +44,7 @@
 							style="width: 280rpx"
 							:value="form.password"
 							@input="inputChange($event, 'password')"
+							@confirm="checkPassword"
 						/>
 						<view class="error-style" v-if="errMsg.password != ''">{{ errMsg.password }}</view>
 					</view>
@@ -74,12 +75,12 @@
 						<view class="error-style" v-if="errMsg.email != ''">{{ errMsg.email }}</view>
 					</view>
 				</uni-list-item>
-				<uni-list-item>
+				<uni-list-item :rightText="isEdit?form.companyName:''">
 					<view slot="header" class="form-title">
 						公司名称
 						<text class="required-s">*</text>
 					</view>
-					<view slot="footer">
+					<view slot="footer" v-if="!isEdit">
 						<input
 							placeholder="请选择"
 							placeholder-style="color:#B5B5B5;"
@@ -198,7 +199,9 @@ export default {
 			backData: [],
 			searchVal: '',
 			ifOnly: true,
-			topValue: ''
+			passwordOK:true,
+			topValue: '',
+			isEdit:false
 		};
 	},
 	watch: {
@@ -209,8 +212,8 @@ export default {
 		}
 	},
 	onLoad(options) {
-		console.log(options);
 		if (options.userId) {
+			this.isEdit=true
 			this.getUserDetail(options.userId);
 			uni.setNavigationBarTitle({
 				title: '编辑用户'
@@ -234,6 +237,7 @@ export default {
 			//组织架构查询
 			companyAPI.getAllCompanyLevel({ userId: uni.getStorageSync('userId') }).then(res => {
 				if (res.data.code == 0) {
+					let codeList=[]
 					this.backData = res.data.treeData.map(item => {
 						codeList.push(item.code);
 						return item;
@@ -308,6 +312,15 @@ export default {
 					}
 				});
 		},
+		checkPassword(){
+			if (!/^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$)([^\u4e00-\u9fa5\s]){8,20}$/.test(this.form.password)) {
+				this.errMsg.password = '密码必须由8位以上数字和字母组合';
+				this.passwordOK = false;
+			}else{
+				this.errMsg.password = '';
+				this.passwordOK = true;
+			}
+		},
 		checkForm() {
 			let flag = true;
 			if (this.form.username == '') {
@@ -321,12 +334,7 @@ export default {
 			if (this.form.password == '') {
 				this.errMsg.password = '请填写密码';
 				flag = false;
-			} else {
-				if (!/^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$)([^\u4e00-\u9fa5\s]){8,20}$/.test(this.form.password)) {
-					this.errMsg.password = '密码必须由8位以上数字和字母组合';
-					flag = false;
-				}
-			}
+			} 
 			if (this.form.companyCode == '') {
 				this.errMsg.companyCode = '请选择公司名称';
 				flag = false;
@@ -355,7 +363,7 @@ export default {
 		},
 		commit() {
 			let flag = this.checkForm();
-			if (flag && this.ifOnly) {
+			if (flag && this.ifOnly&&this.passwordOK) {
 				userAPI
 					.updateUser({
 						userId: this.form.userId,
@@ -378,9 +386,10 @@ export default {
 						}
 					});
 				//保存后页面跳转
-				uni.redirectTo({
-					url: '/pages/user/user'
-				});
+				uni.navigateBack()
+				// uni.redirectTo({
+				// 	url: '/pages/user/user'
+				// });
 			}
 		}
 	}

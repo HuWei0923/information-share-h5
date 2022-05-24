@@ -40,11 +40,19 @@ export default [
 		method:'post',
 		url:'/api/user/getRole'
 	},
-	
 	{
 		name:"getAllRole",
 		method:'post',
 		url:'/api/user/getAllRole'
 	},
-	
+	{
+		name:"roleNameExists",
+		method:'post',
+		url:'/api/user/roleNameExists'
+	},
+	{
+		name:"saveOrEditRole",
+		method:'post',
+		url:'/api/user/saveOrEditRole'
+	}
 ]

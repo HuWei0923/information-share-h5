@@ -50,10 +50,11 @@ export default {
 			horizontal: 'right'
 		};
 	},
-	onLoad() {
+	onLoad() {},
+	onShow() {
+		this.listData=[]
 		this.getData();
 	},
-	onShow() {},
 	//上拉加载更多
 	onReachBottom() {
 		if (this.listData.length < this.currentPage * this.pageSize) {
@@ -79,7 +80,7 @@ export default {
 			};
 			this.loadStatus = 'more';
 			userAPI.getAllRole(param).then(res => {
-				this.total=res.data.totalRecords
+				this.total = res.data.totalRecords;
 				let temp = res.data.allRole.content.map(item => {
 					item.permissionList = item.permission.split(',');
 					item.showMenu = false;
@@ -89,6 +90,7 @@ export default {
 				if (this.listData.length < this.currentPage * this.pageSize) {
 					this.loadStatus = 'noMore';
 				}
+				uni.stopPullDownRefresh();
 			});
 			// let temp =[
 			// 	{roleName:'子管理员',roleId:'9894423425523',permissions:['用户子管理权限','客商初筛权限','黑名单审批权限'],showMenu:false},
@@ -110,8 +112,9 @@ export default {
 			});
 		},
 		edit(item) {
+			let params = JSON.stringify(item);
 			uni.navigateTo({
-				url: `/pages/roleManage/create?roleId=${item.roleId}`
+				url: `/pages/roleManage/create?params=${params}`
 			});
 		}
 	}

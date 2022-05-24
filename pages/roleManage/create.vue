@@ -15,6 +15,7 @@
 							style="width: 280rpx;"
 							:value="form.roleName"
 							@input="inputChange($event, 'roleName')"
+							@blur="checkRoleNameExists"
 						/>
 						<view class="error-style" v-if="errMsg.roleName != ''">{{ errMsg.roleName }}</view>
 					</view>
@@ -39,6 +40,7 @@
 </template>
 
 <script>
+	import { userAPI } from 'api/index.js';
 export default {
 	data() {
 		return {
@@ -50,6 +52,7 @@ export default {
 				roleName: '',
 				permissions:''
 			},
+			roleData:{},
 			permissionList: [
 				{value:'客商初筛权限',text:'客商初筛权限'},
 				{value:'黑名单审批权限',text:'黑名单审批权限'},
@@ -59,23 +62,27 @@ export default {
 				{value:'信保报告列表权限',text:'信保报告列表权限'},
 				{value:'消息中心权限',text:'消息中心权限'},
 				{value:'访问日志权限',text:'访问日志权限'},
-			]
+			],
+			isEdit:false,
+			checkRoleName:true
 		};
 	},
 	onLoad(options) {
-		console.log(options);
-		if (options.roleId) {
+		if (options.params) {
 			uni.setNavigationBarTitle({
 				title: '编辑角色'
 			});
+			this.isEdit=true
+			this.roleData=JSON.parse(options.params)
 			this.getDetailData()
 		}
 	},
 	methods: {
 		getDetailData(){
+			console.log(this.roleData.permissionList);
 			this.form = {
-				roleName:'黑名单审核专员',
-				permissions:['客商初筛权限','黑名单审批权限','黑名单申请权限']
+				roleName:this.roleData.roleName,
+				permissions:this.roleData.permissionList.map(item=>item.trim())
 			}
 		},
 		inputChange(event, field) {
@@ -86,6 +93,23 @@ export default {
 		changePermissions(val){
 			// console.log(val)
 			this.errMsg.permissions=''
+		},
+		checkRoleNameExists(){
+			let params={
+				isNew:!this.isEdit,
+				roleId:this.roleData.roleId,
+				roleName:this.form.roleName
+			}
+			userAPI.roleNameExists(params).then(res=>{
+				console.log(res)
+				if(res.data.roleNameExists){
+					this.errMsg.roleName = '角色名称已存在';
+					this.checkRoleName=false
+				}else{
+					this.errMsg.roleName=''
+					this.checkRoleName=true
+				}
+			})
 		},
 		checkForm(){
 			let flag = true;
@@ -101,8 +125,22 @@ export default {
 		},
 		commit(){
 			let flag=this.checkForm()
-			if(flag){
-				
+			if(flag&&this.checkRoleName){
+				let params={
+					isNew:!this.isEdit,
+					permission:this.form.permissions,
+					roleId:this.roleData.roleId,
+					roleName:this.form.roleName
+				}
+				userAPI.saveOrEditRole(params).then(res=>{
+					if(res.data.code==0){
+						uni.showToast({
+							icon: 'none',
+							title: '保存成功。'
+						});
+						uni.navigateBack()
+					}
+				})
 			}
 		}
 	}
