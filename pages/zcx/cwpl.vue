@@ -155,7 +155,7 @@ export default {
 			zcxAPI.getLatestFinancialDeminingHtml(param).then(res => {
 				
 				if(res.data.toString().lastIndexOf("{\"code\":\"0\"}")){
-				  this.html =  res.data.toString().replace("{\"code\":\"0\"}","");
+					this.html =  res.data.toString().replace("{\"code\":\"0\"}","");
 				
 				}
 			});
