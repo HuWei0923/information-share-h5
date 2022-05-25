@@ -147,7 +147,7 @@
 				@change="changeRole"
 			></uni-data-picker> -->
 						<picker :value="form.roleName" @change="changeRole" :range="roleOptions">
-							<input placeholder="请选择" placeholder-style="color:#B5B5B5;" name="input" :value="form.roleName" readonly style="float: right" />
+							<input  placeholder="请选择" placeholder-style="color:#B5B5B5;" name="input" :value="form.roleName" readonly style="float: right" />
 							<!-- 	  <text v-if="roleName" class="icon_close" @click="close"></text> -->
 						</picker>
 						<view class="error-style" v-if="errMsg.roleName != ''">{{ errMsg.roleName }}</view>
@@ -183,7 +183,8 @@ export default {
 				companyCode: '',
 				companyName: '',
 				deptName: '',
-				roleName: ''
+				roleName: '',
+				
 			},
 			errMsg: {
 				username: '',
@@ -344,7 +345,7 @@ export default {
 			//   flag = false
 			// }
 			//邮箱校验
-			if (this.form.email.replace(/(^\s*)|(\s*$)/g, '').length > 0) {
+			if (this.form.email.replace(/(^\s*)|(\s*$)/g, '').length > 0&&this.form.email.length>0) {
 				let reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
 				if (!reg.test(this.form.email)) {
 					this.errMsg.email = '请收入正确的邮箱';
@@ -352,7 +353,7 @@ export default {
 				}
 			}
 
-			if (this.form.mobile.replace(/(^\s*)|(\s*$)/g, '').length > 0) {
+			if (this.form.mobile.replace(/(^\s*)|(\s*$)/g, '').length > 0&&this.form.mobile.length>0) {
 				let reg = /^1[0-9]{10}$/;
 				if (!reg.test(this.form.mobile)) {
 					this.errMsg.mobile = '请输入正确的手机号';
@@ -364,6 +365,10 @@ export default {
 		commit() {
 			let flag = this.checkForm();
 			if (flag && this.ifOnly&&this.passwordOK) {
+				if (this.form.roleName && (this.form.roleName instanceof Array)) {
+				        this.form.roleName = this.form.roleName.join(',');
+				}
+				
 				userAPI
 					.updateUser({
 						userId: this.form.userId,
@@ -374,7 +379,8 @@ export default {
 						email: this.form.email,
 						companyCode: this.form.companyCode,
 						companyName: this.form.companyName,
-						deptName: this.form.dept
+						deptName: this.form.dept,
+						permissionRoles:this.form.roleName
 						//因为后台接口根据permissionRoles字段判断角色则取
 					})
 					.then(res => {

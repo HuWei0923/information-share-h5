@@ -37,11 +37,11 @@
 						<!-- <image src="@/static/img/stop.png" v-if="item.status==0" style="width: 20px;height:20px;position: relative;top:5px;left:5px"></image> -->
 					</text>
 					<text>
-						<uni-tag text="已启用" type="primary" v-if="item.status == 1" class="uni-mr-2"></uni-tag>
-						<uni-tag text="已停用" v-else-if="item.status == 0" class="uni-mr-2"></uni-tag>
+						<uni-tag text="已启用" :inverted="true" type="primary" v-if="item.status == 1" class="uni-mr-2"></uni-tag>
+						<uni-tag text="已停用" disabled  :inverted="true" v-else-if="item.status == 0" class="uni-mr-2"></uni-tag>
 						<uni-tag text="点击停用" v-if="item.status == 1" type="error" @click="statusdisenable(item)"></uni-tag>
 						<uni-tag text="点击启用" v-else-if="item.status == 0" type="primary" @click="statusenable(item)"></uni-tag>
-						<uni-icons :type="item.showMore ? 'top' : 'bottom'" size="15" color="#fff" class="uni-ml-2" @click="item.showMenu = !item.showMenu"></uni-icons>
+						<uni-icons :type="item.showMenu ? 'top' : 'bottom'" size="15" color="#fff" class="uni-ml-2" @click="item.showMenu = !item.showMenu"></uni-icons>
 					</text>
 				</view>
 				<view style="padding: 15px;" v-if="item.showMenu">
@@ -95,7 +95,7 @@ export default {
 			dataTree: [],
 			listData: [],
 			currentPage: 1,
-			pageSize: 10,
+			pageSize: 15,
 			total: 0,
 			loadStatus: 'more',
 			vertical: 'bottom',
