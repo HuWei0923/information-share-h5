@@ -12,9 +12,15 @@
 				<!-- <uni-combox class="uni-mt-5" :candidates="roleOptions" placeholder="角色" v-model="search.role"></uni-combox> -->
 			</uni-col>
 			<uni-col :span="16" style="position: relative;">
-				<view @click="showInstitution">
-					<uni-easyinput ref="input" class="uni-mt-5" trim="all" placeholder="组织机构" v-model="search.institutionName"></uni-easyinput>
+				<view style="width: 100%;height: 72rpx;border: 1px solid rgb(229, 229, 229);display: flex;align-items: center;" class="uni-mt-5">
+					<view class="ins_style" :class="{'no-style':search.institutionName == ''}" @click="showInstitution">{{ search.institutionName == '' ? '组织机构' : search.institutionName }}</view>
+					<view style="width: 25px;" v-if="search.institutionName != ''">
+						<uni-icons type="clear" size="18px" color="#e3e3e3" @click="cancleInstitution"></uni-icons>
+					</view>
 				</view>
+				<!-- <view @click="showInstitution">
+					<uni-easyinput ref="input" class="uni-mt-5" trim="all" placeholder="组织机构" v-model="search.institutionName"></uni-easyinput>
+				</view> -->
 			</uni-col>
 		</uni-row>
 		<view style="padding: 10rpx 20rpx 0;">
@@ -38,7 +44,7 @@
 					</text>
 					<text>
 						<uni-tag text="已启用" :inverted="true" type="primary" v-if="item.status == 1" class="uni-mr-2"></uni-tag>
-						<uni-tag text="已停用" disabled  :inverted="true" v-else-if="item.status == 0" class="uni-mr-2"></uni-tag>
+						<uni-tag text="已停用" disabled :inverted="true" v-else-if="item.status == 0" class="uni-mr-2"></uni-tag>
 						<uni-tag text="点击停用" v-if="item.status == 1" type="error" @click="statusdisenable(item)"></uni-tag>
 						<uni-tag text="点击启用" v-else-if="item.status == 0" type="primary" @click="statusenable(item)"></uni-tag>
 						<uni-icons :type="item.showMenu ? 'top' : 'bottom'" size="15" color="#fff" class="uni-ml-2" @click="item.showMenu = !item.showMenu"></uni-icons>
@@ -121,9 +127,7 @@ export default {
 			deep: true
 		}
 	},
-	onLoad() {
-		
-	},
+	onLoad() {},
 	onShow() {
 		this.currentPage = 1;
 		this.listData = [];
@@ -171,7 +175,6 @@ export default {
 		getAllRole() {
 			this.roleOptions = [];
 			userAPI.getRole().then(res => {
-				
 				this.roleOptions = res.data.allRole.map(item => {
 					return {
 						text: item,
@@ -258,14 +261,13 @@ export default {
 							icon: 'none',
 							title: '启用成功。'
 						});
-						
+
 						this.currentPage = 1;
 						this.listData = [];
-						
+
 						this.getData();
 					}
 				});
-			
 		},
 
 		statusdisenable(item) {
@@ -282,11 +284,10 @@ export default {
 						});
 						this.currentPage = 1;
 						this.listData = [];
-						
+
 						this.getData();
 					}
 				});
-			
 		},
 
 		onchange(e) {
@@ -311,6 +312,10 @@ export default {
 			console.log(data);
 			this.search.institutionName = data[0].name;
 			this.search.institution = data[0].code;
+		},
+		cancleInstitution() {
+			this.search.institutionName = '';
+			this.search.institution = '';
 		},
 		showInstitution() {
 			this.$refs.tkitree._show();
@@ -364,6 +369,20 @@ export default {
 .active {
 	background-color: #4f9be1;
 	color: #fff;
+}
+.ins_style {
+	flex: 1;
+	height: 100%;
+	line-height: 66rpx;
+	padding-left: 20rpx;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	color:#333
+}
+.no-style{
+	font-weight: 100;
+	font-size: 12px;
 }
 .disabled {
 	background-color: #e3e3e3;

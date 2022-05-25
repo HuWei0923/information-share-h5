@@ -138,4 +138,7 @@ export default {
 	font-weight: normal;
 	color: #fff;
 }
+::v-deep .uni-fab__circle--rightBottom{
+	bottom: 120rpx;
+}
 </style>
