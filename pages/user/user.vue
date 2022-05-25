@@ -261,8 +261,7 @@ export default {
 						
 						this.currentPage = 1;
 						this.listData = [];
-						this.getAllRole();
-						this.getAllCompanyLevel();
+						
 						this.getData();
 					}
 				});
@@ -283,8 +282,7 @@ export default {
 						});
 						this.currentPage = 1;
 						this.listData = [];
-						this.getAllRole();
-						this.getAllCompanyLevel();
+						
 						this.getData();
 					}
 				});
