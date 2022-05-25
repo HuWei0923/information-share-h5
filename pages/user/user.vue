@@ -122,11 +122,15 @@ export default {
 		}
 	},
 	onLoad() {
+		
+	},
+	onShow() {
+		this.currentPage = 1;
+		this.listData = [];
 		this.getAllRole();
 		this.getAllCompanyLevel();
 		this.getData();
 	},
-	onShow() {},
 	//上拉加载更多
 	onReachBottom() {
 		if (this.listData.length < this.currentPage * this.pageSize) {
@@ -167,6 +171,7 @@ export default {
 		getAllRole() {
 			this.roleOptions = [];
 			userAPI.getRole().then(res => {
+				
 				this.roleOptions = res.data.allRole.map(item => {
 					return {
 						text: item,
@@ -253,11 +258,15 @@ export default {
 							icon: 'none',
 							title: '启用成功。'
 						});
+						
+						this.currentPage = 1;
+						this.listData = [];
+						this.getAllRole();
+						this.getAllCompanyLevel();
+						this.getData();
 					}
 				});
-			uni.navigateTo({
-				url: '/pages/user/user'
-			});
+			
 		},
 
 		statusdisenable(item) {
@@ -272,11 +281,14 @@ export default {
 							icon: 'none',
 							title: '停用成功。'
 						});
+						this.currentPage = 1;
+						this.listData = [];
+						this.getAllRole();
+						this.getAllCompanyLevel();
+						this.getData();
 					}
 				});
-			uni.navigateTo({
-				url: '/pages/user/user'
-			});
+			
 		},
 
 		onchange(e) {
