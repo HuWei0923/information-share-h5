@@ -136,17 +136,11 @@
 				<uni-list-item>
 					<view slot="header" class="form-title">
 						角色
-						<text class="required-s">*</text>
+						<!-- <text class="required-s">*</text> -->
 					</view>
 					<view slot="footer">
-						<!-- <uni-data-picker
-				ref="picker"
-				placeholder="请选择"
-				:localdata="roleOptions"
-				v-model="form.roleName"
-				@change="changeRole"
-			></uni-data-picker> -->
-						<picker :value="form.roleName" @change="changeRole" :range="roleOptions">
+						<uni-icons type="clear" size="20" color="#e3e3e3" style="float: right;" v-if="form.roleName!==''" @click="form.roleName=''"></uni-icons>
+						<picker :value="form.roleName" @change="changeRole" :range="roleOptions" style="float: right;">
 							<input  placeholder="请选择" placeholder-style="color:#B5B5B5;" name="input" :value="form.roleName" readonly style="float: right" />
 							<!-- 	  <text v-if="roleName" class="icon_close" @click="close"></text> -->
 						</picker>
