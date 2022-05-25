@@ -43,4 +43,14 @@ export default [{
 		method:'post',
 		url:'/api/company/zhongChengXin/getReportList'
 	},
+	{
+		name:"reportExist",
+		method:'post',
+		url:'/api/report/zhongChengXin/reportExist'
+	},
+	{
+		name:"getLatestFinancialDeminingHtml",
+		method:'post',
+		url:'/api/company/zhongChengXin/getLatestFinancialDeminingHtml'
+	}
 ]

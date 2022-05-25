@@ -65,7 +65,7 @@ export default {
 			let param = {
 				companyId: this.companyId,
 				creditCode: this.creditCode,
-				userId: '1'
+				userId: uni.getStorageSync('userId')
 			};
 			zcxAPI.getRiskScreenHtml(param).then(res => {
 				console.log(res);

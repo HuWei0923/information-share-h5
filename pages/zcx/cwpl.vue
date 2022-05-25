@@ -88,6 +88,7 @@ export default {
 			allIndustry: [],
 			industryType: '',
 			dataTree: [],
+			professionDetail:'',
 			industryTypeOptions: ['中央国有企业', '国企非上市公司', '国企上市公司', '民企非上市公司', '民企上市公司'],
 			errMsg: {
 				industry: '',
@@ -99,7 +100,8 @@ export default {
 				{ img: '/static/img/index/qyxypj.png', code: 'qyxypj', name: '区域信用评价' },
 				{ img: '/static/img/index/ctqypj.png', code: 'ctqyxypj', name: '城投企业评价' },
 				// { img: '/static/img/index/xxzx.png', code: 'historyReportList', name: '历史报告' }
-			]
+			],
+			existFlag:true,
 		};
 	},
 	onLoad(options) {
@@ -108,6 +110,7 @@ export default {
 		this.companyName = options.companyName;
 		this.creditCode = options.creditCode;
 		this.getIndustry();
+		this.reportExist();
 	},
 	methods: {
 		getIndustry() {
@@ -127,6 +130,36 @@ export default {
 				this.dataTree = list;
 			});
 		},
+		reportExist(){
+			this.existFlag = true;
+			zcxAPI.reportExist({
+				creditCode:this.creditCode,
+				reportType:'财务排雷'
+			}).then(res => {
+				debugger;
+				
+				if (res.statusCode == 200) {
+					this.existFlag = res.data.existFlag;
+				}
+			});
+		},
+		getRegionRatingHtml(){
+			let param = {
+				ver: "1.0",
+				companyId:this.companyId,
+				creditCode: this.creditCode,
+				industry: this.professionDetail,
+				nature:this.industryType,
+				userId: uni.getStorageSync('userId').toString(),
+			}
+			zcxAPI.getLatestFinancialDeminingHtml(param).then(res => {
+				
+				if(res.data.toString().lastIndexOf("{\"code\":\"0\"}")){
+				  this.html =  res.data.toString().replace("{\"code\":\"0\"}","");
+				
+				}
+			});
+		},
 		onchange(e) {
 			let list = [];
 			list.push();
@@ -134,9 +167,11 @@ export default {
 				list.push(item.text);
 			});
 			this.allIndustry = list;
+			this.professionDetail=list[list.length-1];
 			this.errMsg.industry = '';
 		},
 		changeIndustryType(e) {
+			debugger;
 			this.industryType = this.industryTypeOptions[e.detail.value];
 			this.errMsg.industryType = '';
 		},
@@ -150,6 +185,9 @@ export default {
 				this.errMsg.industryType = '请选择企业性质';
 				flag = false;
 			}
+			
+			
+			
 			return flag;
 		},
 		preview() {
@@ -157,7 +195,27 @@ export default {
 		},
 		next() {
 			let flag = this.check();
+			
+			
 			if (flag) {
+				if(this.active==0){
+					if(!this.existFlag){
+						uni.showModal({
+							title: '提示',
+							content: '非常抱歉，第三方接口内无财报数据，无法生成对应报告！',
+							showCancel: false,
+							success: () => {
+								
+							}
+						});
+						
+						return;
+					}
+				}else if(this.active==1){
+					this.getRegionRatingHtml();
+				}
+				
+				
 				if (this.active < this.stepList.length - 1) this.active++;
 			}
 		},
