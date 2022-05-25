@@ -48,7 +48,10 @@
 					<uni-list-item title="财报信息" rightText="数据取自近两年财报"></uni-list-item>
 				</uni-list>
 			</view>
-			<scroll-view v-else-if="active == 2" scroll-y scroll-x class="uni-mt-10 main-box"><text class="html-text-box" v-html="html"></text></scroll-view>
+			<iframe id="iframes" v-else-if="active == 2" frameborder="no" border="0" :srcdoc="html" style="width: 100vw;height:60vh;position: relative;overflow: auto;" class="uni-mt-10">
+				<!-- <view class="html-text-box" v-html="html"></view> -->
+			</iframe>
+			<!-- <scroll-view v-else-if="active == 2" scroll-y scroll-x class="uni-mt-10 main-box"><text class="html-text-box" v-html="html"></text></scroll-view> -->
 			<view v-else class="uni-mt-10 download-box">
 				<view class="download" @click="download"><uni-icons type="pulldown" size="60" color="#B7BDC6"></uni-icons></view>
 				<view style="color: #B7BDC6;" class="uni-mt-5">报告下载</view>
@@ -136,7 +139,6 @@ export default {
 				creditCode:this.creditCode,
 				reportType:'财务排雷'
 			}).then(res => {
-				debugger;
 				
 				if (res.statusCode == 200) {
 					this.existFlag = res.data.existFlag;
@@ -156,7 +158,6 @@ export default {
 				
 				if(res.data.toString().lastIndexOf("{\"code\":\"0\"}")){
 					this.html =  res.data.toString().replace("{\"code\":\"0\"}","");
-				
 				}
 			});
 		},
@@ -171,7 +172,6 @@ export default {
 			this.errMsg.industry = '';
 		},
 		changeIndustryType(e) {
-			debugger;
 			this.industryType = this.industryTypeOptions[e.detail.value];
 			this.errMsg.industryType = '';
 		},

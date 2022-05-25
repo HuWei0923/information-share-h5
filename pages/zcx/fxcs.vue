@@ -1,9 +1,12 @@
 <template>
 	<view class="content">
 		<view style="margin-top: 20rpx;"><uni-steps :options="stepList" :active="active" /></view>
-		<scroll-view v-if="active == 0" scroll-y scroll-x style="width: 100vw;height:60vh;position: relative;" class="uni-mt-10">
+		<!-- <scroll-view v-if="active == 0" scroll-y scroll-x style="width: 100vw;height:60vh;position: relative;" class="uni-mt-10">
 			<view class="html-text-box" v-html="html"></view>
-		</scroll-view>
+		</scroll-view> -->
+		<iframe v-if="active == 0" frameborder="no" border="0" :srcdoc="html" style="width: 100vw;height:60vh;position: relative;" class="uni-mt-10">
+			<!-- <view class="html-text-box" v-html="html"></view> -->
+		</iframe>
 		<view v-else class="uni-mt-10 download-box">
 			<view class="download" @click="download"><uni-icons type="pulldown" size="60" color="#B7BDC6"></uni-icons></view>
 			<view style="color: #B7BDC6;" class="uni-mt-5">报告下载</view>
