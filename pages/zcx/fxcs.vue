@@ -73,6 +73,7 @@ export default {
 			zcxAPI.getRiskScreenHtml(param).then(res => {
 				console.log(res);
 				this.html = res.data;
+				
 			});
 		},
 		preview() {

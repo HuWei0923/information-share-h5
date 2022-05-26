@@ -52,5 +52,11 @@ export default [{
 		name:"getLatestFinancialDeminingHtml",
 		method:'post',
 		url:'/api/company/zhongChengXin/getLatestFinancialDeminingHtml'
+	},
+	{
+		name:"getLiteRatingPDF",
+		method:'post',
+		url:'/api/company/zhongChengXin/getReportPDF',
+		filetype:true
 	}
 ]

@@ -19,8 +19,8 @@
 				</view>
 				<uni-transition mode-class="fade" :duration="200" :show="item.showMenu">
 					<view style="margin-top: 20rpx;padding-top: 20rpx;text-align: right;border-top: 1px solid #efefef;">
-						<uni-tag text="预览" type="primary" style="margin-right: 10rpx;"></uni-tag>
-						<uni-tag text="下载" type="success" style="margin-right: 10rpx;"></uni-tag>
+						<uni-tag text="预览" type="primary" style="margin-right: 10rpx;" @click="checkDetail(item)"></uni-tag>
+						<uni-tag text="下载" type="success" style="margin-right: 10rpx;" @click="downnload(item)"></uni-tag>
 					</view>
 				</uni-transition>
 			</uni-group>
@@ -72,10 +72,46 @@ export default {
 				}
 			})
 		},
-		
 		formatMsToDate(time){
-		return	Utils.formatMsToDate(time)
-		}
+			return	Utils.formatMsToDate(time)
+		},
+		downnload(item) {
+			let param = {
+				fileName: item.fileName,
+				reportId:item.reportId,
+				reportType:item.reportType,
+				updateTime:item.updateTime,
+				isDownload:"1"
+			}
+			zcxAPI.getLiteRatingPDF(param).then(res => {
+				console.log(res)
+				
+				const content = res.data
+				const blob = new Blob([content])
+				const fileName = `${item.fileName}`.split('.')[0] + '.pdf'
+				debugger;
+				// const fileName = `${row.fileName}.pdf`
+				if ('download' in document.createElement('a')) { // 非IE下载
+					const elink = document.createElement('a')
+					elink.download = fileName
+					elink.style.display = 'none'
+					elink.href = URL.createObjectURL(blob)
+					console.log(elink.href);
+					document.body.appendChild(elink)
+					elink.click()
+					URL.revokeObjectURL(elink.href) // 释放URL 对象
+					document.body.removeChild(elink)
+				} else { // IE10+下载
+					navigator.msSaveBlob(blob, fileName)
+				}
+			});
+		},
+		checkDetail(item) {
+			//预览pdf
+			uni.navigateTo({
+				url: '/pages/pdf/zcxindex?fileName='+item.fileName+'&reportId='+item.reportId+'&reportType='+item.reportType+'&updateTime='+item.updateTime+'&isDownload=1'
+			});
+		},
 	}
 };
 </script>

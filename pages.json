@@ -93,8 +93,14 @@
 				"enablePullDownRefresh": false
 			}
 
-		},
-		{
+		},{
+			"path": "pages/pdf/zcxindex",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		},{
 			"path": "pages/zcx/search",
 			"style": {
 				"navigationBarTitleText": "搜索",

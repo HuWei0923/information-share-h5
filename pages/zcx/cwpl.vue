@@ -104,6 +104,7 @@ export default {
 				// { img: '/static/img/index/xxzx.png', code: 'historyReportList', name: '历史报告' }
 			],
 			existFlag:true,
+			fileName:'',
 		};
 	},
 	onLoad(options) {
@@ -157,6 +158,9 @@ export default {
 				if(res.data.toString().lastIndexOf("{\"code\":\"0\"}")){
 					this.html =  res.data.toString().replace("{\"code\":\"0\"}","").replace('class="page-content"','class="page-content" style="overflow:auto"');
 				}
+				let temp = 'content-disposition'
+				let data = res.headers[temp];
+				this.fileName = data.split('=')[1];
 			});
 		},
 		onchange(e) {
@@ -226,7 +230,30 @@ export default {
 			uni.navigateTo({
 				url:`/pages/zcx/${item.code}?companyId=${this.companyId}&companyName=${this.companyName}&creditCode=${this.creditCode}&pageFrom=财务排雷`
 			})
-		}
+		},
+		download(){
+			let param = {
+				fileName: this.fileName,
+			}
+			zcxAPI.getLiteRatingPDF(param).then(res => {
+				const content = res.data
+				const blob = new Blob([content])
+				const fileName = `财务排雷-${this.companyName}.pdf`
+				if ('download' in document.createElement('a')) { // 非IE下载
+					const elink = document.createElement('a')
+					elink.download = fileName
+					elink.style.display = 'none'
+					elink.href = URL.createObjectURL(blob)
+					console.log(elink.href);
+					document.body.appendChild(elink)
+					elink.click()
+					URL.revokeObjectURL(elink.href) // 释放URL 对象
+					document.body.removeChild(elink)
+				} else { // IE10+下载
+					navigator.msSaveBlob(blob, fileName)
+				}
+			});
+		},
 	}
 };
 </script>
