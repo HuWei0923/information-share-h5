@@ -49,6 +49,34 @@ export default {
 		};
 	},
 	onLoad(options) {
+		const script4 = document.createElement('script');
+		script4.src = 'http://cmp/v1.0.0/js/cmp-i18n.js';
+		document.body.appendChild(script4);
+		
+		const script = document.createElement('script');
+		script.src = 'http://cmp/v1.0.0/js/cordova/__CMPSHELL_PLATFORM__/cordova.js';
+		
+		const script1 = document.createElement('script');
+		script1.src = 'http://cmp/v1.0.0/js/cordova/cordova-plugins.js';
+		
+		const script2 = document.createElement('script');
+		script2.src = 'http://cmp/v/js/cmp.js';
+		
+		const script3 = document.createElement('script');
+		script3.src = 'http://cmp/v/js/cmp-att.js';
+		
+		script4.onload=function () {	
+			document.body.appendChild(script);
+		}
+		script.onload=function () {	
+			document.body.appendChild(script1);
+		}
+		script1.onload=function () {     
+		    document.body.appendChild(script2);
+		}
+		script2.onload=function () {   
+		    document.body.appendChild(script3);
+		}
 		console.log(options)
 		this.companyId=options.companyId
 		this.reportType=options.pageFrom

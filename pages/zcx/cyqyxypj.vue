@@ -114,7 +114,11 @@ export default {
 				{ img: '/static/img/index/qyxypj.png', code: 'qyxypj', name: '区域信用评价' },
 				{ img: '/static/img/index/ctqypj.png', code: 'ctqyxypj', name: '城投企业评价' },
 				// { img: '/static/img/index/xxzx.png', code: 'historyReportList', name: '历史报告' }
-			]
+			],
+			existFlag:true,
+			profession:'',
+			professionDetail:'',
+			fileName:'',
 		};
 	},
 	onLoad(options) {
@@ -123,6 +127,7 @@ export default {
 		this.companyName = options.companyName;
 		this.creditCode = options.creditCode;
 		this.getIndustry();
+		this.reportExist();
 	},
 	methods: {
 		getIndustry() {
@@ -141,6 +146,38 @@ export default {
 				this.dataTree = list;
 			});
 		},
+		reportExist(){
+			this.existFlag = true;
+			debugger;
+			zcxAPI.reportExist({
+				creditCode:this.creditCode,
+				reportType:'产业企业评价'
+			}).then(res => {
+				debugger;
+				if (res.statusCode == 200) {
+					this.existFlag = res.data.existFlag;
+				}
+			});
+		},
+		getLiteRatingHtml(){
+			let param = {
+
+				companyId:this.companyId,
+				industryCategory: this.profession,
+				industry: this.professionDetail,
+				isIndustryLeader: this.ifHeader == '是' ? true : false,
+				userId: uni.getStorageSync('userId').toString(),
+				nature: this.industryType
+			}
+			zcxAPI.getLiteRatingHtml(param).then(res => {
+				if(res.data.toString().lastIndexOf("{\"code\":\"0\"}")){
+					this.html =  res.data.toString().replace("{\"code\":\"0\"}","").replace('class="page-content"','class="page-content" style="overflow:auto"');
+				}
+				let temp = 'content-disposition'
+				let data = res.header[temp];
+				this.fileName = data.split('=')[1];
+			});
+		},
 		onchange(e) {
 			console.log(e);
 			let list = [];
@@ -149,6 +186,8 @@ export default {
 				list.push(item.text);
 			});
 			this.allIndustry = list;
+			this.profession = list[0].replace(/(^\s+)|(\s+$)/g,"");
+			this.professionDetail= list[1].replace(/(^\s+)|(\s+$)/g,"");
 			this.errMsg.industry = '';
 		},
 		changeIndustryType(e) {
@@ -181,6 +220,22 @@ export default {
 		next() {
 			let flag = this.check();
 			if (flag) {
+				if(this.active==0){
+					if(!this.existFlag){
+						uni.showModal({
+							title: '提示',
+							content: '非常抱歉，第三方接口内无财报数据，无法生成对应报告！',
+							showCancel: false,
+							success: () => {
+								
+							}
+						});
+						
+						return;
+					}
+				}else if(this.active==1){
+					this.getLiteRatingHtml();
+				}
 				if (this.active < this.stepList.length - 1) this.active++;
 			}
 		},
@@ -192,6 +247,29 @@ export default {
 		goToFirstPage() {
 			uni.switchTab({
 				url: '/pages/index/index'
+			});
+		},
+		download(){
+			let param = {
+				fileName: this.fileName,
+			}
+			zcxAPI.getLiteRatingPDF(param).then(res => {
+				const content = res.data
+				const blob = new Blob([content])
+				const fileName = `产业信用评价-${this.companyName}.pdf`
+				if ('download' in document.createElement('a')) { // 非IE下载
+					const elink = document.createElement('a')
+					elink.download = fileName
+					elink.style.display = 'none'
+					elink.href = URL.createObjectURL(blob)
+					console.log(elink.href);
+					document.body.appendChild(elink)
+					elink.click()
+					URL.revokeObjectURL(elink.href) // 释放URL 对象
+					document.body.removeChild(elink)
+				} else { // IE10+下载
+					navigator.msSaveBlob(blob, fileName)
+				}
 			});
 		},
 	}

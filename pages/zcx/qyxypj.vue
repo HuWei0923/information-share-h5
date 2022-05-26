@@ -160,7 +160,8 @@ export default {
 				{ img: '/static/img/index/cyqypj.png', code: 'cyqyxypj', name: '产业企业评价' },
 				{ img: '/static/img/index/ctqypj.png', code: 'ctqyxypj', name: '城投企业评价' },
 				// { img: '/static/img/index/xxzx.png', code: 'historyReportList', name: '历史报告' }
-			]
+			],
+			existFlag:true,
 		};
 	},
 	onLoad(options) {
@@ -168,7 +169,8 @@ export default {
 		this.companyName = options.companyName;
 		this.creditCode = options.creditCode;
 		this.getIndustry();
-		this.getArea()
+		this.getArea();
+		this.reportExist();
 	},
 	watch:{
 		administrativeLevel(val){
@@ -220,6 +222,19 @@ export default {
 				this.allAreaData=res.data.areaList
 			})
 		},
+		reportExist(){
+			this.existFlag = true;
+			debugger;
+			zcxAPI.reportExist({
+				creditCode:this.creditCode,
+				reportType:'产业企业评价'
+			}).then(res => {
+				debugger;
+				if (res.statusCode == 200) {
+					this.existFlag = res.data.existFlag;
+				}
+			});
+		},
 		onchange(e) {
 			let list = [];
 			list.push();
@@ -261,6 +276,20 @@ export default {
 		next() {
 			let flag = this.check();
 			if (flag) {
+				if(this.active==0){
+					if(!this.existFlag){
+						uni.showModal({
+							title: '提示',
+							content: '非常抱歉，第三方接口内无财报数据，无法生成对应报告！',
+							showCancel: false,
+							success: () => {
+								
+							}
+						});
+						
+						return;
+					}
+				}
 				if (this.active < this.stepList.length - 1) this.active++;
 				if(this.active==1){
 					this.getRegionInfo()

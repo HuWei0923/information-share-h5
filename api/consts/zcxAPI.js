@@ -58,5 +58,11 @@ export default [{
 		method:'post',
 		url:'/api/company/zhongChengXin/getReportPDF',
 		filetype:true
+	},
+	{
+		name:"getLiteRatingHtml",
+		method:'post',
+		url:'/api/company/zhongChengXin/getLiteRatingHtml',
+		filetype:true
 	}
 ]

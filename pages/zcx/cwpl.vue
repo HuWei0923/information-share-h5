@@ -159,7 +159,7 @@ export default {
 					this.html =  res.data.toString().replace("{\"code\":\"0\"}","").replace('class="page-content"','class="page-content" style="overflow:auto"');
 				}
 				let temp = 'content-disposition'
-				let data = res.headers[temp];
+				let data = res.header[temp];
 				this.fileName = data.split('=')[1];
 			});
 		},
