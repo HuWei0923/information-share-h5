@@ -155,8 +155,17 @@ export default {
 				userId: uni.getStorageSync('userId').toString(),
 			}
 			zcxAPI.getLatestFinancialDeminingHtml(param).then(res => {
-				if(res.data.toString().lastIndexOf("{\"code\":\"0\"}")){
-					this.html =  res.data.toString().replace("{\"code\":\"0\"}","").replace('class="page-content"','class="page-content" style="overflow:auto"');
+				
+				if(res.data.code&&res.data.code!='0'){
+					this.html=JSON.stringify(res.data);
+					
+				}else{
+				
+					if(res.data.toString().lastIndexOf("{\"code\":\"0\"}")){
+						
+						this.html =  res.data.toString().replace("{\"code\":\"0\"}","").replace('class="page-content"','class="page-content" style="overflow:auto"');
+					}
+				
 				}
 				let temp = 'content-disposition'
 				let data = res.header[temp];
