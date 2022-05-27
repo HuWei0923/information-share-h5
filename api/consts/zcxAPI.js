@@ -62,7 +62,6 @@ export default [{
 	{
 		name:"getLiteRatingHtml",
 		method:'post',
-		url:'/api/company/zhongChengXin/getLiteRatingHtml',
-		filetype:true
+		url:'/api/company/zhongChengXin/getLiteRatingHtml'
 	}
 ]
