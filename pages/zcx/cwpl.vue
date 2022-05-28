@@ -48,8 +48,10 @@
 					<uni-list-item title="财报信息" rightText="数据取自近两年财报"></uni-list-item>
 				</uni-list>
 			</view>
-			<iframe id="iframes" v-else-if="active == 2" frameborder="no" border="0" :srcdoc="html" style="width: 100vw;height:60vh;position: relative;overflow: auto;" class="uni-mt-10">
+			<view id="iframe-box" v-else-if="active == 2">
+			<iframe id="ifram"  frameborder="no" border="0" src="http://www.baidu.com" style="width: 100vw;height:60vh;position: relative;overflow: auto;" class="uni-mt-10">
 			</iframe>
+			</view>
 			<!-- <scroll-view v-else-if="active == 2" scroll-y scroll-x class="uni-mt-10 main-box">
 				<view class="html-text-box" id="htmlDom" ref="htmlDom" v-html="html"></view></scroll-view> -->
 			<view v-else class="uni-mt-10 download-box">
@@ -117,6 +119,18 @@ export default {
 		this.getIndustry();
 		this.reportExist();
 	},
+	onShow(){
+		let ifram = document.getElementById('ifram');
+		if (navigator.userAgent.match(/iPad|iPhone/i)) {
+		  let iframe_box = document.getElementById('iframe-box');
+		  iframe_box.style.width = 100 + '%';
+		  iframe_box.style.overflowX = 'hidden';
+		  iframe_box.style.overflowY = 'scroll';
+		  iframe_box.style.webkitOverflowScrolling = 'touch';
+		  ifram.setAttribute('scrolling', 'no');
+		  iframe_box.appendChild(ifram)
+		}
+	},
 	methods: {
 		getIndustry() {
 			zcxAPI.getIndustry({}).then(res => {
@@ -171,23 +185,23 @@ export default {
 			//          document.getElementById('htmlDom').append(script)
 			//  })
 
-			zcxAPI.getLatestFinancialDeminingHtml(param).then(res => {
-				this.html=res.data
-				// if(res.data.code&&res.data.code!='0'){
-				// 	this.html=JSON.stringify(res.data);
+			// zcxAPI.getLatestFinancialDeminingHtml(param).then(res => {
+			// 	this.html=res.data
+			// 	// if(res.data.code&&res.data.code!='0'){
+			// 	// 	this.html=JSON.stringify(res.data);
 					
-				// }else{
+			// 	// }else{
 				
-				// 	if(res.data.toString().lastIndexOf("{\"code\":\"0\"}")){
+			// 	// 	if(res.data.toString().lastIndexOf("{\"code\":\"0\"}")){
 						
-				// 		this.html =  res.data.toString().replace("{\"code\":\"0\"}","").replace('class="page-content"','class="page-content" style="overflow:auto"');
-				// 	}
+			// 	// 		this.html =  res.data.toString().replace("{\"code\":\"0\"}","").replace('class="page-content"','class="page-content" style="overflow:auto"');
+			// 	// 	}
 				
-				// }
-				let temp = 'content-disposition'
-				let data = res.header[temp];
-				this.fileName = data.split('=')[1];
-			});
+			// 	// }
+			// 	let temp = 'content-disposition'
+			// 	let data = res.header[temp];
+			// 	this.fileName = data.split('=')[1];
+			// });
 		},
 		onchange(e) {
 			let list = [];
