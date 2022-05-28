@@ -87,7 +87,7 @@
 	import {
 		zcxAPI
 	} from 'api/index.js';
-	import mock from 'static/mock.js'
+
 	export default {
 		data() {
 			return {
