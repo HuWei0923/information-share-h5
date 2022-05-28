@@ -48,9 +48,10 @@
 					<uni-list-item title="财报信息" rightText="数据取自近两年财报"></uni-list-item>
 				</uni-list>
 			</view>
-			<!-- <iframe id="iframes" v-else-if="active == 2" frameborder="no" border="0" :srcdoc="html" style="width: 100vw;height:60vh;position: relative;overflow: auto;" class="uni-mt-10">
-			</iframe> -->
-			<scroll-view v-else-if="active == 2" scroll-y scroll-x class="uni-mt-10 main-box"><text class="html-text-box" v-html="html"></text></scroll-view>
+			<iframe id="iframes" v-else-if="active == 2" frameborder="no" border="0" :srcdoc="html" style="width: 100vw;height:60vh;position: relative;overflow: auto;" class="uni-mt-10">
+			</iframe>
+			<!-- <scroll-view v-else-if="active == 2" scroll-y scroll-x class="uni-mt-10 main-box">
+				<view class="html-text-box" id="htmlDom" ref="htmlDom" v-html="html"></view></scroll-view> -->
 			<view v-else class="uni-mt-10 download-box">
 				<view class="download" @click="download"><uni-icons type="pulldown" size="60" color="#B7BDC6"></uni-icons></view>
 				<view style="color: #B7BDC6;" class="uni-mt-5">报告下载</view>
@@ -77,6 +78,7 @@
 
 <script>
 import { zcxAPI } from 'api/index.js';
+import mock from 'static/mock.js'
 export default {
 	data() {
 		return {
@@ -154,19 +156,34 @@ export default {
 				nature:this.industryType,
 				userId: uni.getStorageSync('userId').toString(),
 			}
+			// console.log(mock.html)
+			// this.html =  mock.html.toString().replace("{\"code\":\"0\"}","").replace('class="page-content"','class="page-content" style="overflow:auto"');
+			// let formStr = mock.html
+			//  let regJs = ''
+			//  formStr.replace(/<script.*?>([\s\S]+?)<\/script>/img, (_, js) => { // 正则匹配出script中的内容
+			//          regJs = js
+			//  })
+			//  setTimeout(() => {
+			//          let script = document.createElement('script');
+			//          script.innerHTML = regJs
+			// 		 console.log(this.$refs.htmlDom)
+			// 		 console.log(document.getElementById('htmlDom'))
+			//          document.getElementById('htmlDom').append(script)
+			//  })
+
 			zcxAPI.getLatestFinancialDeminingHtml(param).then(res => {
-				
-				if(res.data.code&&res.data.code!='0'){
-					this.html=JSON.stringify(res.data);
+				this.html=res.data
+				// if(res.data.code&&res.data.code!='0'){
+				// 	this.html=JSON.stringify(res.data);
 					
-				}else{
+				// }else{
 				
-					if(res.data.toString().lastIndexOf("{\"code\":\"0\"}")){
+				// 	if(res.data.toString().lastIndexOf("{\"code\":\"0\"}")){
 						
-						this.html =  res.data.toString().replace("{\"code\":\"0\"}","").replace('class="page-content"','class="page-content" style="overflow:auto"');
-					}
+				// 		this.html =  res.data.toString().replace("{\"code\":\"0\"}","").replace('class="page-content"','class="page-content" style="overflow:auto"');
+				// 	}
 				
-				}
+				// }
 				let temp = 'content-disposition'
 				let data = res.header[temp];
 				this.fileName = data.split('=')[1];
