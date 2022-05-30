@@ -253,7 +253,8 @@ export default {
 			userAPI
 				.updateUser({
 					userId: item.userId,
-					status: 1
+					status: 1,
+					operator: uni.getStorageSync('userCode')
 				})
 				.then(res => {
 					if (res.data.code == 0) {
@@ -274,7 +275,8 @@ export default {
 			userAPI
 				.updateUser({
 					userId: item.userId,
-					status: 0
+					status: 0,
+					operator: uni.getStorageSync('userCode')
 				})
 				.then(res => {
 					if (res.data.code == 0) {
