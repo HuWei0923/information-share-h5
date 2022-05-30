@@ -8,18 +8,8 @@ export default {
 				this.tranData(data, item, child, parent);
 				arr.push(item);
 			}
-			// this.tranData(data, item, child, parent);
-			// arr.push(item);
 		}
 		return arr
-		// let temp = data.find(item=>!item.scode)
-		// console.log(temp)
-		// if(temp){
-		// 	return [temp]
-		// }else{
-		// 	return arr;
-		// }
-		
 	},
 	tranData: function(data, parent, idField, parentField) {
 		var temp = [];
@@ -31,6 +21,13 @@ export default {
 			}
 		}
 		if (temp.length > 0) {
+			parent.isLevel=true
+			let obj = {
+				code:parent.code,
+				name:'查看本部人员信息',
+				isLevel:false
+			}
+			temp.unshift(obj)
 			parent['children'] = temp;
 		}
 	},

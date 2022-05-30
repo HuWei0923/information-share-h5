@@ -108,7 +108,8 @@ export default {
 			horizontal: 'right',
 			backData: [],
 			searchVal: '',
-			topValue: ''
+			topValue: '',
+			isLevel:true
 		};
 	},
 	watch: {
@@ -167,6 +168,7 @@ export default {
 						if (codeList.indexOf(item.scode) == -1) this.topValue = item.scode;
 					});
 					let arr = Utils.formatTreeData(res.data.treeData, 'code', 'scode', this.topValue);
+					console.log(arr)
 					this.dataTree = arr;
 				}
 			});
@@ -218,7 +220,7 @@ export default {
 					operator: uni.getStorageSync('userCode'),
 					isSubAdmin: this.search.role,
 					companyCode: this.search.institution,
-					isLevel: true
+					isLevel: this.isLevel
 				})
 				.then(res => {
 					this.total = res.data.totalRecords;
@@ -314,6 +316,11 @@ export default {
 			console.log(data);
 			this.search.institutionName = data[0].name;
 			this.search.institution = data[0].code;
+			if(data[0].name=='查看本部人员信息'){
+				this.isLevel=false
+			}else{
+				this.isLevel=true
+			}
 		},
 		cancleInstitution() {
 			this.search.institutionName = '';
