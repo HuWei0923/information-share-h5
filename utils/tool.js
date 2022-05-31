@@ -27,6 +27,7 @@ export default {
 				let obj = {
 					code:parent.code,
 					name:'查看本部人员信息',
+					pname:parent.name,
 					isLevel:false
 				}
 				temp.unshift(obj)
