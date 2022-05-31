@@ -63,5 +63,15 @@ export default [{
 		name:"getLiteRatingHtml",
 		method:'post',
 		url:'/api/company/zhongChengXin/getLiteRatingHtml'
-	}
+	},
+	{
+		name:"getRegionRatingHtml",
+		method:'post',
+		url:'/api/company/zhongChengXin/getRegionRatingHtml'
+	},
+	{
+		name:"getCityInvRatingHtml",
+		method:'post',
+		url:'/api/company/zhongChengXin/getCityInvRatingHtml'
+	},
 ]

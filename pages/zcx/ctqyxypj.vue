@@ -182,7 +182,9 @@ export default {
 				{ img: '/static/img/index/qyxypj.png', code: 'qyxypj', name: '区域信用评价' },
 				// { img: '/static/img/index/xxzx.png', code: 'historyReportList', name: '历史报告' }
 			],
-			adjustData: [{ name: '非标风险事件', detail: '区域本级的城投企业未发生过非标风险事件', influence: '0', source: '系统' }]
+			adjustData: [{ name: '非标风险事件', detail: '区域本级的城投企业未发生过非标风险事件', influence: '0', source: '系统' }],
+			existFlag: true,
+			fileName: '',
 		};
 	},
 	onLoad(options) {
@@ -191,6 +193,7 @@ export default {
 		this.creditCode = options.creditCode;
 		this.getIndustry();
 		this.getArea();
+		this.reportExist();
 	},
 	watch: {
 		administrativeLevel(val) {
@@ -245,6 +248,18 @@ export default {
 				this.allAreaData = res.data.areaList;
 			});
 		},
+		reportExist() {
+			this.existFlag = true;
+			zcxAPI.reportExist({
+				creditCode: this.creditCode,
+				reportType: '城投企业评价'
+			}).then(res => {
+		
+				if (res.statusCode == 200) {
+					this.existFlag = res.data.existFlag;
+				}
+			});
+		},
 		onchange(e) {
 			let list = [];
 			list.push();
@@ -268,6 +283,7 @@ export default {
 			this.errMsg.administrativeLevel = '';
 		},
 		check() {
+			debugger;
 			let flag = true;
 			if (this.administrativeLevel == '') {
 				this.errMsg.administrativeLevel = '请选择行政级别';
@@ -284,11 +300,36 @@ export default {
 			if (this.active !== 0) this.active--;
 		},
 		next() {
-			if (this.active == 1) {
-				let flag = this.check();
-				if (!flag) return;
+			let flag = this.check();
+			
+			
+		
+			if (this.active == 0) {
+				flag = true;
+				if (!this.existFlag) {
+					uni.showModal({
+						title: '提示',
+						content: '非常抱歉，第三方接口内无财报数据，无法生成对应报告！',
+						showCancel: false,
+						success: () => {
+		
+						}
+					});
+		
+					return;
+				}
+			} 
+			
+			if(flag){
+				
+				if(this.active ==1){
+					this.getCityInvRatingHtml();
+				}
+				if (this.active < this.stepList.length - 1) this.active++;
 			}
-			if (this.active < this.stepList.length - 1) this.active++;
+			
+			
+					
 		},
 		getRegionInfo() {
 			let param = {
@@ -310,6 +351,38 @@ export default {
 				}
 			});
 		},
+		getCityInvRatingHtml() {
+			
+			let param = {
+				ver: "1.0",
+				companyId: this.companyId,
+				creditCode: this.creditCode,
+				industry: this.industry,
+				areaCode: this.areaName,
+				level: this.administrativeLevel,
+				type:this.administrativeLevel,		
+				userId: uni.getStorageSync('userId').toString(),
+			}
+			
+		
+			zcxAPI.getCityInvRatingHtml(param).then(res => {
+				
+				if(res.data.code&&res.data.code!='0'){
+					this.html=JSON.stringify(res.data);
+		
+				}else{
+		
+					if(res.data.toString().lastIndexOf("{\"code\":\"0\"}")){
+		
+						this.html =  res.data.toString().replace("{\"code\":\"0\"}","").replace('class="page-content"','class="page-content" style="overflow:auto"');
+					}
+		
+				}
+				let temp = 'content-disposition'
+				let data = res.header[temp];
+				this.fileName = data.split('=')[1];
+			});
+		},
 		goToPage(item) {
 			uni.navigateTo({
 				url: `/pages/zcx/${item.code}?companyId=${this.companyId}&companyName=${this.companyName}&creditCode=${this.creditCode}&pageFrom=城投企业信用评价`
@@ -318,6 +391,29 @@ export default {
 		goToFirstPage() {
 			uni.switchTab({
 				url: '/pages/index/index'
+			});
+		},
+		download() {
+			let param = {
+				fileName: this.fileName,
+			}
+			zcxAPI.getLiteRatingPDF(param).then(res => {
+				const content = res.data
+				const blob = new Blob([content])
+				const fileName = `城投企业信用评价-${this.companyName}.pdf`
+				if ('download' in document.createElement('a')) { // 非IE下载
+					const elink = document.createElement('a')
+					elink.download = fileName
+					elink.style.display = 'none'
+					elink.href = URL.createObjectURL(blob)
+					console.log(elink.href);
+					document.body.appendChild(elink)
+					elink.click()
+					URL.revokeObjectURL(elink.href) // 释放URL 对象
+					document.body.removeChild(elink)
+				} else { // IE10+下载
+					navigator.msSaveBlob(blob, fileName)
+				}
 			});
 		},
 	}

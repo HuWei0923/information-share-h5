@@ -137,6 +137,7 @@
 					},
 					// { img: '/static/img/index/xxzx.png', code: 'historyReportList', name: '历史报告' }
 				],
+		
 				existFlag: true,
 				fileName: '',
 			};
@@ -219,18 +220,18 @@
 				//  })
 
 				zcxAPI.getLatestFinancialDeminingHtml(param).then(res => {
-					this.html = res.data
-					// if(res.data.code&&res.data.code!='0'){
-					// 	this.html=JSON.stringify(res.data);
+					//this.html = res.data
+					if(res.data.code&&res.data.code!='0'){
+						this.html=JSON.stringify(res.data);
 
-					// }else{
+					}else{
 
-					// 	if(res.data.toString().lastIndexOf("{\"code\":\"0\"}")){
+						if(res.data.toString().lastIndexOf("{\"code\":\"0\"}")){
 
-					// 		this.html =  res.data.toString().replace("{\"code\":\"0\"}","").replace('class="page-content"','class="page-content" style="overflow:auto"');
-					// 	}
+							this.html =  res.data.toString().replace("{\"code\":\"0\"}","").replace('class="page-content"','class="page-content" style="overflow:auto"');
+						}
 
-					// }
+					}
 					let temp = 'content-disposition'
 					let data = res.header[temp];
 					this.fileName = data.split('=')[1];

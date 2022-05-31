@@ -9,6 +9,7 @@
 					<uni-list-item>
 						<view slot="header" class="form-title">
 							所属行业
+							<text class="required-s">*</text>
 						</view>
 						<view slot="footer">
 							<uni-data-picker
@@ -19,6 +20,7 @@
 								:map="{ text: 'text', value: 'text' }"
 								@change="onchange"
 							></uni-data-picker>
+							<view class="error-style" v-if="errMsg.industry != ''">{{ errMsg.industry }}</view>
 						</view>
 					</uni-list-item>
 					<uni-list-item>
@@ -28,7 +30,13 @@
 						</view>
 						<view slot="footer">
 							<picker :value="administrativeLevel" @change="changeAdministrativeLevel" :range="administrativeLevelOptions">
-								<input placeholder="请选择" placeholder-style="color:#B5B5B5;" name="input" :value="administrativeLevel" readonly style="float:right" />
+								<input 
+								placeholder="请选择" 
+								placeholder-style="color:#B5B5B5;" 
+								name="input" 
+								:value="administrativeLevel" 
+								readonly 
+								style="float:right" />
 							</picker>
 							<view class="error-style" v-if="errMsg.administrativeLevel != ''">{{ errMsg.administrativeLevel }}</view>
 						</view>
@@ -162,6 +170,8 @@ export default {
 				// { img: '/static/img/index/xxzx.png', code: 'historyReportList', name: '历史报告' }
 			],
 			existFlag:true,
+			professionDetail:'',
+			fileName:'',
 		};
 	},
 	onLoad(options) {
@@ -222,14 +232,46 @@ export default {
 				this.allAreaData=res.data.areaList
 			})
 		},
+		getRegionRatingHtml() {
+			
+			let param = {
+				ver: "1.0",
+				companyId: this.companyId,
+				creditCode: this.creditCode,
+				industry: this.industry,
+				areaCode: this.areaName,
+				level: this.administrativeLevel,
+				type:this.administrativeLevel,		
+				userId: uni.getStorageSync('userId').toString(),
+			}
+			
+		
+			zcxAPI.getRegionRatingHtml(param).then(res => {
+				
+				if(res.data.code&&res.data.code!='0'){
+					this.html=JSON.stringify(res.data);
+		
+				}else{
+		
+					if(res.data.toString().lastIndexOf("{\"code\":\"0\"}")){
+		
+						this.html =  res.data.toString().replace("{\"code\":\"0\"}","").replace('class="page-content"','class="page-content" style="overflow:auto"');
+					}
+		
+				}
+				let temp = 'content-disposition'
+				let data = res.header[temp];
+				this.fileName = data.split('=')[1];
+			});
+		},
 		reportExist(){
 			this.existFlag = true;
-			debugger;
+			
 			zcxAPI.reportExist({
 				creditCode:this.creditCode,
 				reportType:'产业企业评价'
 			}).then(res => {
-				debugger;
+				
 				if (res.statusCode == 200) {
 					this.existFlag = res.data.existFlag;
 				}
@@ -242,6 +284,7 @@ export default {
 				list.push(item.text);
 			});
 			this.allIndustry = list;
+			//this.professionDetail = list[list.length - 1];
 		},
 		changeArea(e){
 			console.log(e)
@@ -259,6 +302,10 @@ export default {
 		},
 		check() {
 			let flag = true;
+			if (this.industry == '') {
+				this.errMsg.industry = '请选择所属行业';
+				flag = false;
+			}
 			if (this.administrativeLevel == '') {
 				this.errMsg.administrativeLevel = '请选择行政级别';
 				flag = false;
@@ -292,7 +339,9 @@ export default {
 				}
 				if (this.active < this.stepList.length - 1) this.active++;
 				if(this.active==1){
-					this.getRegionInfo()
+					this.getRegionInfo();
+				}else if(this.active==2){
+					this.getRegionRatingHtml();
 				}
 			}
 		},
@@ -325,6 +374,29 @@ export default {
 		goToFirstPage() {
 			uni.switchTab({
 				url: '/pages/index/index'
+			});
+		},
+		download() {
+			let param = {
+				fileName: this.fileName,
+			}
+			zcxAPI.getLiteRatingPDF(param).then(res => {
+				const content = res.data
+				const blob = new Blob([content])
+				const fileName = `区域信用评价-${this.companyName}.pdf`
+				if ('download' in document.createElement('a')) { // 非IE下载
+					const elink = document.createElement('a')
+					elink.download = fileName
+					elink.style.display = 'none'
+					elink.href = URL.createObjectURL(blob)
+					console.log(elink.href);
+					document.body.appendChild(elink)
+					elink.click()
+					URL.revokeObjectURL(elink.href) // 释放URL 对象
+					document.body.removeChild(elink)
+				} else { // IE10+下载
+					navigator.msSaveBlob(blob, fileName)
+				}
 			});
 		},
 	}
