@@ -93,7 +93,8 @@ export default {
 				status: '',
 				role: '',
 				institution: '',
-				institutionName: ''
+				institutionName: '',
+				isLevel:true
 			},
 			statusOptions: [{ value: '1', text: '已启用' }, { value: '0', text: '已停用' }],
 			roleOptions: [{}],
@@ -220,7 +221,7 @@ export default {
 					operator: uni.getStorageSync('userCode'),
 					isSubAdmin: this.search.role,
 					companyCode: this.search.institution,
-					isLevel: this.isLevel
+					isLevel: this.search.isLevel
 				})
 				.then(res => {
 					this.total = res.data.totalRecords;
@@ -314,18 +315,19 @@ export default {
 		},
 		confirm(data) {
 			console.log(data);
-			this.search.institutionName = data[0].name;
 			this.search.institution = data[0].code;
 			if(data[0].name=='查看本部人员信息'){
-				this.isLevel=false
+				this.search.isLevel=false
 				this.search.institutionName = this.backData.find(item=>item.code==data[0].code).name;
 			}else{
-				this.isLevel=true
+				this.search.isLevel=true
+				this.search.institutionName = data[0].name;
 			}
 		},
 		cancleInstitution() {
 			this.search.institutionName = '';
 			this.search.institution = '';
+			this.search.isLevel=true
 		},
 		showInstitution() {
 			this.$refs.tkitree._show();
