@@ -316,10 +316,9 @@ export default {
 			console.log(data);
 			this.search.institutionName = data[0].name;
 			this.search.institution = data[0].code;
-			debugger;
 			if(data[0].name=='查看本部人员信息'){
 				this.isLevel=false
-				this.search.institutionName = data[0].pname;
+				this.search.institutionName = this.backData.find(item=>item.code==data[0].code).name;
 			}else{
 				this.isLevel=true
 			}
