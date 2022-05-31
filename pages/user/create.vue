@@ -175,7 +175,7 @@
 		watch: {
 			searchVal(val) {
 				let temp = this.backData.filter(item => item.name.indexOf(val) !== -1);
-				let arr = Utils.formatTreeData(temp, 'code', 'scode', this.topValue);
+				let arr = Utils.formatTreeData(temp, 'code', 'scode', this.topValue,true);
 				this.dataTree = arr;
 			}
 		},
@@ -219,7 +219,7 @@
 						res.data.treeData.map(item => {
 							if (codeList.indexOf(item.scode) == -1) this.topValue = item.scode;
 						});
-						let arr = Utils.formatTreeData(res.data.treeData, 'code', 'scode', this.topValue);
+						let arr = Utils.formatTreeData(res.data.treeData, 'code', 'scode', this.topValue,true);
 						this.dataTree = arr;
 					}
 				});
