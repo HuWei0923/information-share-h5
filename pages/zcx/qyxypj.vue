@@ -461,7 +461,7 @@ export default {
 <style scoped>
 .main-box {
 	width: 100vw;
-	height: 70vh;
+	height: 65vh;
 	position: relative;
 }
 input {
