@@ -112,7 +112,7 @@ export default {
 				isDownload:"1"
 			}
 			
-			var url1='http://zibchina.com:9001/common/ZCX/downloadPDF/'+item.pdfName;	
+			var url1='http://zibchina.com:9001/api/company/ZCX/getPDF/'+item.pdfName;	
 			// alert(url1);
 			// alert(typeof(cmp.att));
 			

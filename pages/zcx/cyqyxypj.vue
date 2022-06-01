@@ -295,7 +295,7 @@ export default {
 			}
 			var pdfname = this.fileName.replace(".html",".pdf");
 									
-			var url1='http://zibchina.com:9001/common/ZCX/downloadPDF/'+pdfname;
+			var url1='http://zibchina.com:9001/api/company/ZCX/getPDF/'+pdfname;
 			
 			if(typeof(cmp)  == 'function'){
 				
