@@ -156,7 +156,7 @@ export default {
 				
 				var toDownloadFileOptions = {
 					path:url1,//文件下载地址
-					filename:item.reportName,//文件名称
+					filename:pdfname,//文件名称
 					
 					success:function(result){ //下载成功的回调
 					//返回的数据格式如下：
