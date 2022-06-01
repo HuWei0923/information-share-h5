@@ -52,7 +52,8 @@ export default {
 			listData: [],
 			sourceType: '',
 			pageIndex: '',
-			keyword: ''
+			keyword: '',
+			fxcsData:{},
 		};
 	},
 	onLoad(options) {
@@ -108,12 +109,87 @@ export default {
 			}
 			return text;
 		},
+		fxcsIsDay(item,fxcsData){
+			// if (new Date().getTime() - this.fxcsData.updateTime < 86400000) {
+			if(new Date(this.fxcsData.updateTime).toDateString() === new Date().toDateString()){
+				//预览pdf
+				uni.navigateTo({
+					url: '/pages/pdf/zcxindex?fileName='+fxcsData.fileName+'&reportId='+fxcsData.reportId+'&reportType='+fxcsData.reportType+'&updateTime='+fxcsData.updateTime+'&isDownload=1'
+				});
+			} else {
+				uni.showModal({
+					title: '提示',
+					cancelText:'取消',
+					confirmText:'确定',
+					content:'已有本地报告，是否直接查阅?',
+					success: function (res1) {
+						if (res1.confirm) {
+						//预览pdf
+							uni.navigateTo({
+								url: '/pages/pdf/zcxindex?fileName='+fxcsData.fileName+'&reportId='+fxcsData.reportId+'&reportType='+fxcsData.reportType+'&updateTime='+fxcsData.updateTime+'&isDownload=1'
+							});
+							console.log('用户点击确定');
+							
+						} else if (res1.cancel) {
+							uni.navigateTo({
+								url:`/pages/zcx/fxcs?companyId=${item.companyId}&companyName=${item.companyName}&creditCode=${item.creditCode}`
+							})
+							console.log('放弃');
+						}
+					}
+				});
+			}
+		},
 		goToPage(item){
 			console.log(item)
-			uni.navigateTo({
-				url:`/pages/zcx/${this.pageIndex}?companyId=${item.companyId}&companyName=${item.companyName}&creditCode=${item.creditCode}`
-			})
-		}
+			
+			if(item.creditCode == '' || item.creditCode == null){
+				
+				uni.showModal({
+					title: '提示',
+					content: '非常抱歉，此公司无统一社会信用代码，无法生成对应报告！',
+					showCancel: false,
+					success: () => {
+						
+					}
+				});
+						
+				return;
+			}
+			debugger;
+			if(this.pageIndex=='fxcs'){
+				
+				
+				let fxcsData={
+					companyId:item.companyId,
+					reportType:'风险初筛'
+				}
+				zcxAPI.getReportList(fxcsData).then(res=>{
+					if (res.data.code == '0') {
+						if(res.data.reportList.length > 0){
+							var fxcsData = res.data.reportList[0];
+							console.log(res.data);
+							//console.log(this.fxcsData)
+							this.fxcsIsDay(item,fxcsData)
+						}else{
+							uni.navigateTo({
+								url:`/pages/zcx/${this.pageIndex}?companyId=${item.companyId}&companyName=${item.companyName}&creditCode=${item.creditCode}`
+							})
+						}
+					}
+				})
+				
+				
+				
+			}else{
+				uni.navigateTo({
+					url:`/pages/zcx/${this.pageIndex}?companyId=${item.companyId}&companyName=${item.companyName}&creditCode=${item.creditCode}`
+				})
+			}
+			
+			
+		},
+		
 	}
 };
 </script>

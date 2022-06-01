@@ -54,7 +54,8 @@ export default {
 				{ img: '/static/img/index/qyxypj.png', code: 'qyxypj', name: '区域信用评价' },
 				{ img: '/static/img/index/ctqypj.png', code: 'ctqyxypj', name: '城投企业评价' }
 				// { img: '/static/img/index/xxzx.png', code: 'historyReportList', name: '历史报告' }
-			]
+			],
+			fileName:'',
 		};
 	},
 	onLoad(options) {
@@ -71,8 +72,20 @@ export default {
 				userId: uni.getStorageSync('userId')
 			};
 			zcxAPI.getRiskScreenHtml(param).then(res => {
-				console.log(res);
-				this.html = res.data;
+				if(res.data.code&&res.data.code!='0'){
+					this.html=JSON.stringify(res.data);
+				
+				}else{
+				
+					if(res.data.toString().lastIndexOf("{\"code\":\"0\"}")){
+				
+						this.html =  res.data.toString().replace("{\"code\":\"0\"}","").replace('class="page-content"','class="page-content" style="overflow:auto"');
+					}
+				
+				}
+				let temp = 'content-disposition'
+				let data = res.header[temp];
+				this.fileName = data.split('=')[1];
 				
 			});
 		},
@@ -80,6 +93,13 @@ export default {
 			if (this.active !== 0) this.active--;
 		},
 		next() {
+			flag =true;
+			if (this.active == 0){
+				if(this.fileName==''){
+					flag =false;
+				}
+			}
+			
 			if (this.active < this.stepList.length - 1) this.active++;
 		},
 		goToPage(item) {
@@ -91,7 +111,30 @@ export default {
 			uni.switchTab({
 				url: '/pages/index/index'
 			});
-		}
+		},
+		download() {
+			let param = {
+				fileName: this.fileName,
+			}
+			zcxAPI.getLiteRatingPDF(param).then(res => {
+				const content = res.data
+				const blob = new Blob([content])
+				const fileName = `风险初筛-${this.companyName}.pdf`
+				if ('download' in document.createElement('a')) { // 非IE下载
+					const elink = document.createElement('a')
+					elink.download = fileName
+					elink.style.display = 'none'
+					elink.href = URL.createObjectURL(blob)
+					console.log(elink.href);
+					document.body.appendChild(elink)
+					elink.click()
+					URL.revokeObjectURL(elink.href) // 释放URL 对象
+					document.body.removeChild(elink)
+				} else { // IE10+下载
+					navigator.msSaveBlob(blob, fileName)
+				}
+			});
+		},
 	}
 };
 </script>

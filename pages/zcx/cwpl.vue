@@ -271,7 +271,11 @@
 			},
 			next() {
 				let flag = this.check();
-
+				if (this.active == 2){
+					if(this.fileName==''){
+						flag =false;
+					}
+				}
 
 				if (flag) {
 					if (this.active == 0) {
