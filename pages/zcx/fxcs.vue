@@ -56,6 +56,7 @@ export default {
 				// { img: '/static/img/index/xxzx.png', code: 'historyReportList', name: '历史报告' }
 			],
 			fileName:'',
+			companyName:'',
 		};
 	},
 	onLoad(options) {
@@ -90,6 +91,7 @@ export default {
 		}
 		this.companyId = options.companyId;
 		this.creditCode = options.creditCode;
+		this.companyName = options.companyName;
 		this.getRiskScreenHtml();
 	},
 	methods: {
