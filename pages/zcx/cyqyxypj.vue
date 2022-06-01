@@ -293,9 +293,9 @@ export default {
 			let param = {
 				fileName: this.fileName,
 			}
-			var url1='http://zibchina.com:9001/common/ZCX/downloadPDF/'+item.pdfName;	
-			// alert(url1);
-			// alert(typeof(cmp.att));
+			var pdfname = this.fileName.replace(".html",".pdf");
+									
+			var url1='http://zibchina.com:9001/common/ZCX/downloadPDF/'+pdfname;
 			
 			if(typeof(cmp)  == 'function'){
 				
