@@ -60,6 +60,34 @@ export default {
 	},
 	onLoad(options) {
 		console.log(options);
+		const script4 = document.createElement('script');
+		script4.src = 'http://cmp/v1.0.0/js/cmp-i18n.js';
+		document.body.appendChild(script4);
+		
+		const script = document.createElement('script');
+		script.src = 'http://cmp/v1.0.0/js/cordova/__CMPSHELL_PLATFORM__/cordova.js';
+		
+		const script1 = document.createElement('script');
+		script1.src = 'http://cmp/v1.0.0/js/cordova/cordova-plugins.js';
+		
+		const script2 = document.createElement('script');
+		script2.src = 'http://cmp/v/js/cmp.js';
+		
+		const script3 = document.createElement('script');
+		script3.src = 'http://cmp/v/js/cmp-att.js';
+		
+		script4.onload=function () {	
+			document.body.appendChild(script);
+		}
+		script.onload=function () {	
+			document.body.appendChild(script1);
+		}
+		script1.onload=function () {     
+		    document.body.appendChild(script2);
+		}
+		script2.onload=function () {   
+		    document.body.appendChild(script3);
+		}
 		this.companyId = options.companyId;
 		this.creditCode = options.creditCode;
 		this.getRiskScreenHtml();
@@ -93,14 +121,16 @@ export default {
 			if (this.active !== 0) this.active--;
 		},
 		next() {
-			flag =true;
+			var flag =true;
 			if (this.active == 0){
 				if(this.fileName==''){
 					flag =false;
 				}
 			}
+			if(flag){
+				if (this.active < this.stepList.length - 1) this.active++;
+			}
 			
-			if (this.active < this.stepList.length - 1) this.active++;
 		},
 		goToPage(item) {
 			uni.navigateTo({
@@ -116,24 +146,46 @@ export default {
 			let param = {
 				fileName: this.fileName,
 			}
-			zcxAPI.getLiteRatingPDF(param).then(res => {
-				const content = res.data
-				const blob = new Blob([content])
-				const fileName = `风险初筛-${this.companyName}.pdf`
-				if ('download' in document.createElement('a')) { // 非IE下载
-					const elink = document.createElement('a')
-					elink.download = fileName
-					elink.style.display = 'none'
-					elink.href = URL.createObjectURL(blob)
-					console.log(elink.href);
-					document.body.appendChild(elink)
-					elink.click()
-					URL.revokeObjectURL(elink.href) // 释放URL 对象
-					document.body.removeChild(elink)
-				} else { // IE10+下载
-					navigator.msSaveBlob(blob, fileName)
+			var url1='http://zibchina.com:9001/common/ZCX/downloadPDF/'+item.pdfName;	
+			// alert(url1);
+			// alert(typeof(cmp.att));
+			
+			if(typeof(cmp)  == 'function'){
+				
+				var toDownloadFileOptions = {
+					path:url1,//文件下载地址
+					filename:item.reportName,//文件名称
+					
+					success:function(result){ //下载成功的回调
+					//返回的数据格式如下：
+						//alert(JSON.stringify(result));
+					},
+					error:function(error){//下载失败的回调函数
+						alert(JSON.stringify(error));
+					
+					}
 				}
-			});
+				cmp.att.read(toDownloadFileOptions);
+			}else{
+				zcxAPI.getLiteRatingPDF(param).then(res => {
+					const content = res.data
+					const blob = new Blob([content])
+					const fileName = `风险初筛-${this.companyName}.pdf`
+					if ('download' in document.createElement('a')) { // 非IE下载
+						const elink = document.createElement('a')
+						elink.download = fileName
+						elink.style.display = 'none'
+						elink.href = URL.createObjectURL(blob)
+						console.log(elink.href);
+						document.body.appendChild(elink)
+						elink.click()
+						URL.revokeObjectURL(elink.href) // 释放URL 对象
+						document.body.removeChild(elink)
+					} else { // IE10+下载
+						navigator.msSaveBlob(blob, fileName)
+					}
+				});
+			}
 		},
 	}
 };

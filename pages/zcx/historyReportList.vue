@@ -111,28 +111,51 @@ export default {
 				updateTime:item.updateTime,
 				isDownload:"1"
 			}
-			zcxAPI.getLiteRatingPDF(param).then(res => {
-				console.log(res)
+			
+			var url1='http://zibchina.com:9001/common/ZCX/downloadPDF/'+item.pdfName;	
+			// alert(url1);
+			// alert(typeof(cmp.att));
+			
+			if(typeof(cmp)  == 'function'){
 				
-				const content = res.data
-				const blob = new Blob([content])
-				const fileName = `${item.fileName}`.split('.')[0] + '.pdf'
-				debugger;
-				// const fileName = `${row.fileName}.pdf`
-				if ('download' in document.createElement('a')) { // 非IE下载
-					const elink = document.createElement('a')
-					elink.download = fileName
-					elink.style.display = 'none'
-					elink.href = URL.createObjectURL(blob)
-					console.log(elink.href);
-					document.body.appendChild(elink)
-					elink.click()
-					URL.revokeObjectURL(elink.href) // 释放URL 对象
-					document.body.removeChild(elink)
-				} else { // IE10+下载
-					navigator.msSaveBlob(blob, fileName)
+				var toDownloadFileOptions = {
+					path:url1,//文件下载地址
+					filename:item.reportName,//文件名称
+					
+					success:function(result){ //下载成功的回调
+					//返回的数据格式如下：
+						//alert(JSON.stringify(result));
+					},
+					error:function(error){//下载失败的回调函数
+						alert(JSON.stringify(error));
+					
+					}
 				}
-			});
+				cmp.att.read(toDownloadFileOptions);
+			}else{
+				zcxAPI.getLiteRatingPDF(param).then(res => {
+					console.log(res)
+					
+					const content = res.data
+					const blob = new Blob([content])
+					const fileName = `${item.fileName}`.split('.')[0] + '.pdf'
+					debugger;
+					// const fileName = `${row.fileName}.pdf`
+					if ('download' in document.createElement('a')) { // 非IE下载
+						const elink = document.createElement('a')
+						elink.download = fileName
+						elink.style.display = 'none'
+						elink.href = URL.createObjectURL(blob)
+						console.log(elink.href);
+						document.body.appendChild(elink)
+						elink.click()
+						URL.revokeObjectURL(elink.href) // 释放URL 对象
+						document.body.removeChild(elink)
+					} else { // IE10+下载
+						navigator.msSaveBlob(blob, fileName)
+					}
+				});
+			}
 		},
 		checkDetail(item) {
 			//预览pdf
