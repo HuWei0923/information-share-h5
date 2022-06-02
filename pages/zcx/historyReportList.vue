@@ -78,11 +78,22 @@ export default {
 		    document.body.appendChild(script3);
 		}
 		console.log(options)
-		this.companyId=options.companyId
-		this.reportType=options.pageFrom
+		this.companyId=options.companyId;
+		
+		this.reportType=options.pageFrom;
+		this.getData();
 	},
 	onShow() {
+		
+	},
+	//下拉刷新
+	onPullDownRefresh() {
+		
+		this.listData = [];
 		this.getData();
+		setTimeout(() => {
+			uni.stopPullDownRefresh();
+		}, 1000);
 	},
 	methods: {
 		getData() {
