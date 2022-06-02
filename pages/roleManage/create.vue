@@ -134,11 +134,27 @@ export default {
 				}
 				userAPI.saveOrEditRole(params).then(res=>{
 					if(res.data.code==0){
-						uni.showToast({
+						uni.showModal({
 							icon: 'none',
-							title: '保存成功。'
+							title: '保存成功。',
+							showCancel:false,
+							success:()=>{
+								
+								uni.navigateBack()
+							}
 						});
-						uni.navigateBack()
+						
+					}else{
+						uni.showModal({
+							icon: 'none',
+							title: res.data.msg,
+							showCancel:false,
+							success:()=>{
+								
+								uni.navigateBack()
+							}
+						});
+						
 					}
 				})
 			}
