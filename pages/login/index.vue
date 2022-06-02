@@ -84,6 +84,7 @@
 								uni.setStorageSync('username', res.data.name);
 								uni.setStorageSync('userId', res.data.userId);
 								uni.setStorageSync('userCode', res.data.username);
+								uni.setStorageSync('companyCode', res.data.companyCode);
 								this.timer=setTimeout(()=>{
 									uni.switchTab({
 										url: '/pages/index/index'

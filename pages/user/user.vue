@@ -92,7 +92,7 @@ export default {
 				code: '',
 				status: '',
 				role: '',
-				institution: '',
+				institution: uni.getStorageSync('companyCode'),
 				institutionName: '',
 				isLevel:true
 			},
@@ -326,7 +326,7 @@ export default {
 		},
 		cancleInstitution() {
 			this.search.institutionName = '';
-			this.search.institution = '';
+			this.search.institution = uni.getStorageSync('companyCode');
 			this.search.isLevel=true
 		},
 		showInstitution() {

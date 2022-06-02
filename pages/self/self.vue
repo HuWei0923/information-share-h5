@@ -163,6 +163,7 @@ export default {
 			uni.removeStorageSync('username');
 			uni.removeStorageSync('userId');
 			uni.removeStorageSync('userCode');
+			uni.removeStorageSync('companyCode')
 			uni.showToast({
 				icon: 'none',
 				title: '退出成功。',
