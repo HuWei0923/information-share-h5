@@ -48,6 +48,7 @@
 						uni.setStorageSync('username', uni.getStorageSync('username'));
 						uni.setStorageSync('userId', uni.getStorageSync('userId'));
 						uni.setStorageSync('userCode', uni.getStorageSync('username'));
+						uni.setStorageSync('companyCode', uni.getStorageSync('companyCode'));
 						this.timer=setTimeout(()=>{
 							uni.switchTab({
 								url: '/pages/index/index'
