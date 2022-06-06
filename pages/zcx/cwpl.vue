@@ -33,9 +33,9 @@
 						</view>
 					</uni-list-item>
 				</uni-list>
-				<view class=" flex flex-direction" style="padding: 50rpx 50rpx 0;">
+				<!-- <view class=" flex flex-direction" style="padding: 50rpx 50rpx 0;">
 					<button class="cu-btn line-blue " @click="goToPage({ code: 'historyReportList' })">查看历史报告</button>
-				</view>
+				</view> -->
 			</view>
 			<view v-else-if="active == 1" class="uni-mt-10 main-box">
 				<uni-list>
@@ -57,6 +57,9 @@
 					<uni-icons type="pulldown" size="60" color="#B7BDC6"></uni-icons>
 				</view>
 				<view style="color: #B7BDC6;" class="uni-mt-5">报告下载</view>
+			</view>
+			<view class=" flex flex-direction" style="padding: 50rpx 50rpx 0;" >
+				<button class="cu-btn line-blue " @click="goToPage({ code: 'historyReportList' })">查看历史报告</button>
 			</view>
 			<uni-row :gutter="10" style="padding: 50rpx;text-align: center;">
 				<uni-col :span="6"><button @click="preview" type="primary" :disabled="active == 0"
