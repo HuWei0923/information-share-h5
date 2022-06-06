@@ -26,7 +26,7 @@
 						</view>
 						<view slot="footer">
 							<picker :value="industryType" @change="changeIndustryType" :range="industryTypeOptions">
-								<input placeholder="请选择" placeholder-style="color:#B5B5B5;" name="input"
+								<input  disabled="true" placeholder="请选择" placeholder-style="color:#B5B5B5;" name="input"
 									:value="industryType" readonly style="float:right" />
 							</picker>
 							<view class="error-style" v-if="errMsg.industryType != ''">{{ errMsg.industryType }}</view>
@@ -336,7 +336,7 @@
 				});
 			},
 			goToPage(item) {
-				uni.redirectTo({
+				uni.navigateTo({
 					url: `/pages/zcx/${item.code}?companyId=${this.companyId}&companyName=${this.companyName}&creditCode=${this.creditCode}&pageFrom=财务排雷`
 				})
 			},

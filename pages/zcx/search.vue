@@ -111,10 +111,9 @@ export default {
 		},
 		fxcsIsDay(item,fxcsData){
 			// if (new Date().getTime() - this.fxcsData.updateTime < 86400000) {
-			if(new Date(this.fxcsData.updateTime).toDateString() === new Date().toDateString()){
-				//预览pdf
-				uni.redirectTo({
-					url: '/pages/pdf/zcxindex?fileName='+fxcsData.fileName+'&reportId='+fxcsData.reportId+'&reportType='+fxcsData.reportType+'&updateTime='+fxcsData.updateTime+'&isDownload=1'
+			if(new Date(fxcsData.updateTime).toDateString() === new Date().toDateString()){
+				uni.navigateTo({
+					url: `/pages/zcx/historyReportList?companyId=${item.companyId}&companyName=${item.companyName}&creditCode=${item.creditCode}&pageFrom=风险初筛`
 				});
 			} else {
 				uni.showModal({
@@ -125,13 +124,13 @@ export default {
 					success: function (res1) {
 						if (res1.confirm) {
 						//预览pdf
-							uni.redirectTo({
+							uni.navigateTo({
 								url: '/pages/pdf/zcxindex?fileName='+fxcsData.fileName+'&reportId='+fxcsData.reportId+'&reportType='+fxcsData.reportType+'&updateTime='+fxcsData.updateTime+'&isDownload=1'
 							});
 							console.log('用户点击确定');
 							
 						} else if (res1.cancel) {
-							uni.redirectTo({
+							uni.navigateTo({
 								url:`/pages/zcx/fxcs?companyId=${item.companyId}&companyName=${item.companyName}&creditCode=${item.creditCode}`
 							})
 							console.log('放弃');
@@ -172,7 +171,7 @@ export default {
 							//console.log(this.fxcsData)
 							this.fxcsIsDay(item,fxcsData)
 						}else{
-							uni.redirectTo({
+							uni.navigateTo({
 								url:`/pages/zcx/${this.pageIndex}?companyId=${item.companyId}&companyName=${item.companyName}&creditCode=${item.creditCode}`
 							})
 						}
@@ -182,7 +181,7 @@ export default {
 				
 				
 			}else{
-				uni.redirectTo({
+				uni.navigateTo({
 					url:`/pages/zcx/${this.pageIndex}?companyId=${item.companyId}&companyName=${item.companyName}&creditCode=${item.creditCode}`
 				})
 			}

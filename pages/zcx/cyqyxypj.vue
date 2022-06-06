@@ -30,7 +30,7 @@
 						</view>
 						<view slot="footer">
 							<picker :value="industryType" @change="changeIndustryType" :range="industryTypeOptions">
-								<input placeholder="请选择" placeholder-style="color:#B5B5B5;" name="input" :value="industryType" readonly style="float:right" />
+								<input disabled="true" placeholder="请选择" placeholder-style="color:#B5B5B5;" name="input" :value="industryType" readonly style="float:right" />
 							</picker>
 							<view class="error-style" v-if="errMsg.industryType != ''">{{ errMsg.industryType }}</view>
 						</view>
@@ -42,7 +42,7 @@
 						</view>
 						<view slot="footer">
 							<picker :value="ifHeader" @change="changeIfHeader" :range="ifHeaderOptions">
-								<input placeholder="请选择" placeholder-style="color:#B5B5B5;" name="input" :value="ifHeader" readonly style="float:right" />
+								<input disabled="true" placeholder="请选择" placeholder-style="color:#B5B5B5;" name="input" :value="ifHeader" readonly style="float:right" />
 							</picker>
 							<view class="error-style" v-if="errMsg.ifHeader != ''">{{ errMsg.ifHeader }}</view>
 						</view>
@@ -283,7 +283,7 @@ export default {
 			}
 		},
 		goToPage(item){
-			uni.redirectTo({
+			uni.navigateTo({
 				url:`/pages/zcx/${item.code}?companyId=${this.companyId}&companyName=${this.companyName}&creditCode=${this.creditCode}&pageFrom=产业企业信用评价`
 			})
 		},

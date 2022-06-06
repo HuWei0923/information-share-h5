@@ -52,7 +52,7 @@
 							</view>
 							<view slot="footer">
 								<picker :value="administrativeLevel" @change="changeAdministrativeLevel" :range="administrativeLevelOptions">
-									<input placeholder="请选择" placeholder-style="color:#B5B5B5;" name="input" :value="administrativeLevel" readonly style="float:right" />
+									<input disabled="true" placeholder="请选择" placeholder-style="color:#B5B5B5;" name="input" :value="administrativeLevel" readonly style="float:right" />
 								</picker>
 								<view class="error-style" v-if="errMsg.administrativeLevel != ''">{{ errMsg.administrativeLevel }}</view>
 							</view>

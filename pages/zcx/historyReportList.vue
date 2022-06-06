@@ -170,7 +170,7 @@ export default {
 		},
 		checkDetail(item) {
 			//预览pdf
-			uni.redirectTo({
+			uni.navigateTo({
 				url: '/pages/pdf/zcxindex?fileName='+item.fileName+'&reportId='+item.reportId+'&reportType='+item.reportType+'&updateTime='+item.updateTime+'&isDownload=1'
 			});
 		},

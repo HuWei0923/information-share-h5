@@ -31,6 +31,7 @@
 						<view slot="footer">
 							<picker :value="administrativeLevel" @change="changeAdministrativeLevel" :range="administrativeLevelOptions">
 								<input 
+								disabled="true"
 								placeholder="请选择" 
 								placeholder-style="color:#B5B5B5;" 
 								name="input" 
@@ -404,7 +405,7 @@ export default {
 			})
 		},
 		goToPage(item){
-			uni.redirectTo({
+			uni.navigateTo({
 				url:`/pages/zcx/${item.code}?companyId=${this.companyId}&companyName=${this.companyName}&creditCode=${this.creditCode}&pageFrom=区域信用评价`
 			})
 		},

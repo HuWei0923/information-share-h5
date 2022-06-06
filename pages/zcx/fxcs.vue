@@ -135,7 +135,7 @@ export default {
 			
 		},
 		goToPage(item) {
-			uni.redirectTo({
+			uni.navigateTo({
 				url: `/pages/zcx/${item.code}?companyId=${this.companyId}&companyName=${this.companyName}&creditCode=${this.creditCode}&pageFrom=风险初筛`
 			});
 		},
