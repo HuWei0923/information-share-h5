@@ -400,7 +400,7 @@ export default {
 			})
 		},
 		goToPage(item){
-			uni.navigateTo({
+			uni.redirectTo({
 				url:`/pages/zcx/${item.code}?companyId=${this.companyId}&companyName=${this.companyName}&creditCode=${this.creditCode}&pageFrom=区域信用评价`
 			})
 		},

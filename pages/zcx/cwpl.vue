@@ -333,7 +333,7 @@
 				});
 			},
 			goToPage(item) {
-				uni.navigateTo({
+				uni.redirectTo({
 					url: `/pages/zcx/${item.code}?companyId=${this.companyId}&companyName=${this.companyName}&creditCode=${this.creditCode}&pageFrom=财务排雷`
 				})
 			},

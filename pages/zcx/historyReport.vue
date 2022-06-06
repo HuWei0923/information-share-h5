@@ -100,12 +100,12 @@ export default {
 	},
 	methods: {
 		goToPage(item) {
-			uni.navigateTo({
+			uni.redirectTo({
 				url: `/pages/zcx/${item.code}?companyId=${this.companyId}&companyName=${this.companyName}&creditCode=${this.creditCode}`
 			});
 		},
 		checkHistoryList(item) {
-			uni.navigateTo({ url: '/pages/zcx/historyReportList' });
+			uni.redirectTo({ url: '/pages/zcx/historyReportList' });
 		}
 	}
 };
