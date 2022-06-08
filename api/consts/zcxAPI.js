@@ -74,4 +74,9 @@ export default [{
 		method:'post',
 		url:'/api/company/zhongChengXin/getCityInvRatingHtml'
 	},
+	{
+		name:"getBaseInfo",
+		method:'post',
+		url:'/api/company/getBaseInfo'
+	},
 ]

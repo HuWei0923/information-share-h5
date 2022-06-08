@@ -155,7 +155,6 @@ export default {
 						
 				return;
 			}
-			debugger;
 			if(this.pageIndex=='fxcs'){
 				
 				
@@ -181,6 +180,7 @@ export default {
 				
 				
 			}else{
+				console.log(item)
 				uni.navigateTo({
 					url:`/pages/zcx/${this.pageIndex}?companyId=${item.companyId}&companyName=${item.companyName}&creditCode=${item.creditCode}`
 				})

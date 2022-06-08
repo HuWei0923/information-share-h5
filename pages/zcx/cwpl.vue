@@ -143,6 +143,7 @@
 		
 				existFlag: true,
 				fileName: '',
+				allIndustry:[]
 			};
 		},
 		onLoad(options) {
@@ -196,23 +197,41 @@
 		},
 		methods: {
 			getIndustry() {
-				zcxAPI.getIndustry({}).then(res => {
-					let obj = res.data.areaList;
-					let list = [];
-					for (let i in obj) {
-						let tempObj = {};
-						tempObj.text = ' ' + i;
-						let children = obj[i].map(item => {
-							return {
-								text: item
-							};
-						});
-						tempObj.children = children;
-						list.push(tempObj);
+				new Promise((resolve)=>{
+					zcxAPI.getIndustry({}).then(res => {
+						let obj = res.data.areaList;
+						let list = [];
+						for (let i in obj) {
+							let tempObj = {};
+							tempObj.text = ' ' + i;
+							let children = obj[i].map(item => {
+								return {
+									text: item
+								};
+							});
+							this.allIndustry=[...this.allIndustry,...obj[i]]
+							tempObj.children = children;
+							list.push(tempObj);
+						}
+						this.dataTree = list;
+						resolve(res.data.areaList)
+					});
+				}).then(result=>{
+					let param = {
+						companyId: this.companyId,
+						companyName: this.companyName,
+						userId: uni.getStorageSync('userId').toString(),
 					}
-					console.log(list);
-					this.dataTree = list;
-				});
+					zcxAPI.getBaseInfo(param).then(response=>{
+						if(response.data.code=='0'&&response.data.baseInfo){
+							if(this.allIndustry.includes(response.data.baseInfo.industry)){
+								this.industry=response.data.baseInfo.industry
+								this.professionDetail=this.industry
+							}
+						}
+					})
+				})
+				
 			},
 			reportExist() {
 				this.existFlag = true;
@@ -301,6 +320,7 @@
 				if (this.active !== 0) this.active--;
 			},
 			next() {
+				console.log(this.professionDetail)
 				let flag = this.check();
 				if (this.active == 2){
 					if(this.fileName==''){

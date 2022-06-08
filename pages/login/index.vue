@@ -45,7 +45,7 @@
 					title:'您已登录，将为您自动跳转至首页',
 					success:()=>{
 						uni.setStorageSync('token', uni.getStorageSync('token'));
-						uni.setStorageSync('username', uni.getStorageSync('username'));
+						uni.setStorageSync('username', uni.getStorageSync('name'));
 						uni.setStorageSync('userId', uni.getStorageSync('userId'));
 						uni.setStorageSync('userCode', uni.getStorageSync('username'));
 						uni.setStorageSync('companyCode', uni.getStorageSync('companyCode'));

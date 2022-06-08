@@ -14,4 +14,9 @@ export default [
 		method:'get',
 		url:'/api/common/ZXB/downloadPDF'
 	},
+	{
+		name:"logCreditOper",
+		method:'post',
+		url:'/api/common/logCreditOper'
+	}
 ]
