@@ -100,7 +100,7 @@ export default {
 			companyName: '',
 			creditCode: '',
 			industry: '',
-			ifHeader: '',
+			ifHeader: '是',
 			allIndustry: [],
 			industryType: '',
 			dataTree: [],
