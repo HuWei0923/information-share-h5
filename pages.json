@@ -234,7 +234,29 @@
 			}
 
 		}
-	],
+	    ,{
+            "path" : "pages/blackGrayNameList/index",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "黑灰名单",
+                "enablePullDownRefresh": true
+            },
+			"meta": {
+				"title": "黑灰名单"
+			}
+        },
+		{
+		    "path" : "pages/attentionList/index",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "关注清单",
+		        "enablePullDownRefresh": true
+		    },
+			"meta": {
+				"title": "关注清单"
+			}
+		}
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
 		"navigationBarTitleText": "uni-app",

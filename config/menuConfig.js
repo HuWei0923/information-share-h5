@@ -17,12 +17,14 @@ const menuData = [{
 		children: [{
 				title: '关注清单',
 				icon: require('@/static/img/index/gzqd.png'),
-				flag: 'common.attention'
+				flag: 'common.attention',
+				url: '/pages/attentionList/index'
 			},
 			{
 				title: '黑灰名单',
 				icon: require('@/static/img/index/xxzx.png'),
-				flag: 'common.blackList'
+				flag: 'common.blackList',
+				url: '/pages/blackGrayNameList/index'
 			},
 			{
 				title: '消息中心',
