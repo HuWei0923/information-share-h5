@@ -16,14 +16,13 @@
 </template>
 
 <script>
+	import {userAPI} from '@/api/index.js'
 	export default {
 		data() {
 			return {
-				current: 0,
-				items: ['黑名单', '灰名单'],
 				listData:[],
 				currentPage: 1,
-				pageSize: 15,
+				pageSize: 20,
 				total: 0,
 				loadStatus: 'more',
 			}
@@ -54,41 +53,27 @@
 		},
 		methods: {
 			getData(){
-				let temp=[]
-				if(this.current==0){
-					 temp=[
-						{companyName:'上海百度人才咨询有限公司',tianyancha:1},
-						{companyName:'中信证券股份有限公司',tianyancha:1,zhongchengxin:1},
-						{companyName:'中信证券股份有限公司山西分公司',tianyancha:1},
-						{companyName:'兰溪市诸葛旅游发展有限公司寿春堂',tianyancha:1},
-						{companyName:'北京恒沙科技有限责任公司',zhongchengxin:1},
-						{companyName:'北京百度网讯科技有限公司',tianyancha:1,zhongchengxin:1},
-						{companyName:'台州伟隆新型金属材料有限公司',tianyancha:1},
-						{companyName:'山东英特力集团有限公司',tianyancha:1},
-						{companyName:'广东康美药业有限公司',tianyancha:1},
-						{companyName:'广州市丝丝苗苗文化有限公司',tianyancha:1,zhongchengxin:1},
-					]
-					
-				}else if(this.current==1){
-					 temp=[
-						{companyName:'马钢（上海）工贸有限公司'},
-					]
+				let param = {
+					pageIndex:this.currentPage,
+					pageSize:this.pageSize,
+					userId:uni.getStorageSync('userId')
 				}
-				this.loadStatus = 'loading';
-				this.listData=[...this.listData,...temp]
-				if (this.listData.length < this.currentPage * this.pageSize) {
-					this.loadStatus = 'noMore';
-					return;
-				}
-				this.loadStatus = 'more';
+				userAPI.getCareList(param).then(res=>{
+					if(res.data.code=='0'){
+						this.total=res.data.total
+						let temp=res.data.careList?JSON.parse(res.data.careList):[]
+						console.log(JSON.parse(res.data.careList))
+						this.loadStatus = 'loading';
+						this.listData=[...this.listData,...temp]
+						if (this.listData.length < this.currentPage * this.pageSize) {
+							this.loadStatus = 'noMore';
+							return;
+						}
+						this.loadStatus = 'more';
+					}
+				})
 			},
-			onClickItem(e) {
-				console.log(e)
-				this.current = e.currentIndex
-				this.currentPage = 1;
-				this.listData = [];
-				this.getData();
-			}
+			
 		}
 	}
 </script>

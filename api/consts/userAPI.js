@@ -54,5 +54,20 @@ export default [
 		name:"saveOrEditRole",
 		method:'post',
 		url:'/api/user/saveOrEditRole'
-	}
+	},
+	{
+		name:"getCareList",
+		method:'post',
+		url:'/api/user/getCareList'
+	},
+	{
+		name:"getBlackList",
+		method:'post',
+		url:'/api/common/getBlackList'
+	},
+	{
+		name:"getGreyList",
+		method:'post',
+		url:'/api/common/getGreyList'
+	},
 ]
