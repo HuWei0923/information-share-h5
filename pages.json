@@ -256,6 +256,15 @@
 				"title": "关注清单"
 			}
 		}
+        ,{
+            "path" : "pages/enterpriseBaseInfo/index",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "企业信息",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
