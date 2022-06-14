@@ -6,16 +6,16 @@
 		</view>
 		<view v-if="current==0">
 			<view style="display: flex;margin: 10rpx 0">
-				<view class="attention-s" v-if="careStatus.zhongchengxin=='1'">
+				<view class="attention-s" @click="cancleZCXFoucus"  style="color: #efefef;background-color: #409eff;" v-if="careStatus.zhongchengxin=='1'">
 					<uni-icons type="star-filled" size="20" class="icon-s" color="#fff"></uni-icons>取消关注（数据源：中诚信）
 				</view>
-				<view class="attention-s" v-else @click="attentZCX">
+				<view class="attention-s" @click="attentZCX" v-else >
 					<uni-icons type="star" size="20" class="icon-s" color="#898989"></uni-icons>关注（数据源：中诚信）
 				</view>
-				<view class="attention-s" style="color: #efefef;background-color: #409eff;" v-if="careStatus.tianyancha=='1'">
+				<view class="attention-s" @click="cancleTYCFoucus" style="color: #efefef;background-color: #409eff;" v-if="careStatus.tianyancha=='1'">
 					<uni-icons type="star-filled" size="20" class="icon-s" color="#fff"></uni-icons>取消关注（数据源：天眼查）
 				</view>
-				<view class="attention-s" v-else>
+				<view class="attention-s" @click="goTYCFocus" v-else>
 					<uni-icons type="star" size="20" class="icon-s" color="#898989"></uni-icons>关注（数据源：天眼查）
 				</view>
 			</view>
@@ -105,6 +105,101 @@
 				uni.navigateTo({
 					url:`/pages/attentionList/attentionZCX?companyId=${this.companyId}&companyName=${this.companyName}&creditCode=${this.baseInfo.creditCode}`
 				})
+			},
+			cancleZCXFoucus () {
+			//取消关注
+				let param = {
+					userId: uni.getStorageSync('userId'),
+					companyId: this.companyId,
+					zhongchengxin: '0'
+				}
+				userAPI.careOrNot(param).then(res=>{
+					console.log(res);
+					if (res.data.code == 0) {
+						
+						uni.showModal({
+							title: '提示',
+							content: res.data.msg,
+							showCancel: false,
+							success: () => {
+								
+							}
+						});
+						this.getData()
+					} else {
+						uni.showModal({
+							title: '提示',
+							content: res.data.msg,
+							showCancel: false,
+							success: () => {
+								
+							}
+						});
+					}
+				})
+			},
+			cancleTYCFoucus () {
+				let param = {
+					userId: uni.getStorageSync('userId'),
+					companyId: this.companyId,
+					tianyancha: '0'
+				}
+				userAPI.careOrNot(param).then(res=>{
+					console.log(res);
+					if (res.data.code == 0) {
+						
+						uni.showModal({
+							title: '提示',
+							content: res.data.msg,
+							showCancel: false,
+							success: () => {
+								
+							}
+						});
+						this.getData()
+					} else {
+						uni.showModal({
+							title: '提示',
+							content: res.data.msg,
+							showCancel: false,
+							success: () => {
+								
+							}
+						});
+					}
+				})
+			},
+			goTYCFocus () {
+				let param = {
+					userId: uni.getStorageSync('userId'),
+					companyId: this.companyId,
+					 tianyancha: '1'
+				}
+				userAPI.careOrNot(param).then(res=>{
+					console.log(res);
+					if (res.data.code == 0) {
+						
+						uni.showModal({
+							title: '提示',
+							content: res.data.msg,
+							showCancel: false,
+							success: () => {
+								
+							}
+						});
+						this.getData()
+					} else {
+						uni.showModal({
+							title: '提示',
+							content: res.data.msg,
+							showCancel: false,
+							success: () => {
+								
+							}
+						});
+					}
+				})
+				
 			}
 		}
 	}

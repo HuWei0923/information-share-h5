@@ -85,5 +85,9 @@ export default [
 		method: 'post',
 		url: '/api/user/getCareStatus'
 	},
-	
+	{
+		name: "careOrNot",
+		method: 'post',
+		url: '/api/user/careOrNot'
+	},
 ]

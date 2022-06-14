@@ -140,7 +140,48 @@ export default {
 		},
 		attention(){
 			let flag=this.check()
-			if(flag){}
+			if(flag){
+				et param = {
+					userId: uni.getStorageSync('userId'),
+					companyId: this.companyId,
+					code:this.creditCode,
+					entName: this.companyName,
+					entType: this.form.entType,
+					areaLevel: this.form.areaLevel,
+					provinceCode: this.form.provinceCode,
+					provinceName: this.form.provinceCode !== '' ? this.provinceOptions.find(item => item.areaCode == this.form.provinceCode).areaName : '',
+					cityCode: this.form.cityCode,
+					cityName: this.form.cityCode !== '' ? this.cityOptions.find(item => item.areaCode == this.form.cityCode).areaName : '',
+					countyCode: this.form.countyCode,
+					countyName: this.form.countyCode !== '' ? this.countyOptions.find(item => item.areaCode == this.form.countyCode).areaName : '',
+					tianyancha: '1'
+				}
+				userAPI.careOrNot(param).then(res=>{
+					console.log(res);
+					if (res.data.code == 0) {
+						
+						uni.showModal({
+							title: '提示',
+							content: res.data.msg,
+							showCancel: false,
+							success: () => {
+								
+							}
+						});
+						uni.navigateBack();
+					} else {
+						uni.showModal({
+							title: '提示',
+							content: res.data.msg,
+							showCancel: false,
+							success: () => {
+								
+							}
+						});
+					}
+				})
+				
+			}
 		}
 	}
 };
