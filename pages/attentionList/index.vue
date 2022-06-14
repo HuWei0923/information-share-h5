@@ -11,11 +11,11 @@
 					<img src="@/static/img/tyc.png" alt="" style="width: 40rpx;height: 40rpx;margin-left: 10rpx;"
 						v-if="item.tianyancha==1">
 				</view>
-				<view class="tag" v-if="Number(item.messageNumber)">
+				<view class="tag" v-if="Number(item.messageNumber)" >
 					<img src="@/static/img/tag.png" alt=""
-						style="width: 100%;height: 100%;position:absolute;left:0;top:0">
+						style="width: 40px;height: 100%;position:absolute;left:0;top:0">
 					<text
-						style="position: relative;top:6rpx;z-index: 1">{{Number(item.messageNumber)>99?'99+':item.messageNumber}}</text>
+						style="position: relative;left:11rpx;top:6rpx;z-index: 1">{{Number(item.messageNumber)>99?'99+':item.messageNumber}}</text>
 				</view>
 
 			</view>
