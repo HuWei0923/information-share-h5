@@ -80,4 +80,10 @@ export default [
 		method: 'post',
 		url: '/api/company/getCompanyInfoByName'
 	},
+	{
+		name: "getCareStatus",
+		method: 'post',
+		url: '/api/user/getCareStatus'
+	},
+	
 ]

@@ -5,6 +5,21 @@
 				@clickItem="onClickItem"></uni-segmented-control>
 		</view>
 		<view v-if="current==0">
+			<view style="display: flex;margin: 10rpx 0">
+				<view class="attention-s" v-if="careStatus.zhongchengxin=='1'">
+					<uni-icons type="star-filled" size="20" class="icon-s" color="#fff"></uni-icons>取消关注（数据源：中诚信）
+				</view>
+				<view class="attention-s" v-else @click="attentZCX">
+					<uni-icons type="star" size="20" class="icon-s" color="#898989"></uni-icons>关注（数据源：中诚信）
+				</view>
+				<view class="attention-s" style="color: #efefef;background-color: #409eff;" v-if="careStatus.tianyancha=='1'">
+					<uni-icons type="star-filled" size="20" class="icon-s" color="#fff"></uni-icons>取消关注（数据源：天眼查）
+				</view>
+				<view class="attention-s" v-else>
+					<uni-icons type="star" size="20" class="icon-s" color="#898989"></uni-icons>关注（数据源：天眼查）
+				</view>
+			</view>
+			
 			<uni-list>
 				<uni-list-item title="公司名称" :rightText="baseInfo.name" />
 				<uni-list-item title="统一社会信用代码" :rightText="baseInfo.creditCode" />
@@ -32,7 +47,8 @@
 				items: ['基本信息', '工商舆情'],
 				companyId:'',
 				companyName:'',
-				baseInfo:{}
+				baseInfo:{},
+				careStatus:{}
 			}
 		},
 		onLoad(options){
@@ -47,21 +63,34 @@
 			
 		},
 		methods: {
-			
+			getCareStatus(companyId){
+				let param = {
+					companyId:companyId,
+					userId: uni.getStorageSync('userId')
+				}
+				userAPI.getCareStatus(param).then(res=>{
+					if(res.data.code=='0'){
+						this.careStatus=res.data.careStatus?JSON.parse(res.data.careStatus):[],
+						console.log(this.careStatus)
+					}
+				})
+			},
 			getData(){
 				let param = {
-					companyId:this.companyId,
 					companyName:this.companyName,
 					userId: uni.getStorageSync('userId')
 				}
 				new Promise(resolve=>{
 					userAPI.getCompanyInfoByName(param).then(res=>{
 						if(res.data.code=='0'){
-							this.companyId=res.data.company.companyId
+							resolve(res.data.company?res.data.company.companyId:'')
 						}
 					})
-					resolve()
-				}).then(()=>{
+				}).then((companyId)=>{
+					console.log(companyId)
+					this.companyId=companyId
+					param.companyId=companyId
+					this.getCareStatus(companyId)
 					userAPI.getBaseInfo(param).then(res=>{
 						if(res.data.code=='0'){
 							this.baseInfo=res.data.baseInfo
@@ -72,6 +101,11 @@
 			onClickItem(e) {
 				this.current = e.currentIndex;
 			},
+			attentZCX(){
+				uni.navigateTo({
+					url:`/pages/attentionList/attentionZCX?companyId=${this.companyId}&companyName=${this.companyName}&creditCode=${this.baseInfo.creditCode}`
+				})
+			}
 		}
 	}
 </script>
@@ -79,5 +113,18 @@
 <style scoped>
 ::v-deep .uni-list-item__content{
 		min-width: 25vw;
+	}
+	.attention-s{
+		background-color: #e3e3e3;
+		color: #898989;
+		padding:10rpx ;
+		border-radius: 5px;
+		font-size: 24rpx;
+		margin-right: 8rpx;
+		box-shadow: #e3e3e3 0 0 10rpx;
+	}
+	.icon-s{
+		vertical-align: bottom;
+		margin-right: 6rpx;
 	}
 </style>
