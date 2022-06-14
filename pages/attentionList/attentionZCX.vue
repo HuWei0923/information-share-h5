@@ -10,7 +10,7 @@
 						placeholder="请选择"
 						:localdata="dataTree"
 						v-model="enterpriseType"
-						:map="{ text: 'text', value: 'text' }"
+						:map="{ text: 'text', value: 'code' }"
 						@change="onchange"
 					></uni-data-picker>
 				</view>
@@ -57,7 +57,7 @@ export default {
 			administrativeLevelOptions: ['省级', '地市级', '区县级'],
 			areaName: '',
 			allAreaName: [],
-			dataTree: [{text:'非城投企业'},{text:'城投企业'}],
+			dataTree: [{text:'非城投企业',code:"0"},{text:'城投企业',code:"1"}],
 			areaDataTree:[],
 			industry: '',
 			enterpriseType:'',
@@ -146,8 +146,8 @@ export default {
 					companyId: this.companyId,
 					code:this.creditCode,
 					entName: this.companyName,
-					entType: this.form.entType,
-					areaLevel: this.form.areaLevel,
+					entType: this.enterpriseType,
+					areaLevel: this.administrativeLevel,
 					provinceCode: this.form.provinceCode,
 					provinceName: this.form.provinceCode !== '' ? this.provinceOptions.find(item => item.areaCode == this.form.provinceCode).areaName : '',
 					cityCode: this.form.cityCode,
