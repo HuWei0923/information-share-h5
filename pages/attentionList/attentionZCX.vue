@@ -141,7 +141,7 @@ export default {
 		attention(){
 			let flag=this.check()
 			if(flag){
-				et param = {
+				let param = {
 					userId: uni.getStorageSync('userId'),
 					companyId: this.companyId,
 					code:this.creditCode,
