@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import { zcxAPI } from 'api/index.js';
+import { userAPI ,zcxAPI} from 'api/index.js';
 export default {
 	data() {
 		return {
@@ -57,6 +57,7 @@ export default {
 			administrativeLevelOptions: ['省级', '地市级', '区县级'],
 			areaName: '',
 			allAreaName: [],
+			allAreaCode:[],
 			dataTree: [{text:'非城投企业',code:"0"},{text:'城投企业',code:"1"}],
 			areaDataTree:[],
 			industry: '',
@@ -110,12 +111,16 @@ export default {
 			this.enterpriseType=e.detail.value[0].value
 		},
 		changeArea(e){
+			console.log(e)
 			let list = [];
+			let list2=[]
 			list.push();
 			e.detail.value.map(item => {
 				list.push(item.text);
+				list2.push(item.value);
 			});
 			this.allAreaName = list;
+			this.allAreaCode=list2
 			this.errMsg.areaName = '';
 		},
 		changeAdministrativeLevel(e) {
@@ -125,8 +130,7 @@ export default {
 		},
 		check(){
 			let flag=true
-			console.log(this.enterpriseType)
-			if(this.enterpriseType=='城投企业'){
+			if(this.enterpriseType=='1'){
 				if(this.administrativeLevel==''){
 					this.errMsg.administrativeLevel = '请选择行政级别';
 					flag = false;
@@ -135,8 +139,8 @@ export default {
 					this.errMsg.areaName = '请选择区域名称';
 					flag = false;
 				}
-				return flag;
 			}
+			return flag;
 		},
 		attention(){
 			let flag=this.check()
@@ -148,36 +152,41 @@ export default {
 					entName: this.companyName,
 					entType: this.enterpriseType,
 					areaLevel: this.administrativeLevel,
-					provinceCode: this.form.provinceCode,
-					provinceName: this.form.provinceCode !== '' ? this.provinceOptions.find(item => item.areaCode == this.form.provinceCode).areaName : '',
-					cityCode: this.form.cityCode,
-					cityName: this.form.cityCode !== '' ? this.cityOptions.find(item => item.areaCode == this.form.cityCode).areaName : '',
-					countyCode: this.form.countyCode,
-					countyName: this.form.countyCode !== '' ? this.countyOptions.find(item => item.areaCode == this.form.countyCode).areaName : '',
-					tianyancha: '1'
+					provinceCode: this.allAreaCode[0]?this.allAreaCode[0]:'',
+					provinceName: this.allAreaName[0]?this.allAreaName[0]:'',
+					cityCode: this.allAreaCode[1]?this.allAreaCode[1]:'',
+					cityName: this.allAreaName[1]?this.allAreaName[1]:'',
+					countyCode: this.allAreaCode[2]?this.allAreaCode[2]:'',
+					countyName: this.allAreaName[2]?this.allAreaName[2]:'',
+					zhongchengxin: '1'
 				}
+				console.log(param)
 				userAPI.careOrNot(param).then(res=>{
-					console.log(res);
+					// console.log(res);
 					if (res.data.code == 0) {
 						
-						uni.showModal({
-							title: '提示',
-							content: res.data.msg,
-							showCancel: false,
-							success: () => {
+						// uni.showModal({
+						// 	title: '提示',
+						// 	content: res.data.msg,
+						// 	showCancel: false,
+						// 	success: () => {
 								
-							}
-						});
+						// 	}
+						// });
 						uni.navigateBack();
 					} else {
-						uni.showModal({
-							title: '提示',
-							content: res.data.msg,
-							showCancel: false,
-							success: () => {
+						uni.showToast({
+							icon:'none',
+							title:res.data.msg
+						})
+						// uni.showModal({
+						// 	title: '提示',
+						// 	content: res.data.msg,
+						// 	showCancel: false,
+						// 	success: () => {
 								
-							}
-						});
+						// 	}
+						// });
 					}
 				})
 				

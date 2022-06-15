@@ -60,7 +60,9 @@
 			this.getData()
 		},
 		onShow(){
-			
+			if(this.companyId!=''){
+				this.getCareStatus(this.companyId)
+			}
 		},
 		methods: {
 			getCareStatus(companyId){
