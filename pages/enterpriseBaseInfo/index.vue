@@ -44,17 +44,20 @@
 		data() {
 			return {
 				current: 0,
-				items: ['基本信息', '工商舆情'],
+				items: [],
 				companyId:'',
 				companyName:'',
 				baseInfo:{},
-				careStatus:{}
+				careStatus:{},
+				title:''
 			}
 		},
 		onLoad(options){
 			uni.setNavigationBarTitle({
 			    title:`企业信息-${options.title}`
 			});
+			
+			this.items=options.title=='关注清单'?['基本信息', '工商舆情']:[`基本信息【${options.title}】`, '工商舆情']
 			this.companyName=options.companyName
 			// this.companyId=options.companyId
 			this.getData()
