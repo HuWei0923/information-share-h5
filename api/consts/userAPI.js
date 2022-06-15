@@ -90,4 +90,14 @@ export default [
 		method: 'post',
 		url: '/api/user/careOrNot'
 	},
+	{
+		name:'getAllBlackList',
+		method:'post',
+		url:'/api/common/getBlackListDetailList'
+	},
+	{
+		name:'getAllGrayList',
+		method:'post',
+		url:'/api/common/getGreyList'
+	}
 ]
