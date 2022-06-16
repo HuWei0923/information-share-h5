@@ -274,6 +274,24 @@
             }
             
         }
+        ,{
+            "path" : "pages/messageCenter/index",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "消息中心",
+                "enablePullDownRefresh": true
+            }
+            
+        }
+        ,{
+            "path" : "pages/messageCenter/components/alarm",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "消息中心-实时预警",
+                "enablePullDownRefresh": true
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

@@ -99,5 +99,15 @@ export default [
 		name:'getAllGrayList',
 		method:'post',
 		url:'/api/common/getGreyList'
-	}
+	},
+	{
+		name:'getIsBlack',
+		method:'post',
+		url:'/api/common/getIsBlack'
+	},
+	{
+		name:'getIsGrey',
+		method:'post',
+		url:'/api/common/getIsGrey'
+	},
 ]
