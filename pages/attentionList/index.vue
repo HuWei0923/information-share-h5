@@ -98,7 +98,7 @@ export default {
       setTimeout(() => {
         if (this.touchNum == 1) {
           uni.navigateTo({
-            url: `/pages/enterpriseBaseInfo/index?title=关注清单&companyName=${item.companyName}&companyId=${item.companyId}`,
+            url: `/pages/enterpriseBaseInfo/index?id=${item.id}&companyName=${item.companyName}&companyId=${item.companyId}&creditCode=${item.creditCode}`,
           })
         }
         if (this.touchNum >= 2) {

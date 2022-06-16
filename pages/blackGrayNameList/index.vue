@@ -140,13 +140,14 @@
 				this.$refs.popup.open();
 			},
 			checkDetail(item){
+				console.log(item)
 				this.touchNum++;
 				clearTimeout(this.timer)
 				this.timer=setTimeout(() => {
 					if (this.touchNum == 1) {
-						let title=this.current==0?'黑名单':'灰名单'
+						// let title=this.current==0?'黑名单':'灰名单'
 						uni.navigateTo({
-							url:`/pages/enterpriseBaseInfo/index?title=${title}&companyName=${item.companyName}`
+							url:`/pages/enterpriseBaseInfo/index?id=${item.tycCompanyId}&companyName=${item.companyName}&companyId=${item.companyId}&creditCode=${item.orgNo}`
 						})
 					}
 					if (this.touchNum >= 2) {
