@@ -114,7 +114,8 @@ const menuData = [{
 		children: [{
 			title: '检索入口',
 			icon: require('@/static/img/index/jsrk.png'),
-			flag: 'tyc:check'
+			flag: 'tyc:check',
+			url:'/pages/zcx/search?page=jsrk'
 		}]
 	}
 ]

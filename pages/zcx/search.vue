@@ -140,8 +140,8 @@ export default {
 			}
 		},
 		goToPage(item){
-			console.log(item)
-			
+			console.log(this.pageIndex)
+			return
 			if(item.creditCode == '' || item.creditCode == null){
 				
 				uni.showModal({
@@ -179,6 +179,10 @@ export default {
 				
 				
 				
+			}else if(this.pageIndex=='jsrk'){
+				// uni.navigateTo({
+				// 	url:`/pages/enterpriseBaseInfo/index?title=关注清单&companyName=${item.companyName}&companyId=${item.companyId}`
+				// })
 			}else{
 				console.log(item)
 				uni.navigateTo({
