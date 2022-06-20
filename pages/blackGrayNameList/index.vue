@@ -47,7 +47,9 @@
 				total: 0,
 				loadStatus: 'more',
 				sortType: 'startDate',
-				content: '存在历史交易且对手违约导致形成一定金额以上历史风险资产的交易对手。'
+				content: '存在历史交易且对手违约导致形成一定金额以上历史风险资产的交易对手。',
+				touchNum: 0,
+				timer:null
 			};
 		},
 		onShow() {
@@ -138,10 +140,28 @@
 				this.$refs.popup.open();
 			},
 			checkDetail(item){
-				let title=this.current==0?'黑名单':'灰名单'
-				uni.navigateTo({
-					url:`/pages/enterpriseBaseInfo/index?title=${title}&companyName=${item.companyName}`
-				})
+				console.log(item)
+				this.touchNum++;
+				clearTimeout(this.timer)
+				this.timer=setTimeout(() => {
+					if (this.touchNum == 1) {
+						// let title=this.current==0?'黑名单':'灰名单'
+						uni.navigateTo({
+							url:`/pages/enterpriseBaseInfo/index?id=${item.tycCompanyId}&companyName=${item.companyName}&companyId=${item.companyId}&creditCode=${item.orgNo}`
+						})
+					}
+					if (this.touchNum >= 2) {
+						// console.log('双击');
+						uni.showToast({
+							icon:'none',
+							title:item.companyName,
+							mask:true,
+							duration:2000
+						})
+					}
+					this.touchNum = 0;
+				}, 250);
+				
 			}
 		}
 	};

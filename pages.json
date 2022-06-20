@@ -265,6 +265,24 @@
             }
             
         }
+        ,{
+            "path" : "pages/attentionList/attentionZCX",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "关注-中诚信",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/messageCenter/index",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "消息中心",
+                "enablePullDownRefresh": true
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

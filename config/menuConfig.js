@@ -29,7 +29,8 @@ const menuData = [{
 			{
 				title: '消息中心',
 				icon: require('@/static/img/index/hhmd.png'),
-				flag: 'common.message'
+				flag: 'common.message',
+				url:'/pages/messageCenter/index'
 			},
 			{
 				title: '用户中心',

@@ -80,4 +80,34 @@ export default [
 		method: 'post',
 		url: '/api/company/getCompanyInfoByName'
 	},
+	{
+		name: "getCareStatus",
+		method: 'post',
+		url: '/api/user/getCareStatus'
+	},
+	{
+		name: "careOrNot",
+		method: 'post',
+		url: '/api/user/careOrNot'
+	},
+	{
+		name:'getAllBlackList',
+		method:'post',
+		url:'/api/common/getBlackListDetailList'
+	},
+	{
+		name:'getAllGrayList',
+		method:'post',
+		url:'/api/common/getGreyList'
+	},
+	{
+		name:'getIsBlack',
+		method:'post',
+		url:'/api/common/getIsBlack'
+	},
+	{
+		name:'getIsGrey',
+		method:'post',
+		url:'/api/common/getIsGrey'
+	},
 ]

@@ -1,0 +1,309 @@
+<template>
+	<view style="padding: 20rpx;">
+		<uni-row :gutter="10">
+			<uni-col :span="16" style="position: relative;">
+				<view style="width: 100%;height: 76rpx;border: 1px solid rgb(229, 229, 229);display: flex;align-items: center;border-radius: 4px;">
+					<view class="ins_style" :class="{ 'no-style': form.companyName.length == 0 }" @click="showCompanyPopup">
+						<text v-if="form.companyName.length == 0">企业名称</text>
+						<text v-else>
+							<uni-tag :text="form.companyName[0]"></uni-tag>
+							<uni-tag :text="`+${form.companyName.length - 1}`" style="margin-left: 2px;" v-if="form.companyName.length > 1"></uni-tag>
+						</text>
+					</view>
+					<view style="width: 25px;" v-if="form.companyName.length !== 0"><uni-icons type="clear" size="18px" color="#e3e3e3" @click="cancleCompany"></uni-icons></view>
+				</view>
+			</uni-col>
+			<uni-col :span="8"><uni-data-select v-model="form.riskLevel" :localdata="riskLevelOptions" @change="changeRiskLevel" placeholder="风险等级"></uni-data-select></uni-col>
+			<uni-col :span="16"><uni-datetime-picker v-model="form.dateRange" class="uni-mt-2" :clear-icon="false" type="daterange" /></uni-col>
+			
+		</uni-row>
+		<view style="padding: 10rpx 20rpx 0;display: flex;justify-content: space-between;">
+			<text>	共
+			<text style="color: #409eff;margin: 0 10rpx;">{{ total }}</text>
+			条数据</text>
+			<text>
+				<text>数据来源：中诚信</text>
+				<text class="uni-ml-10">更新时间：{{updateTime}}</text>
+			</text>
+		
+		</view>
+		<view v-if="listData.length > 0">
+			<uni-group mode="card" v-for="(item, index) in listData" :key="index">
+				<view slot="title" class="card-title">
+					<text style="font-weight: bold;">{{ item.companyName }}</text>
+					<text>
+						<uni-tag text="一般" type="primary" v-if="item.riskLevel==0"></uni-tag>
+						<uni-tag text="重大" type="warning" v-if="item.riskLevel==1"></uni-tag>
+						<uni-tag text="警示" type="error" v-if="item.riskLevel==2"></uni-tag>
+					</text>
+				</view>
+				<view style="padding: 15px;">
+					<view style="position: relative;line-height: 48rpx;padding-right: 60rpx;">
+							<view>监控企业类别：{{ item.type }}</view>
+							<view>风险类别：{{ item.riskType }}</view>
+							<view>风险事件：{{ item.riskEvent }}</view>
+							<view>消息日期：{{ item.date }}</view>
+							<view>推送来源：{{ item.sourceFrom }}</view>
+					</view>
+				</view>
+			</uni-group>
+			<uni-load-more :status="loadStatus"></uni-load-more>
+		</view>
+		<view class="empty-box" v-else>
+			<image src="@/static/img/empty-image.png" class="empty-image"></image>
+			<view class="empty-text">暂无数据</view>
+		</view>
+		<!-- 企业名称弹框 -->
+		<uni-drawer ref="popup" mode="right" :mask-click="false">
+			<view class="popup-title">
+				<text @click="$refs.popup.close()">取消</text>
+				<text style="color: #409eff;" @click="selectAll">{{ multipleSelect.length == companyOptions.length ? '取消全选' : '全选' }}</text>
+				<text style="color: #409eff;" @click="confirm">确定</text>
+			</view>
+			<scroll-view class="popup-content" scroll-y="true">
+				<checkbox-group @change="changeCompany">
+					<label v-for="(item, index) in companyOptions" :key="item.companyName" class="popup-item">
+						<view class="left-text">{{ item.companyName }}</view>
+						<view><checkbox :value="item.companyName" :checked="item.checked" /></view>
+					</label>
+				</checkbox-group>
+			</scroll-view>
+		</uni-drawer>
+	</view>
+</template>
+
+<script>
+	import { messageAPI } from '@/api/index.js';
+	import moment from 'moment';
+	export default {
+		data() {
+			return {
+				form: {
+					companyName: [],
+						dateRange: [moment().format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')],
+					riskLevel: '',
+				},
+				companyOptions: [{ value: 123, text: '知豆电动汽车有限公司' }],
+				riskLevelOptions: [],
+				total: 0,
+				currentPage: 1,
+				listData: [],
+				loadStatus: 'more',
+				updateTime:'8:30 AM',
+				multipleSelect: [],
+			}
+		},
+		watch: {
+			form: {
+				handler(val) {
+					// console.log(val);
+					this.currentPage = 1;
+					this.listData = [];
+					this.getData();
+				},
+				deep: true,
+				immediate: true
+			}
+		},
+		mounted() {
+			this.getCompayNameList();
+		},
+		methods: {
+			getCompayNameList() {
+				messageAPI.getCompayNameList({ userName: uni.getStorageSync('userCode') }).then(res => {
+					if (res.data.code == 0) {
+						this.companyOptions = res.data.companyNameList.map(item => {
+							return {
+								companyName: item,
+								checked: false
+							};
+						});
+					}
+				});
+			},
+			getData() {
+				let temp = [
+					{
+						type: '非城投企业',
+						companyName: '广州市丝丝苗苗文化有限公司',
+						riskLevel:0,
+						riskType: '开庭公告',
+						riskEvent: '新增房屋买卖合同纠纷开庭公告',
+						date: '2022-06-22',
+						sourceFrom: '中诚信',
+						showDetail: false
+					},
+					{
+						type: '非城投企业',
+						companyName: '广州市丝丝苗苗文化有限公司',
+						riskLevel:1,
+						riskType: '对外投资',
+						riskEvent: '新增对外投资',
+						date: '2022-06-22',
+						sourceFrom: '中诚信',
+						showDetail: false
+					},
+					{
+						type: '非城投企业',
+						companyName: '广州市丝丝苗苗文化有限公司',
+						riskLevel:2,
+						riskType: '开庭公告',
+						riskEvent: '新增房屋买卖合同纠纷开庭公告',
+						date: '2022-06-22',
+						sourceFrom: '中诚信',
+						showDetail: false
+					}
+				];
+			
+				this.listData = [...this.listData, ...temp];
+			},
+			changeCompany(e) {
+				this.multipleSelect = e.detail.value;
+			},
+			confirm() {
+				this.form.companyName = this.multipleSelect;
+				this.$refs.popup.close();
+			},
+			cancleCompany() {
+				this.form.companyName = [];
+			},
+			showCompanyPopup() {
+				//打开企业弹框
+				this.$refs.popup.open('right');
+				this.companyOptions.map(item => {
+					item.checked = false;
+					if (this.form.companyName.includes(item.companyName)) {
+						item.checked = true;
+					}
+					return item;
+				});
+			},
+			selectAll() {
+				if (this.form.companyName.length == this.companyOptions.length) {
+					//已全选  再次点击取消全选
+					this.companyOptions.map(item => {
+						item.checked = false;
+						this.multipleSelect = [];
+						return item;
+					});
+				} else {
+					let list = [];
+					this.companyOptions.map(item => {
+						item.checked = true;
+						list.push(item.companyName);
+					});
+					this.multipleSelect = list;
+				}
+			},
+		}
+	}
+</script>
+
+<style scoped>
+::v-deep .input-value {
+	line-height: 68rpx;
+}
+::v-deep .placeholder {
+	font-size: 24rpx;
+	font-weight: 200;
+}
+::v-deep .uni-group__title {
+	background-color: #4f9be1;
+}
+::v-deep .uni-group__title-text {
+	color: #fff;
+}
+::v-deep .uni-select {
+	display: block;
+}
+::v-deep .uni-stat__select {
+	padding: 0;
+	display: block;
+}
+::v-deep .uni-stat__actived {
+	outline: none;
+}
+::v-deep .uni-select__input-box {
+	min-height: 38px;
+}
+::v-deep .uni-select__input-placeholder {
+	font-weight: 100;
+	font-size: 13px;
+}
+::v-deep .uni-input-placeholder {
+	font-weight: 100;
+	font-size: 12px;
+}
+::v-deep .uni-group__content {
+	padding: 0;
+}
+::v-deep .uni-date-x {
+	height: 38px;
+	/* border-radius: 0; */
+}
+::v-deep .uni-drawer__content {
+	width: 85vw !important;
+}
+.btn-box {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+}
+.card-title {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0 15px;
+	height: 40px;
+	font-weight: normal;
+	background-color: #4f9be1;
+	color: #fff;
+}
+.active {
+	background-color: #4f9be1;
+	color: #fff;
+}
+.ins_style {
+	flex: 1;
+	height: 100%;
+	line-height: 66rpx;
+	padding-left: 20rpx;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	color:#333
+}
+.no-style{
+	font-weight: 100;
+	font-size: 12px;
+}
+.popup-content {
+	padding: 15px 0;
+	height: 50px;
+	background-color: #fff;
+	/* width: 85vw; */
+	/* overflow: auto; */
+	height: 90vh;
+}
+.popup-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	border-bottom: 1px solid #efefef;
+	padding: 10px 15px;
+}
+.left-text {
+	flex: 1;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+.popup-title {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	border-bottom: 1px solid #efefef;
+	padding: 10px 15px;
+}
+</style>
