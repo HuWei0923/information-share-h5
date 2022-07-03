@@ -15,4 +15,19 @@ export default [
 		method: 'post',
 		url: '/api/common/getEventTypeList'
 	},
+	{
+		name: "getRiskMorningPost",
+		method: 'post',
+		url: '/api/common/getRiskMorningPost'
+	},
+	{
+		name: "getMorningNews",
+		method: 'post',
+		url: '/api/common/getMorningNews'
+	},
+	{
+		name: "getPlatformNews",
+		method: 'post',
+		url: '/api/common/getPlatformNews'
+	},
 ]

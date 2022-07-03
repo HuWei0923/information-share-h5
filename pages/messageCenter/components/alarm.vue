@@ -48,7 +48,7 @@
 							风险等级：
 							<uni-tag :text="item.riskLevel" :type="item.riskLevel == '高风险' ? 'error' : 'warning'"></uni-tag>
 						</view>
-						<view>标题：{{ item.a }}</view>
+						<view>{{ item.a }}</view>
 						<view>推送时间：{{ item.updateTime }}</view>
 						<view>
 							链接：
@@ -260,7 +260,7 @@ export default {
 			});
 		},
 		selectAll() {
-			if (this.form.companyName.length == this.companyOptions.length) {
+			if (this.multipleSelect.length == this.companyOptions.length) {
 				//已全选  再次点击取消全选
 				this.companyOptions.map(item => {
 					item.checked = false;
@@ -277,7 +277,7 @@ export default {
 			}
 		},
 		eventSelectAll() {
-			if (this.form.eventType.length == this.eventTypeOptions.length) {
+			if (this.eventMultipleSelect.length == this.eventTypeOptions.length) {
 				//已全选  再次点击取消全选
 				this.eventTypeOptions.map(item => {
 					item.checked = false;
@@ -369,7 +369,7 @@ export default {
 .ins_style {
 	flex: 1;
 	height: 100%;
-	line-height: 66rpx;
+	line-height: 70rpx;
 	padding-left: 20rpx;
 	overflow: hidden;
 	white-space: nowrap;
