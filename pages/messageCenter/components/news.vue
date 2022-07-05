@@ -172,7 +172,7 @@
 			return {
 				form: {
 					companyName: [],
-					dateRange: [],
+					dateRange:[moment().format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')],
 					riskLevel: [],
 					newsEmotion:[]
 				},

@@ -110,7 +110,7 @@ export default {
 		return {
 			form: {
 				companyName: [],
-				dateRange: [],
+				dateRange: [moment().format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')],
 				riskLevel: '',
 				riskLevelOpt: [],
 				eventType: []
@@ -151,6 +151,7 @@ export default {
 	mounted() {
 		this.form.dateRange=[moment().format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')]
 		if(this.companyName!=='') this.form.companyName=[this.companyName]
+		this.$forceUpdate()
 		this.getCompayNameList();
 	},
 	onShow() {},
