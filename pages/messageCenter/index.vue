@@ -5,7 +5,7 @@
 				@clickItem="onClickItem"></uni-segmented-control>
 		</view>
 		<view class="">
-			<components :is="componentsList[current]" :searchMoreFlag="searchMoreFlag"></components>
+			<components :is="componentsList[current]" :companyName="companyName" :searchMoreFlag="searchMoreFlag"></components>
 		</view>
 	</view>
 </template>
@@ -24,7 +24,17 @@
 				current: 0,
 				items: ['实时预警', '风险早报','新闻早报','平台消息'],
 				componentsList:[Alarm,Risk,News,Platform],
-				searchMoreFlag:true
+				searchMoreFlag:true,
+				companyName:''
+			}
+		},
+		onLoad(options){
+			console.log(options)
+			if(options.showTab){
+				this.current=Number(options.showTab)
+			}
+			if(options.companyName){
+				this.companyName=options.companyName
 			}
 		},
 		onReachBottom() {

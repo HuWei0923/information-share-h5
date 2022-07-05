@@ -165,13 +165,14 @@
 	import moment from 'moment';
 	export default {
 		props: {
-			searchMoreFlag: Boolean
+			searchMoreFlag: Boolean,
+			companyName:String
 		},
 		data() {
 			return {
 				form: {
 					companyName: [],
-					dateRange: [moment().format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')],
+					dateRange: [],
 					riskLevel: [],
 					newsEmotion:[]
 				},
@@ -222,8 +223,9 @@
 					this.getData();
 				},
 				deep: true,
-				immediate: true
+				// immediate: true
 			},
+			
 			searchMoreFlag(val) {
 				//上拉显示更多
 				if (this.listData.length < this.currentPage * this.pageSize) {
@@ -234,7 +236,10 @@
 				this.getData();
 			}
 		},
+		
 		mounted() {
+			this.form.dateRange=[moment().format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')]
+			if(this.companyName!=='') this.form.companyName=[this.companyName]
 			this.getCompayNameList();
 		},
 		methods: {

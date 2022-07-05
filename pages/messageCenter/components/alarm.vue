@@ -52,7 +52,7 @@
 						<view>推送时间：{{ item.updateTime }}</view>
 						<view>
 							链接：
-							<uni-link :href="item.url" :text="item.url" color="#007BFF"></uni-link>
+							<uni-link :href="item.url" :text="item.url" color="#007BFF" v-if="item.url"></uni-link>
 						</view>
 					</view>
 				</view>
@@ -103,13 +103,14 @@ import { messageAPI } from '@/api/index.js';
 import moment from 'moment';
 export default {
 	props: {
-		searchMoreFlag: Boolean
+		searchMoreFlag: Boolean,
+		companyName:String
 	},
 	data() {
 		return {
 			form: {
 				companyName: [],
-				dateRange: [moment().format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')],
+				dateRange: [],
 				riskLevel: '',
 				riskLevelOpt: [],
 				eventType: []
@@ -135,7 +136,7 @@ export default {
 				this.getData();
 			},
 			deep: true,
-			immediate: true
+			// immediate: true
 		},
 		searchMoreFlag(val) {
 			//上拉显示更多
@@ -148,6 +149,8 @@ export default {
 		}
 	},
 	mounted() {
+		this.form.dateRange=[moment().format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')]
+		if(this.companyName!=='') this.form.companyName=[this.companyName]
 		this.getCompayNameList();
 	},
 	onShow() {},

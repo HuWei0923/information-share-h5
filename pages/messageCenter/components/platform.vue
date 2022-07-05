@@ -35,7 +35,7 @@
 	import moment from 'moment';
 	export default {
 		props: {
-			searchMoreFlag: Boolean
+			searchMoreFlag: Boolean,
 		},
 		data() {
 			return {
@@ -70,6 +70,7 @@
 				this.getData();
 			}
 		},
+		
 		methods: {
 			getData(){
 				let param = {

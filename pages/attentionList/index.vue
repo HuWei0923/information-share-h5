@@ -1,7 +1,7 @@
 <template>
   <view class="content">
     <view class="main">
-      <view v-for="(item, index) in listData" :key="index" class="main-item" @touchend="checkDetail(item)">
+      <view v-for="(item, index) in listData" :key="index" class="main-item" @click="checkDetail(item)">
         <img src="@/static/img/attention.png" alt="" style="width: 50rpx; height: 50rpx" />
         <view class="main-text">
           <text class="text-s">{{ item.companyName }}</text>
@@ -18,7 +18,7 @@
             v-if="item.tianyancha == 1"
           />
         </view>
-        <view class="tag" v-if="Number(item.messageNumber)">
+        <view class="tag" v-if="Number(item.messageNumber)" @click.stop="showAttentionList(item)">
           <img
             src="@/static/img/tag.png"
             alt=""
@@ -116,6 +116,13 @@ export default {
     showCompanyName(item) {
       console.log(item.companyName)
     },
+	showAttentionList(item){
+		console.log(item)
+		let showTab = item.tianyancha===1?0:1
+		uni.navigateTo({
+			url:`/pages/messageCenter/index?companyName=${item.companyName}&showTab=${showTab}`
+		})
+	}
   },
 }
 </script>
